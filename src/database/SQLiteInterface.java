@@ -48,8 +48,8 @@ public class SQLiteInterface {
             stmt.execute(
                 "CREATE TABLE IF NOT EXISTS books (" +
                     "book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "book_name VARHCAR," +
-                    "author VARHCAR," +
+                    "book_name VARCHAR," +
+                    "author VARCHAR," +
                     "print_year INTEGER," +
                     "volume INTEGER" +
                 ")"
