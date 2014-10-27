@@ -20,15 +20,17 @@ public class Pc extends Entity{
 	private Inventory inventory;
 	private CharacterSheet cs;
 	
+	
+	
+
+	
+	
 	public Pc(String name, Room starting_location){
 		this.name = name;
 		location = starting_location;
 		inventory = new Inventory();
 		cs = new CharacterSheet();
-		
-		
-		
-		
+
 		
 	}
 	
@@ -45,8 +47,30 @@ public class Pc extends Entity{
 			items = new HashSet<Item>();
 		}
 		
-		
 	}
+	
+	public Room getLocation() {
+		return location;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setLocation(Room location) {
+		this.location = location;
+	}
+	
+	public Inventory getInventory() {
+		return inventory;
+	}
+	
+	public CharacterSheet getCs() {
+		return cs;
+	}
+	
+	
+	
 	
 	class CharacterSheet{
 		private int hp = 60;
@@ -58,6 +82,33 @@ public class Pc extends Entity{
 			
 		}
 	
+		public int getHp() {
+			return hp;
+		}
+		
+		public void setHp(int hp) {
+			this.hp = hp;
+		}
+		
+		public int getHealth() {
+			return health;
+		}
+		
+		
+		//Only sets health up to maximum health level.
+		public void setHealth(int health) {
+			if(health + this.health > this.max_health){
+				this.health = this.max_health;
+			}else{
+				this.health = health;
+			}
+		}
+		
+		public void setLevel(int level) {
+			this.level = level;
+		}
+		
+		
 	}
 	
 }
