@@ -1,0 +1,8 @@
+worlds:
+	room_id int, room_name varchar, north_room_id int, east_room_id int, south_room_id int, west_room_id int, north_door_status bool, east_door_status bool, south_door_status bool, west_door_status bool
+
+courses:
+	course_id int, course_name varchar, course_book_id int, hp int
+
+books
+	book_id int, book_name varchar, author varchar, print_year int, volume int
