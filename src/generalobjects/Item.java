@@ -10,9 +10,28 @@ public abstract class Item extends Entity {
 	
 	
 	//The implementation needs to specify what class the target need to be.
-	abstract void use(Pc user, Entity target);
+	abstract void use(Character user, Entity target);
 	
 	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public int getUses() {
+		return uses;
+	}
+	
+	public void setUses(int uses) {
+		this.uses = uses;
+	}
 	
 	private enum Type{
 		CONSUMABLE, USABLE,EQUIPABLE

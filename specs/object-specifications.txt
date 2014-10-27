@@ -8,24 +8,21 @@ And also their propperties and fields.
 --==PC==--
         A PC is a character played by a user.
         
-        A PC object should contain the folowing fields
+        A PC object should contain the following fields
         
                 LOCATION:       Where the player is currently located
-                NAME:           The name of the player (needs to be unique)
-                SPEC SHEET:     Another object defining the characters propprties (class, level ..etc)
-                INVENTORY:      A object specifyning the contents objects owned by the player
+                NAME:              The name of the player (needs to be unique)
+                SPEC SHEET:    Another object defining the characters proprties (class, level ..etc)
+                INVENTORY:     A object specifyning the contents objects owned by the player
 
 --==NPC==--
         A character not played by a user
                     NAME:      The Name of the player. (Needs not be unique)
                     LOCATION:  The location where the NPC is.
                     DIALOG-TREE:   A dialog tree.
-                     
 
-
-
---==LOCALE==--
-        A locale is a pllace where shit can go down.
+--==ROOM==--
+        A room is a place where shit can go down.
 
                  NAME:             The Name of the place.
                  DEDSCRIPTION:     The description of the locale.
