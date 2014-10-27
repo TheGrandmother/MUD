@@ -1,4 +1,4 @@
-package generalobjects;
+package yolo.ioopm.mud.generalobjects;
 
 public abstract class Item extends Entity {
 	private String name;

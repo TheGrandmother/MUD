@@ -1,6 +1,4 @@
-package communication;
-
-import java.sql.Time;
+package yolo.ioopm.mud.communication;
 
 
 /**
@@ -17,10 +15,7 @@ public class Message {
 
 	String message;
 	
-	
-	public Message(String action, String[] nouns,)
-	
-	
-	
-	
+	public Message(String action, String[] nouns) {
+
+    }
 }
