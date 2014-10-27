@@ -1,4 +1,4 @@
-package generalobjects;
+package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
 
