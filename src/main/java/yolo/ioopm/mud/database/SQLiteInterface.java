@@ -1,6 +1,6 @@
-package database;
+package yolo.ioopm.mud.database;
 
-import generalobjects.Room;
+import yolo.ioopm.mud.generalobjects.Room;
 
 import java.sql.*;
 

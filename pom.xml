@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>yolo.ioopm</groupId>
-    <artifactId>MUD</artifactId>
+    <artifactId>mud</artifactId>
     <version>0.1-ALPHA</version>
     <packaging>jar</packaging>
 
@@ -42,7 +42,11 @@
 
     <!-- Dependencies -->
     <dependencies>
-
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.8.6</version>
+        </dependency>
     </dependencies>
 
 
@@ -72,10 +76,41 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>Main</mainClass>
+                            <mainClass>yolo.ioopm.mud.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <!-- Shader -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>false</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>org.xerial:*</artifact>
+                                    <excludes>
+                                        <exclude>**/*.java</exclude>
+                                    </excludes>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
