@@ -24,6 +24,10 @@ public class Room {
         public Room getOtherSide() {
             return otherside;
         }
+
+        public String getName() {
+            return otherside.getName();
+        }
     }
 
     private final String NAME;
@@ -43,8 +47,20 @@ public class Room {
         return NAME;
     }
 
-    public void addExit(Room r, boolean locked) {
-        exits.add(new Door(r, locked));
+    public boolean addExit(Room r, boolean locked) {
+        return exits.add(new Door(r, locked));
+    }
+
+    public boolean addPlayer(Player p) {
+        return players.add(p);
+    }
+
+    public boolean addNPC(NPC n) {
+        return npcs.add(n);
+    }
+
+    public boolean addItem(Item i) {
+        return items.add(i);
     }
 
     public String[] getNameOfExits() {
@@ -52,7 +68,7 @@ public class Room {
 
         int i = 0;
         for(Door d : exits) {
-            names[i++] = d.getOtherSide().getName();
+            names[i++] = d.getName();
         }
 
         return names;
@@ -68,5 +84,17 @@ public class Room {
 
     public Item[] getItems() {
         return items.toArray(new Item[items.size()]);
+    }
+
+    public boolean removePlayer(Player p) {
+        return players.remove(p);
+    }
+
+    public boolean removeNPC(NPC n) {
+        return npcs.remove(n);
+    }
+
+    public boolean removeItem(Item i) {
+        return items.remove(i);
     }
 }
