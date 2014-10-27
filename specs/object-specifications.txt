@@ -1,0 +1,43 @@
+This document contains specifications for the various types of objects wich will be avaliable in the world.
+And also their propperties and fields.
+
+
+
+
+
+--==PC==--
+        A PC is a character played by a user.
+        
+        A PC object should contain the folowing fields
+        
+                LOCATION:       Where the player is currently located
+                NAME:           The name of the player (needs to be unique)
+                SPEC SHEET:     Another object defining the characters propprties (class, level ..etc)
+                INVENTORY:      A object specifyning the contents objects owned by the player
+
+--==NPC==--
+        A character not played by a user
+                    NAME:      The Name of the player. (Needs not be unique)
+                    LOCATION:  The location where the NPC is.
+                    DIALOG-TREE:   A dialog tree.
+                     
+
+
+
+--==LOCALE==--
+        A locale is a pllace where shit can go down.
+
+                 NAME:             The Name of the place.
+                 DEDSCRIPTION:     The description of the locale.
+                 EXITS:            A set of possible exits.
+                 OBJECTS:          A set of objects contained in the room.(Players, npcs, items etc)
+
+--==ITEM==--
+        An item is a thing wich a PC can carry and use.
+                
+                NAME:             The Name of the item.
+                DESCRIPTION:      The description of the item.
+                TYPE:             type of item (equipable, usable, consumable..etc)
+                SIZE:             the size of the item in some dumb unit
+
+                             
