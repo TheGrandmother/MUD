@@ -33,10 +33,10 @@ public class Room {
     private final String NAME;
     private final String DESCRIPTION;
 
-    private HashSet<Door>   exits   = new HashSet<Door>();
-    private HashSet<Player> players = new HashSet<Player>();
-    private HashSet<NPC>    npcs    = new HashSet<NPC>();
-    private HashSet<Item>   items   = new HashSet<Item>();
+    private HashSet<Door> exits   = new HashSet<Door>();
+    private HashSet<Pc>   players = new HashSet<Pc>();
+    private HashSet<NPC>  npcs    = new HashSet<NPC>();
+    private HashSet<Item> items   = new HashSet<Item>();
 
     public Room(String name, String description) {
         this.NAME = name;
@@ -51,7 +51,7 @@ public class Room {
         return exits.add(new Door(r, locked));
     }
 
-    public boolean addPlayer(Player p) {
+    public boolean addPlayer(Pc p) {
         return players.add(p);
     }
 
@@ -74,8 +74,8 @@ public class Room {
         return names;
     }
 
-    public Player[] getPlayers() {
-        return players.toArray(new Player[players.size()]);
+    public Pc[] getPlayers() {
+        return players.toArray(new Pc[players.size()]);
     }
 
     public NPC[] getNPCs() {
@@ -86,7 +86,7 @@ public class Room {
         return items.toArray(new Item[items.size()]);
     }
 
-    public boolean removePlayer(Player p) {
+    public boolean removePlayer(Pc p) {
         return players.remove(p);
     }
 
