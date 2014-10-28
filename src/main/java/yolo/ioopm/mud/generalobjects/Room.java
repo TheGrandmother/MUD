@@ -4,60 +4,6 @@ import java.util.HashSet;
 
 public class Room extends Entity {
 
-    class Door {
-        private final Room    otherside;
-        private       boolean is_locked;
-
-        /**
-         * Constructs the Door-object.
-         *
-         * @param r Room this door leads too.
-         * @param lock_status True if door should be locked, false if unlocked.
-         */
-        public Door(Room r, boolean lock_status) {
-            otherside = r;
-            is_locked = lock_status;
-        }
-
-        /**
-         * Returns current lock value of this door.
-         *
-         * @return true if locked, else false.
-         */
-        public boolean isLocked() {
-            return is_locked;
-        }
-
-        /**
-         * Locks the door.
-         */
-        public void setLocked() {
-            is_locked = true;
-        }
-
-        /**
-         * Unlocks the door.
-         */
-        public void setUnlocked() {
-            is_locked = false;
-        }
-
-        /**
-         * Returns the room on the other side of this door.
-         * @return room on other side.
-         */
-        public Room getOtherSide() {
-            return otherside;
-        }
-
-        /**
-         * Retrieves the name of the room on the other side of this door.
-         * @return name of room this leads too.
-         */
-        public String getName() {
-            return otherside.getName();
-        }
-    }
 
     private final String NAME;
     private final String DESCRIPTION;
@@ -212,4 +158,60 @@ public class Room extends Entity {
     public boolean removeItem(Item i) {
         return items.remove(i);
     }
+    
+    class Door {
+        private final Room    otherside;
+        private       boolean is_locked;
+
+        /**
+         * Constructs the Door-object.
+         *
+         * @param r Room this door leads too.
+         * @param lock_status True if door should be locked, false if unlocked.
+         */
+        public Door(Room r, boolean lock_status) {
+            otherside = r;
+            is_locked = lock_status;
+        }
+
+        /**
+         * Returns current lock value of this door.
+         *
+         * @return true if locked, else false.
+         */
+        public boolean isLocked() {
+            return is_locked;
+        }
+
+        /**
+         * Locks the door.
+         */
+        public void setLocked() {
+            is_locked = true;
+        }
+
+        /**
+         * Unlocks the door.
+         */
+        public void setUnlocked() {
+            is_locked = false;
+        }
+
+        /**
+         * Returns the room on the other side of this door.
+         * @return room on other side.
+         */
+        public Room getOtherSide() {
+            return otherside;
+        }
+
+        /**
+         * Retrieves the name of the room on the other side of this door.
+         * @return name of room this leads too.
+         */
+        public String getName() {
+            return otherside.getName();
+        }
+    }
+
 }
