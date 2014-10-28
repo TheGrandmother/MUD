@@ -8,27 +8,52 @@ public class Room {
         private final Room    otherside;
         private       boolean is_locked;
 
+        /**
+         * Constructs the Door-object.
+         *
+         * @param r Room this door leads too.
+         * @param lock_status True if door should be locked, false if unlocked.
+         */
         public Door(Room r, boolean lock_status) {
             otherside = r;
             is_locked = lock_status;
         }
 
+        /**
+         * Returns current lock value of this door.
+         *
+         * @return true if locked, else false.
+         */
         public boolean isLocked() {
             return is_locked;
         }
 
+        /**
+         * Locks the door.
+         */
         public void setLocked() {
             is_locked = true;
         }
 
+        /**
+         * Unlocks the door.
+         */
         public void setUnlocked() {
             is_locked = false;
         }
 
+        /**
+         * Returns the room on the other side of this door.
+         * @return room on other side.
+         */
         public Room getOtherSide() {
             return otherside;
         }
 
+        /**
+         * Retrieves the name of the room on the other side of this door.
+         * @return name of room this leads too.
+         */
         public String getName() {
             return otherside.getName();
         }
@@ -42,35 +67,81 @@ public class Room {
     private HashSet<NPC>  npcs    = new HashSet<NPC>();
     private HashSet<Item> items   = new HashSet<Item>();
 
+    /**
+     * Constructs the Room-object.
+     *
+     * @param name Name of this room.
+     * @param description Description of this room.
+     */
     public Room(String name, String description) {
         this.NAME = name;
         this.DESCRIPTION = description;
     }
 
+    /**
+     * @return Name of room.
+     */
     public String getName() {
         return NAME;
     }
 
+    /**
+     * @return Description of room.
+     */
     public String getDescription() {
         return DESCRIPTION;
     }
 
+    /**
+     * Adds an exit too the room.
+     *
+     * @param r Room this exit should lead too.
+     * @param locked Whether this exit should be locked or not from the start.
+     *
+     * @return True if the exit was successfully added.
+     */
     public boolean addExit(Room r, boolean locked) {
         return exits.add(new Door(r, locked));
     }
 
+    /**
+     * Adds a player to the room.
+     *
+     * @param p Player to add.
+     *
+     * @return True if player was successfully added.
+     */
     public boolean addPlayer(Pc p) {
         return players.add(p);
     }
 
+    /**
+     * Adds an NPC to the room.
+     *
+     * @param n The NPC to add.
+     *
+     * @return True if NPC was successfully added.
+     */
     public boolean addNPC(NPC n) {
         return npcs.add(n);
     }
 
+    /**
+     * Adds an item to the room.
+     *
+     * @param i The item to add.
+     *
+     * @return True if the item was successfully added.
+     */
     public boolean addItem(Item i) {
         return items.add(i);
     }
 
+    /**
+     * Returns an array with the names of all rooms that this room is connected too.
+     *
+     * @return Array of names.
+     */
     public String[] getNameOfExits() {
         String[] names = new String[exits.size()];
 
@@ -82,26 +153,62 @@ public class Room {
         return names;
     }
 
+    /**
+     * Returns an array of all players in this room.
+     *
+     * @return Array of players.
+     */
     public Pc[] getPlayers() {
         return players.toArray(new Pc[players.size()]);
     }
 
+    /**
+     * Returns an array of all NPC's in this room.
+     *
+     * @return Array of NPC's.
+     */
     public NPC[] getNPCs() {
         return npcs.toArray(new NPC[npcs.size()]);
     }
 
+    /**
+     * Returns an array of all items in this room.
+     *
+     * @return Array of items.
+     */
     public Item[] getItems() {
         return items.toArray(new Item[items.size()]);
     }
 
+    /**
+     * Removes the given player from the room.
+     *
+     * @param p The player to remove.
+     *
+     * @return True if player was successfully removed.
+     */
     public boolean removePlayer(Pc p) {
         return players.remove(p);
     }
 
+    /**
+     * Removes the given NPC from the room.
+     *
+     * @param n The NPC to remove.
+     *
+     * @return True if the NPC was successfully removed.
+     */
     public boolean removeNPC(NPC n) {
         return npcs.remove(n);
     }
 
+    /**
+     * Removes the given item from the room.
+     *
+     * @param i The item to remove.
+     *
+     * @return True if the item was successfully removed.
+     */
     public boolean removeItem(Item i) {
         return items.remove(i);
     }
