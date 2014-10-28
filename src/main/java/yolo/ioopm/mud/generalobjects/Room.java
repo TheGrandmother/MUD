@@ -51,6 +51,10 @@ public class Room {
         return NAME;
     }
 
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
     public boolean addExit(Room r, boolean locked) {
         return exits.add(new Door(r, locked));
     }
