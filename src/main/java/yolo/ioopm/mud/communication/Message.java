@@ -14,8 +14,35 @@ package yolo.ioopm.mud.communication;
 public class Message {
 
 	String message;
+	String reciever;
+	String sender;
+	String action;
+	String[] nouns;
+	String time_stamp;
 	
-	public Message(String action, String[] nouns) {
+	
+	/**
+	 * This will be a constructor which creates a message to be sent to the Adapter
+	 * 
+	 * @param reciever
+	 * @param sender
+	 * @param action
+	 * @param nouns
+	 */
+	public Message(String reciever, String sender, String action, String[] nouns) {
 
-    }
+	}
+	
+	
+	/**
+	 * 
+	 * This function takes a string received by the adapter and converts it to a Message object;
+	 * 
+	 * @param transmission
+	 * @return
+	 */
+	public static Message deconstructTransmission(String transmission){
+		return null;
+		
+	}
 }
