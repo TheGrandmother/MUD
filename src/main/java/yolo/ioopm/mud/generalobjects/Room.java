@@ -17,8 +17,12 @@ public class Room {
             return is_locked;
         }
 
-        public void toggleLock() {
-            is_locked = !is_locked;
+        public void setLocked() {
+            is_locked = true;
+        }
+
+        public void setUnlocked() {
+            is_locked = false;
         }
 
         public Room getOtherSide() {
