@@ -38,8 +38,8 @@ public class Room {
     private final String DESCRIPTION;
 
     private HashSet<Door> exits   = new HashSet<Door>();
-//    private HashSet<Pc>   players = new HashSet<Pc>();
-//    private HashSet<NPC>  npcs    = new HashSet<NPC>();
+    private HashSet<Pc>   players = new HashSet<Pc>();
+    private HashSet<NPC>  npcs    = new HashSet<NPC>();
     private HashSet<Item> items   = new HashSet<Item>();
 
     public Room(String name, String description) {
@@ -55,13 +55,13 @@ public class Room {
         return exits.add(new Door(r, locked));
     }
 
-//    public boolean addPlayer(Pc p) {
-//        return players.add(p);
-//    }
-//
-//    public boolean addNPC(NPC n) {
-//        return npcs.add(n);
-//    }
+    public boolean addPlayer(Pc p) {
+        return players.add(p);
+    }
+
+    public boolean addNPC(NPC n) {
+        return npcs.add(n);
+    }
 
     public boolean addItem(Item i) {
         return items.add(i);
@@ -78,25 +78,25 @@ public class Room {
         return names;
     }
 
-//    public Pc[] getPlayers() {
-//        return players.toArray(new Pc[players.size()]);
-//    }
-//
-//    public NPC[] getNPCs() {
-//        return npcs.toArray(new NPC[npcs.size()]);
-//    }
+    public Pc[] getPlayers() {
+        return players.toArray(new Pc[players.size()]);
+    }
+
+    public NPC[] getNPCs() {
+        return npcs.toArray(new NPC[npcs.size()]);
+    }
 
     public Item[] getItems() {
         return items.toArray(new Item[items.size()]);
     }
 
-//    public boolean removePlayer(Pc p) {
-//        return players.remove(p);
-//    }
-//
-//    public boolean removeNPC(NPC n) {
-//        return npcs.remove(n);
-//    }
+    public boolean removePlayer(Pc p) {
+        return players.remove(p);
+    }
+
+    public boolean removeNPC(NPC n) {
+        return npcs.remove(n);
+    }
 
     public boolean removeItem(Item i) {
         return items.remove(i);
