@@ -7,8 +7,10 @@
     <version>0.1-ALPHA</version>
     <packaging>jar</packaging>
 
+    <!-- Name of output JAR-file -->
     <name>MUD</name>
 
+    <!-- Source encoding -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -42,6 +44,8 @@
 
     <!-- Dependencies -->
     <dependencies>
+
+        <!-- SQLite lib -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
@@ -92,8 +96,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+
+                            <!-- Remove any unused .class files from the output JAR-file -->
                             <minimizeJar>true</minimizeJar>
+
                             <filters>
+
+                                <!-- Explicitly include all files except .java files from SQLite lib -->
                                 <filter>
                                     <artifact>org.xerial:*</artifact>
                                     <excludes>
@@ -103,9 +112,12 @@
                                         <include>**/*</include>
                                     </includes>
                                 </filter>
+
                             </filters>
+
                             <relocations>
                             </relocations>
+
                         </configuration>
                     </execution>
                 </executions>
