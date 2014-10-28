@@ -1,10 +1,11 @@
 package yolo.ioopm.mud.generalobjects;
 
 public abstract class Item extends Entity {
-	private String name;
-	private String description;
+	private final String name = null;
+	private final String description = null;
 	private int uses;
 	private Type type;
+	private final int size = 0;
 	boolean dropable;
 	
 	
@@ -12,6 +13,11 @@ public abstract class Item extends Entity {
 	//The implementation needs to specify what class the target need to be.
 	abstract void use(Character user, Entity target);
 	
+	
+	public int getSize() {
+		return size;
+	}
+
 	
 	public String getName() {
 		return name;

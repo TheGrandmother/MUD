@@ -2,7 +2,7 @@ package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
 
-public class Room {
+public class Room extends Entity {
 
     class Door {
         private final Room    otherside;
@@ -64,7 +64,7 @@ public class Room {
 
     private HashSet<Door> exits   = new HashSet<Door>();
     private HashSet<Pc>   players = new HashSet<Pc>();
-    private HashSet<NPC>  npcs    = new HashSet<NPC>();
+    private HashSet<Npc>  npcs    = new HashSet<Npc>();
     private HashSet<Item> items   = new HashSet<Item>();
 
     /**
@@ -122,7 +122,7 @@ public class Room {
      *
      * @return True if NPC was successfully added.
      */
-    public boolean addNPC(NPC n) {
+    public boolean addNPC(Npc n) {
         return npcs.add(n);
     }
 
@@ -167,8 +167,8 @@ public class Room {
      *
      * @return Array of NPC's.
      */
-    public NPC[] getNPCs() {
-        return npcs.toArray(new NPC[npcs.size()]);
+    public Npc[] getNPCs() {
+        return npcs.toArray(new Npc[npcs.size()]);
     }
 
     /**
@@ -198,7 +198,7 @@ public class Room {
      *
      * @return True if the NPC was successfully removed.
      */
-    public boolean removeNPC(NPC n) {
+    public boolean removeNPC(Npc n) {
         return npcs.remove(n);
     }
 
