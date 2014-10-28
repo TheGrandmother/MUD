@@ -94,7 +94,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>false</minimizeJar>
+                            <minimizeJar>true</minimizeJar>
                             <filters>
                                 <filter>
                                     <artifact>org.xerial:*</artifact>
