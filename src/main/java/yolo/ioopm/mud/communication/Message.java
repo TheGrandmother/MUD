@@ -15,7 +15,7 @@ import yolo.ioopm.mud.communication.messages.GeneralMessage;
 
 public abstract class Message {
 
-    public enum Action {
+    protected enum Action {
         FOO, UNKNOWN
     }
 
@@ -53,8 +53,8 @@ public abstract class Message {
         return SENDER;
     }
 
-    public Action getAction() {
-        return ACTION;
+    public String getAction() {
+        return ACTION.toString();
     }
 
     public String[] getNouns() {
