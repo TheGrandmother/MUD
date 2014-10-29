@@ -45,6 +45,31 @@ public abstract class Message {
         this.TIME_STAMP = time_stamp;
     }
 
+    public String getReceiver() {
+        return RECEIVER;
+    }
+
+    public String getSender() {
+        return SENDER;
+    }
+
+    public Action getAction() {
+        return ACTION;
+    }
+
+    public String[] getNouns() {
+        String[] new_array = new String[NOUNS.length];
+
+        // Just to make sure the receiver can't modify the original array as a precaution.
+        System.arraycopy(NOUNS, 0, new_array, 0, NOUNS.length);
+
+        return new_array;
+    }
+
+    public long getTimeStamp() {
+        return TIME_STAMP;
+    }
+
     public String getMessage() {
         StringBuilder sb = new StringBuilder();
 
