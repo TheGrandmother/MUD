@@ -1,6 +1,8 @@
 package yolo.ioopm.mud.communication;
 
 
+import yolo.ioopm.mud.communication.messages.GeneralMessage;
+
 /**
  * 	This is the class which specifies the messages. These messages are sent to the Adapter and from there
  * 	translated and sent to the server.
@@ -11,16 +13,18 @@ package yolo.ioopm.mud.communication;
  *
  */
 
-public class Message {
+public abstract class Message {
 
-	String message;
-	String reciever;
-	String sender;
-	String action;
-	String[] nouns;
-	String time_stamp;
-	
-	
+    public enum Action {
+        FOO, UNKNOWN
+    }
+
+	private final String RECEIVER;
+	private final String SENDER;
+	private final Action ACTION;
+	private final String[] NOUNS;
+	private final long TIME_STAMP;
+
 	/**
 	 * This will be a constructor which creates a message to be sent to the Adapter
 	 * 
@@ -29,10 +33,34 @@ public class Message {
 	 * @param action
 	 * @param nouns
 	 */
-	public Message(String reciever, String sender, String action, String[] nouns) {
-
+	public Message(String reciever, String sender, Action action, String... nouns) {
+        this(reciever, sender, action, System.currentTimeMillis(), nouns);
 	}
-	
+
+    public Message(String reciever, String sender, Action action, long time_stamp, String... nouns) {
+        this.RECEIVER = reciever;
+        this.SENDER = sender;
+        this.ACTION = action;
+        this.NOUNS = nouns;
+        this.TIME_STAMP = time_stamp;
+    }
+
+    public String getMessage() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(RECEIVER).append(';');
+        sb.append(SENDER).append(';');
+        sb.append(ACTION).append(';');
+        sb.append(TIME_STAMP).append(';');
+
+        if(NOUNS != null) {
+            for(String s : NOUNS) {
+                sb.append(s).append(';');
+            }
+        }
+
+        return sb.toString();
+    }
 	
 	/**
 	 * 
@@ -42,7 +70,24 @@ public class Message {
 	 * @return
 	 */
 	public static Message deconstructTransmission(String transmission){
-		return null;
-		
+
+        String[] sa = transmission.split(";");
+
+        // Length of smallest message
+        if(sa.length < 5) {
+            return null;
+        }
+
+        int delta = sa.length - 4;
+        String[] nouns = null;
+
+        if(delta > 0) {
+            nouns = new String[delta];
+            System.arraycopy(sa, 4, nouns, 0, delta);
+        }
+
+        Message msg = new GeneralMessage(sa[0], sa[1], Action.valueOf(sa[2]), Long.valueOf(sa[3]), nouns);
+
+        return msg;
 	}
 }
