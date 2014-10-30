@@ -10,14 +10,16 @@ import java.util.HashSet;
 public class World {
 
 
-	HashSet<Pc>   players;
-	HashSet<Npc>  npcs;
-	HashSet<Room> rooms;
-	HashSet<Item> items;
+	private HashSet<Pc>   players;
+	private HashSet<Npc>  npcs;
+	private HashSet<Room> rooms;
+	private HashSet<Item> items;
 	
 	
-	
-	public World(Room default_room){
+	/**
+	 * Creates an empty world...
+	 */
+	public World(){
 		players = new HashSet<Pc>();
 		npcs = new HashSet<Npc>();
 		rooms = new HashSet<Room>();
@@ -25,18 +27,7 @@ public class World {
 	}
 
 	
-	
-	public boolean assertUnique(String name,HashSet<? extends Entity> set){
-		for (Entity e : set) {
-			if(e.getName() == name){return false;}
-		}
-		return true;
-	}
-	
-	public boolean assertExsistence(Entity entity, HashSet<? extends Entity> set){
-		return set.contains(entity);
-		
-	}
+
 	
 	/**
 	 * 
@@ -63,11 +54,23 @@ public class World {
 		
 	}
 	
+	/**
+	 * Adds an item to the item set.
+	 * @param item
+	 * @throws EntityNotUnique If entry was not unique.
+	 */
 	public void addItem(Item item) throws  EntityNotUnique{
 		if(!assertUnique(item.getName(), items)){throw new EntityNotUnique();}
 		items.add(item);
 	}
 	
+	/**
+	 * Adds a character to the appropriate set. Also ensures that the name is unique regardless of
+	 * which type of character. 
+	 * 
+	 * @param character
+	 * @throws EntityNotUnique
+	 */
 	public void addCharacter(Character character) throws EntityNotUnique{
 		if(!assertUnique(character.getName(), npcs)){throw new EntityNotUnique();}
 		if(!assertUnique(character.getName(), players)){throw new EntityNotUnique();}
@@ -81,6 +84,12 @@ public class World {
 		
 	}
 	
+	/**
+	 * Adds a room to the world
+	 * 
+	 * @param room
+	 * @throws EntityNotUnique If the room is not unique
+	 */
 	public void addRoom(Room room) throws EntityNotUnique{
 		if(!assertUnique(room.getName(), rooms)){throw new EntityNotUnique();}
 		
@@ -88,13 +97,72 @@ public class World {
 		
 	}
 	
-	class EntityNotUnique extends Exception{
+	public Room findRoom(String name) throws EntityNotPresent{
+		for (Room e : rooms) {
+			if(e.getName() == name){return e;}
+		}
+		throw new EntityNotPresent();
+	}
+	
+	public Item findItem(String name) throws EntityNotPresent{
+		for (Item e : items) {
+			if(e.getName() == name){return e;}
+		}
+		throw new EntityNotPresent();
+	}
+	
+	public Pc findPc(String name) throws EntityNotPresent{
+		for (Pc e : players) {
+			if(e.getName() == name){return e;}
+		}
+		throw new EntityNotPresent();
+	}
+	
+	public Npc findNpc(String name) throws EntityNotPresent{
+		for (Npc e : npcs) {
+			if(e.getName() == name){return e;}
+		}
+		throw new EntityNotPresent();
+	}
+	
+	
+	/**
+	 * Asserts the uniqueness of the name in the given set.
+	 * This assert method only compares the name.
+	 * 
+	 * @param name
+	 * @param set
+	 * @return True if name is unique.
+	 */
+	public boolean assertUnique(String name,HashSet<? extends Entity> set){
+		for (Entity e : set) {
+			if(e.getName() == name){return false;}
+		}
+		return true;
+	}
+	/**
+	 * 
+	 * @param entity
+	 * @param set
+	 * @return Returns true if name exists.
+	 */
+	public boolean assertExsistence(String name, HashSet<? extends Entity> set){
+		for (Entity e : set) {
+			if(e.getName() == name){return true;}
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("serial")
+	public class EntityNotUnique extends Exception{
 		public EntityNotUnique(){
 			super();
 		}
 	}
 	
-	class EntityNotPresent extends Exception{
+	@SuppressWarnings("serial")
+	
+	public class EntityNotPresent extends Exception{
 		public EntityNotPresent(){
 			super();
 		}
