@@ -3,6 +3,7 @@ package yolo.ioopm.mud.communication.server.threads;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,11 +23,33 @@ public class ServerMessageListener extends Thread {
 		while(true) {
 
 			for(Map.Entry<String, ClientConnection> entry : connections.entrySet()) {
+				ClientConnection cc = entry.getValue();
 
+				String data = null;
+
+				try {
+					if(cc.hasUnreadData()) {
+						data = cc.readLine();
+					}
+				}
+				catch(IOException e) {
+					//TODO unhandled exception
+					e.printStackTrace();
+				}
+
+				if(data != null) {
+					Message msg = Message.deconstructTransmission(data);
+					inbox.add(msg);
+				}
+			}
+
+			// Notify all waiting threads that there are new messages.
+			if(inbox.size() > 0) {
+				inbox.notifyAll();
 			}
 
 			try {
-				Thread.sleep(200);
+				Thread.sleep(500);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception
