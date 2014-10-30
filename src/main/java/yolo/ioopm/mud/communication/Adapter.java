@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Adapter {
 
-	protected final ConcurrentLinkedQueue<Message> inbox  = new ConcurrentLinkedQueue<>();
-	protected final ConcurrentLinkedQueue<Message> outbox = new ConcurrentLinkedQueue<>();
+	protected final Mailbox<Message> inbox  = new Mailbox<>();
+	protected final Mailbox<Message> outbox = new Mailbox<>();
 
 	/**
 	 * Tries to send a message trough the adapter
@@ -23,23 +23,6 @@ public abstract class Adapter {
 				outbox.add(message);
 			}
 		}).start();
-	}
-
-	/**
-	 * Pops the latest messages from the inbox-queue and returns them in an ArrayList.
-	 *
-	 * @return Returns latest messages.
-	 * @throws CommunicationError
-	 */
-	public ArrayList<Message> popAllFromInbox() throws CommunicationError {
-		ArrayList<Message> latest = new ArrayList<>();
-
-		Message msg;
-		while((msg = inbox.poll()) != null) {
-			latest.add(msg);
-		}
-
-		return latest;
 	}
 
 	@SuppressWarnings("serial")
