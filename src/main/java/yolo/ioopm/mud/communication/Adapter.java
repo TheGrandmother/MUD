@@ -31,7 +31,7 @@ public abstract class Adapter {
 	 * @return Returns latest messages.
 	 * @throws CommunicationError
 	 */
-	public ArrayList<Message> popAllIncoming() throws CommunicationError {
+	public ArrayList<Message> popAllFromInbox() throws CommunicationError {
 		ArrayList<Message> latest = new ArrayList<>();
 
 		Message msg;
