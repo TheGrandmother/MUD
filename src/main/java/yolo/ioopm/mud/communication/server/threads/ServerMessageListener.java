@@ -8,16 +8,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerMessageListener extends Thread {
 
-    private final Set<ClientConnection> connections;
-    private final ConcurrentLinkedQueue<Message> inbox;
+	private final Set<ClientConnection>          connections;
+	private final ConcurrentLinkedQueue<Message> inbox;
 
-    public ServerMessageListener(Set<ClientConnection> connections, ConcurrentLinkedQueue<Message> inbox) {
-        this.connections = connections;
-        this.inbox = inbox;
-    }
+	public ServerMessageListener(Set<ClientConnection> connections, ConcurrentLinkedQueue<Message> inbox) {
+		this.connections = connections;
+		this.inbox = inbox;
+	}
 
-    @Override
-    public void run() {
-        //TODO sleep the thread after every iteration over the box
-    }
+	@Override
+	public void run() {
+		//TODO sleep the thread after every iteration over the box
+	}
 }

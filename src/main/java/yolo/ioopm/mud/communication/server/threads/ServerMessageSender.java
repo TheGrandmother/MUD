@@ -8,16 +8,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerMessageSender extends Thread {
 
-    private final Set<ClientConnection> connections;
-    private final ConcurrentLinkedQueue<Message> outbox;
+	private final Set<ClientConnection>          connections;
+	private final ConcurrentLinkedQueue<Message> outbox;
 
-    public ServerMessageSender(Set<ClientConnection> connections, ConcurrentLinkedQueue<Message> outbox) {
-        this.connections = connections;
-        this.outbox = outbox;
-    }
+	public ServerMessageSender(Set<ClientConnection> connections, ConcurrentLinkedQueue<Message> outbox) {
+		this.connections = connections;
+		this.outbox = outbox;
+	}
 
-    @Override
-    public void run() {
-        //TODO sleep the thread after every iteration over the box
-    }
+	@Override
+	public void run() {
+		//TODO sleep the thread after every iteration over the box
+	}
 }
