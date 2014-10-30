@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.communication.server.threads;
 
+import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
@@ -11,9 +12,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ServerMessageListener extends Thread {
 
 	private final ConcurrentHashMap<String, ClientConnection> connections;
-	private final ConcurrentLinkedQueue<Message>              inbox;
+	private final Mailbox<Message>                            inbox;
 
-	public ServerMessageListener(ConcurrentHashMap<String, ClientConnection> connections, ConcurrentLinkedQueue<Message> inbox) {
+	public ServerMessageListener(ConcurrentHashMap<String, ClientConnection> connections, Mailbox<Message> inbox) {
 		this.connections = connections;
 		this.inbox = inbox;
 	}
@@ -39,7 +40,13 @@ public class ServerMessageListener extends Thread {
 
 				if(data != null) {
 					Message msg = Message.deconstructTransmission(data);
-					inbox.add(msg);
+
+					if(msg != null) {
+						inbox.add(msg);
+					}
+					else {
+						System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+					}
 				}
 			}
 
