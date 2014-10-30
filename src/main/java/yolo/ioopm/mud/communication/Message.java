@@ -21,7 +21,7 @@ public abstract class Message {
 	private final String   RECEIVER;
 	private final String   SENDER;
 	private final Action   ACTION;
-	private final String[] NOUNS;
+	private final String[] ARGUMENTS;
 	private final long     TIME_STAMP;
 
 	/**
@@ -40,7 +40,7 @@ public abstract class Message {
 		this.RECEIVER = reciever;
 		this.SENDER = sender;
 		this.ACTION = action;
-		this.NOUNS = nouns;
+		this.ARGUMENTS = nouns;
 		this.TIME_STAMP = time_stamp;
 	}
 
@@ -56,11 +56,11 @@ public abstract class Message {
 		return ACTION.toString();
 	}
 
-	public String[] getNouns() {
-		String[] new_array = new String[NOUNS.length];
+	public String[] getArguments() {
+		String[] new_array = new String[ARGUMENTS.length];
 
 		// Just to make sure the receiver can't modify the original array as a precaution.
-		System.arraycopy(NOUNS, 0, new_array, 0, NOUNS.length);
+		System.arraycopy(ARGUMENTS, 0, new_array, 0, ARGUMENTS.length);
 
 		return new_array;
 	}
@@ -77,8 +77,8 @@ public abstract class Message {
 		sb.append(ACTION).append(';');
 		sb.append(TIME_STAMP).append(';');
 
-		if(NOUNS != null) {
-			for(String s : NOUNS) {
+		if(ARGUMENTS != null) {
+			for(String s : ARGUMENTS) {
 				sb.append(s).append(';');
 			}
 		}
