@@ -94,31 +94,24 @@ public class Room extends Entity {
 		return names;
 	}
 
-	/**
-	 * Returns an array of all players in this room.
-	 *
-	 * @return Array of players.
-	 */
-	public Pc[] getPlayers() {
-		return players.toArray(new Pc[players.size()]);
+	public HashSet<Door> getExits() {
+		return exits;
 	}
-
-	/**
-	 * Returns an array of all NPC's in this room.
-	 *
-	 * @return Array of NPC's.
-	 */
-	public Npc[] getNPCs() {
-		return npcs.toArray(new Npc[npcs.size()]);
+	
+	public HashSet<Item> getItems() {
+		return items;
 	}
-
-	/**
-	 * Returns an array of all items in this room.
-	 *
-	 * @return Array of items.
-	 */
-	public Item[] getItems() {
-		return items.toArray(new Item[items.size()]);
+	
+	public HashSet<Npc> getNpcs() {
+		return npcs;
+	}
+	
+	public HashSet<Pc> getPlayers() {
+		return players;
+	}
+	
+	public String getDESCRIPTION() {
+		return DESCRIPTION;
 	}
 
 	/**
