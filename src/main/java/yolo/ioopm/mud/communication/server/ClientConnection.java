@@ -12,7 +12,7 @@ public class ClientConnection {
 	private PrintWriter    print_writer    = null;
 	private BufferedReader buffered_reader = null;
 
-	public ClientConnection(Socket socket) {
+	public ClientConnection(Socket socket) throws IOException {
 		this.socket = socket;
 
 		try {
@@ -20,7 +20,8 @@ public class ClientConnection {
 			this.buffered_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		}
 		catch(IOException e) {
-			e.printStackTrace();
+			System.out.println("Failed to create PrintWriter or BufferedReader for ip-address: " + socket.getLocalAddress().toString());
+			throw e;
 		}
 	}
 

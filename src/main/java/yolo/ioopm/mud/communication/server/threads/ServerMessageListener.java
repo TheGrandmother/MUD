@@ -4,14 +4,15 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerMessageListener extends Thread {
 
-	private final Set<ClientConnection>          connections;
-	private final ConcurrentLinkedQueue<Message> inbox;
+	private final ConcurrentHashMap<String, ClientConnection> connections;
+	private final ConcurrentLinkedQueue<Message>      inbox;
 
-	public ServerMessageListener(Set<ClientConnection> connections, ConcurrentLinkedQueue<Message> inbox) {
+	public ServerMessageListener(ConcurrentHashMap<String, ClientConnection> connections, ConcurrentLinkedQueue<Message> inbox) {
 		this.connections = connections;
 		this.inbox = inbox;
 	}

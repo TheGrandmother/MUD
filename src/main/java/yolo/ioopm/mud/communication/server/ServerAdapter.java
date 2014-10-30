@@ -8,17 +8,15 @@ import yolo.ioopm.mud.communication.server.threads.ServerMessageSender;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerAdapter extends Adapter {
 
-	private final Set<ClientConnection> connections = Collections.newSetFromMap(new ConcurrentHashMap<ClientConnection, Boolean>());
+	private final ConcurrentHashMap<String, ClientConnection> connections = new ConcurrentHashMap<>();
 
 	public ServerAdapter(int port) throws IOException {
 
-		// Async thread - Listens for new connections and adds them to the connections-set.
+		// Async thread - Listens for new connections and adds them to connections.
 		new ServerConnectionListener(new ServerSocket(port), connections).start();
 
 		// Async thread - Listens for new messages from the clients.
