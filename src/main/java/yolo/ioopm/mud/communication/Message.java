@@ -1,7 +1,7 @@
 package yolo.ioopm.mud.communication;
 
 
-import yolo.ioopm.mud.communication.messages.GeneralMessage;
+import yolo.ioopm.mud.communication.messages.IncommingMessage;
 
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
@@ -14,13 +14,9 @@ import yolo.ioopm.mud.communication.messages.GeneralMessage;
 
 public abstract class Message {
 
-	protected enum Action {
-		FOO, UNKNOWN
-	}
-
 	private final String   RECEIVER;
 	private final String   SENDER;
-	private final Action   ACTION;
+	private final String   ACTION;
 	private final String[] ARGUMENTS;
 	private final long     TIME_STAMP;
 
@@ -32,11 +28,11 @@ public abstract class Message {
 	 * @param action
 	 * @param nouns
 	 */
-	public Message(String reciever, String sender, Action action, String... nouns) {
+	public Message(String reciever, String sender, String action, String... nouns) {
 		this(reciever, sender, action, System.currentTimeMillis(), nouns);
 	}
 
-	public Message(String reciever, String sender, Action action, long time_stamp, String... nouns) {
+	public Message(String reciever, String sender, String action, long time_stamp, String... nouns) {
 		this.RECEIVER = reciever;
 		this.SENDER = sender;
 		this.ACTION = action;
@@ -109,7 +105,7 @@ public abstract class Message {
 			System.arraycopy(sa, 4, nouns, 0, delta);
 		}
 
-		Message msg = new GeneralMessage(sa[0], sa[1], Action.valueOf(sa[2]), Long.valueOf(sa[3]), nouns);
+		Message msg = new IncommingMessage(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns);
 
 		return msg;
 	}
