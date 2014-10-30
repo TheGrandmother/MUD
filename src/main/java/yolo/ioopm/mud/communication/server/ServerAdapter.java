@@ -1,7 +1,6 @@
 package yolo.ioopm.mud.communication.server;
 
 import yolo.ioopm.mud.communication.Adapter;
-import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.threads.ServerConnectionListener;
 import yolo.ioopm.mud.communication.server.threads.ServerMessageListener;
 import yolo.ioopm.mud.communication.server.threads.ServerMessageSender;
@@ -24,22 +23,5 @@ public class ServerAdapter extends Adapter {
 
 		// Async thread - Sends the messages that are currently in the outbox.
 		new ServerMessageSender(connections, outbox).start();
-	}
-
-	@Override
-	public void sendMessage(final Message message) throws CommunicationError {
-
-		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				outbox.add(message);
-			}
-		}).start();
-	}
-
-	@Override
-	public Message pollForMessage() throws CommunicationError {
-		return null;
 	}
 }
