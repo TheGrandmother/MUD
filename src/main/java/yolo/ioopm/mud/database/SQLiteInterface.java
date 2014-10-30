@@ -25,37 +25,37 @@ public class SQLiteInterface {
 			Statement stmt = connection.createStatement();
 
 			stmt.execute(
-					"CREATE TABLE IF NOT EXISTS worlds (" +
-							"room_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-							"room_name VARCHAR," +
-							"north_room_id INTEGER," +
-							"east_room_id INTEGER," +
-							"south_room_id INTEGER," +
-							"west_room_id INTEGER," +
-							"north_door_unlocked BOOLEAN," +
-							"east_door_unlocked BOOLEAN," +
-							"south_door_unlocked BOOLEAN," +
-							"west_door_unlocked BOOLEAN" +
-							")"
+				"CREATE TABLE IF NOT EXISTS worlds (" +
+					"room_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					"room_name VARCHAR," +
+					"north_room_id INTEGER," +
+					"east_room_id INTEGER," +
+					"south_room_id INTEGER," +
+					"west_room_id INTEGER," +
+					"north_door_unlocked BOOLEAN," +
+					"east_door_unlocked BOOLEAN," +
+					"south_door_unlocked BOOLEAN," +
+					"west_door_unlocked BOOLEAN" +
+					")"
 			);
 
 			stmt.execute(
-					"CREATE TABLE IF NOT EXISTS courses (" +
-							"course_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-							"course_name VARCHAR," +
-							"course_book INTEGER," +
-							"hp INTEGER" +
-							")"
+				"CREATE TABLE IF NOT EXISTS courses (" +
+					"course_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					"course_name VARCHAR," +
+					"course_book INTEGER," +
+					"hp INTEGER" +
+					")"
 			);
 
 			stmt.execute(
-					"CREATE TABLE IF NOT EXISTS books (" +
-							"book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-							"book_name VARCHAR," +
-							"author VARCHAR," +
-							"print_year INTEGER," +
-							"volume INTEGER" +
-							")"
+				"CREATE TABLE IF NOT EXISTS books (" +
+					"book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+					"book_name VARCHAR," +
+					"author VARCHAR," +
+					"print_year INTEGER," +
+					"volume INTEGER" +
+					")"
 			);
 
 			stmt.close();
