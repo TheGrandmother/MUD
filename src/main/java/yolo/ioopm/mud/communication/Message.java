@@ -92,8 +92,8 @@ public abstract class Message {
 
 		String[] sa = transmission.split(";");
 
-		// Length of smallest message
-		if(sa.length < 5) {
+		// Length of smallest message, currently the heartbeat
+		if(sa.length < 4) {
 			return null;
 		}
 
@@ -102,7 +102,13 @@ public abstract class Message {
 
 		if(delta > 0) {
 			nouns = new String[delta];
-			System.arraycopy(sa, 4, nouns, 0, delta);
+			try {
+				System.arraycopy(sa, 4, nouns, 0, delta);
+			}
+			catch(ArrayIndexOutOfBoundsException e) {
+				System.out.println("System.arraycopy failed! ArrayIndexOutOfBounds! delta:" + delta);
+				nouns = null;
+			}
 		}
 
 		Message msg = new IncommingMessage(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns);

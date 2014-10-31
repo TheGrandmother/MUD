@@ -5,23 +5,31 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerMessageListener extends Thread {
 
-	private final ConcurrentHashMap<String, ClientConnection> connections;
+	private final Map<String, ClientConnection> connections;
 	private final Mailbox<Message>                            inbox;
 
-	public ServerMessageListener(ConcurrentHashMap<String, ClientConnection> connections, Mailbox<Message> inbox) {
+	// This log keeps track of the latest timestamps
+	private final Map<String, Long> timestamps;
+
+	public ServerMessageListener(Map<String, ClientConnection> connections, Mailbox<Message> inbox, Map<String, Long> timestamps) {
 		this.connections = connections;
 		this.inbox = inbox;
+		this.timestamps = timestamps;
 	}
 
 	@Override
 	public void run() {
 		while(true) {
+
+			Set<String> dead_clients = new HashSet<>();
 
 			for(Map.Entry<String, ClientConnection> entry : connections.entrySet()) {
 				ClientConnection cc = entry.getValue();
@@ -42,12 +50,34 @@ public class ServerMessageListener extends Thread {
 					Message msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
-						inbox.add(msg);
+
+						// Add the message to the inbox if it's not a heartbeat.
+						if(!msg.getAction().equals("HeartBeat")) {
+							inbox.add(msg);
+						}
+
+						timestamps.put(msg.getSender(), msg.getTimeStamp());
 					}
 					else {
 						System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 					}
 				}
+				else {
+					//The client has not sent any message, check if they are still alive
+					long latest_time_stamp = timestamps.get(entry.getKey());
+
+					long delta = System.currentTimeMillis() - latest_time_stamp;
+
+					if(delta > 30 * 1000) {
+						dead_clients.add(entry.getKey());
+					}
+				}
+			}
+
+			// Remove any dead clients
+			for(String client : dead_clients) {
+				connections.remove(client);
+				System.out.println(client + " timed out!");
 			}
 
 			// Notify all waiting threads that there are new messages.

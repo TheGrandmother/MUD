@@ -5,17 +5,20 @@ import yolo.ioopm.mud.communication.server.ClientConnection;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerConnectionListener extends Thread {
 
-	private final ServerSocket                                server_socket;
-	private final ConcurrentHashMap<String, ClientConnection> connections;
+	private final ServerSocket                  server_socket;
+	private final Map<String, ClientConnection> connections;
+	private final Map<String, Long>             timestamps;
 
-	public ServerConnectionListener(ServerSocket socket, ConcurrentHashMap<String, ClientConnection> connections) {
+	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps) {
 		this.server_socket = socket;
 		this.connections = connections;
+		this.timestamps = timestamps;
 	}
 
 	@Override
@@ -53,6 +56,7 @@ public class ServerConnectionListener extends Thread {
 
 							if(username != null) {
 								connections.put(username, connection);
+								timestamps.put(username, System.currentTimeMillis());
 								System.out.println("New user chose name: \"" + username + "\"");
 							}
 							else {

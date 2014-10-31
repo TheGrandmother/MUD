@@ -8,6 +8,10 @@ public abstract class Adapter {
 	protected final Mailbox<Message> inbox  = new Mailbox<>();
 	protected final Mailbox<Message> outbox = new Mailbox<>();
 
+	public ArrayList<Message> popAllIncoming() {
+		return inbox.popAll();
+	}
+
 	/**
 	 * Tries to send a message trough the adapter
 	 *
