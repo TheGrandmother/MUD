@@ -38,10 +38,6 @@ public class ClientConnection {
 		return this.buffered_reader.readLine();
 	}
 
-	public synchronized boolean isAlive() {
-		return this.socket.isConnected() && !this.socket.isClosed();
-	}
-
 	public synchronized void killSocket() throws IOException {
 		this.socket.close();
 	}

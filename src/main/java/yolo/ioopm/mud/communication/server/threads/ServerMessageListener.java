@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerMessageListener extends Thread {
 
 	private final Map<String, ClientConnection> connections;
-	private final Mailbox<Message>                            inbox;
+	private final Mailbox<Message>              inbox;
 
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
@@ -56,7 +56,7 @@ public class ServerMessageListener extends Thread {
 							inbox.add(msg);
 						}
 
-						timestamps.put(msg.getSender(), msg.getTimeStamp());
+						timestamps.put(entry.getKey(), msg.getTimeStamp());
 					}
 					else {
 						System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");

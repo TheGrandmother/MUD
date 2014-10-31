@@ -40,13 +40,17 @@ public class ServerConnectionListener extends Thread {
 							connection.write("Please enter your username:");
 
 							String username = null;
-							while(connection.isAlive()) {
+							while(true) {
 
-								//TODO add timeout on sockets
+								//TODO add heartbeat timeout for this thread
 								String temp = connection.readLine(); // This line will block this thread until it can read something
 
 								if(connections.containsKey(temp)) {
 									connection.write("That username is already taken! Please provide a new one:");
+								}
+								else if(temp.contains("HeartBeat")) {
+									// If the packet contains the string "HeartBeat" ignore it and listen again.
+									continue;
 								}
 								else {
 									username = temp;
