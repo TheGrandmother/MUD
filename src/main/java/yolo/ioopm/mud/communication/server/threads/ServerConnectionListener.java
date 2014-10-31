@@ -41,11 +41,13 @@ public class ServerConnectionListener extends Thread {
 
 							String username = null;
 							while(true) {
-
-								//TODO add heartbeat timeout for this thread
 								String temp = connection.readLine(); // This line will block this thread until it can read something
 
-								if(connections.containsKey(temp)) {
+								if(temp == null) {
+									System.out.println("Received null message in username phase! Did the connection close?");
+									return;
+								}
+								else if(connections.containsKey(temp)) {
 									connection.write("That username is already taken! Please provide a new one:");
 								}
 								else if(temp.contains("HeartBeat")) {
