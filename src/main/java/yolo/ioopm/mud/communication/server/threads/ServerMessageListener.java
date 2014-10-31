@@ -5,11 +5,9 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerMessageListener extends Thread {
 
@@ -68,7 +66,9 @@ public class ServerMessageListener extends Thread {
 
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 
-					if(delta > 30 * 1000) {
+					// If there has been no new messages for 10 seconds, add them to dead_clients for removal
+					// heartbeats should be sent every 5 seconds.
+					if(delta > 10000) {
 						dead_clients.add(entry.getKey());
 					}
 				}

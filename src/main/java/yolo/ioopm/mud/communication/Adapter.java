@@ -1,7 +1,6 @@
 package yolo.ioopm.mud.communication;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Adapter {
 
