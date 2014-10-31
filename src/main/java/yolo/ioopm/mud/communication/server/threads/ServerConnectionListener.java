@@ -60,14 +60,9 @@ public class ServerConnectionListener extends Thread {
 								}
 							}
 
-							if(username != null) {
-								connections.put(username, connection);
-								timestamps.put(username, System.currentTimeMillis());
-								System.out.println("New user chose name: \"" + username + "\"");
-							}
-							else {
-								System.out.println("Error! New user gave null username! Did the connection close?");
-							}
+							connections.put(username, connection);
+							timestamps.put(username, System.currentTimeMillis());
+							System.out.println("New user chose name: \"" + username + "\"");
 						}
 						catch(IOException e) {
 							e.printStackTrace();
