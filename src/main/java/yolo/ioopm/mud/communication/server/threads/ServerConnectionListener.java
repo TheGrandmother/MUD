@@ -44,7 +44,7 @@ public class ServerConnectionListener extends Thread {
 								String temp = connection.readLine(); // This line will block this thread until it can read something
 
 								if(temp == null) {
-									System.out.println("Received null message in username phase! Did the connection close?");
+									System.out.println("Received null message in username phase! Did the connection close? Terminating thread!");
 									return;
 								}
 								else if(connections.containsKey(temp)) {
