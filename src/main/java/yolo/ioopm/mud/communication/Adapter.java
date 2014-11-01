@@ -15,9 +15,8 @@ public abstract class Adapter {
 	 * Tries to send a message trough the adapter
 	 *
 	 * @param message
-	 * @throws CommunicationError
 	 */
-	public void sendMessage(final Message message) throws CommunicationError {
+	public void sendMessage(final Message message) {
 
 		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
 		new Thread(new Runnable() {

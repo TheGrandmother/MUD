@@ -94,18 +94,6 @@
                             <minimizeJar>true</minimizeJar>
 
                             <filters>
-
-                                <!-- Explicitly include all files except .java files from SQLite lib -->
-                                <filter>
-                                    <artifact>org.xerial:*</artifact>
-                                    <excludes>
-                                        <exclude>**/*.java</exclude>
-                                    </excludes>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
-                                </filter>
-
                             </filters>
 
                             <relocations>
