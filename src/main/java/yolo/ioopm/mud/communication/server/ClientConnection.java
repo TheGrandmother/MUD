@@ -27,7 +27,6 @@ public class ClientConnection {
 
 	public synchronized void write(String message) {
 		this.print_writer.println(message);
-		this.print_writer.flush();
 	}
 
 	public synchronized boolean hasUnreadData() throws IOException {

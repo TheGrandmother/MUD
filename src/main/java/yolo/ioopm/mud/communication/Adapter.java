@@ -7,8 +7,23 @@ public abstract class Adapter {
 	protected final Mailbox<Message> inbox  = new Mailbox<>();
 	protected final Mailbox<Message> outbox = new Mailbox<>();
 
-	public ArrayList<Message> popAllIncoming() {
-		return inbox.popAll();
+	/**
+	 * This method calls wait() on the inbox.
+	 * Essentially blocks the thread until a notify() has been called on the inbox.
+	 *
+	 * @throws InterruptedException
+	 */
+	public void waitForNewMessages() throws InterruptedException {
+		inbox.wait();
+	}
+
+	/**
+	 * Empties the inbox and returns the messages in an arraylist.
+	 *
+	 * @return - ArrayList with all messages in the inbox.
+	 */
+	public ArrayList<Message> pollInbox() {
+		return inbox.pollAll();
 	}
 
 	/**
@@ -22,20 +37,11 @@ public abstract class Adapter {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				outbox.add(message);
+				outbox.offer(message);
+
+				// Notify the sender that there are new messages waiting.
+				outbox.notifyAll();
 			}
 		}).start();
-	}
-
-	@SuppressWarnings("serial")
-	public class CommunicationError extends Exception {
-
-		public CommunicationError() {
-			super();
-		}
-
-		public CommunicationError(String message) {
-			super(message);
-		}
 	}
 }

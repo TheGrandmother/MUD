@@ -5,9 +5,7 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ServerMessageSender extends Thread {
 
@@ -33,7 +31,9 @@ public class ServerMessageSender extends Thread {
 				e.printStackTrace();
 			}
 
-			ArrayList<Message> messages = outbox.popAll();
+			System.out.println("ServerMessageSender has been notified! Attempting to send messages!");
+
+			ArrayList<Message> messages = outbox.pollAll();
 			if(!messages.isEmpty()) {
 				for(Message msg : messages) {
 					ClientConnection cc = connections.get(msg.getReceiver());

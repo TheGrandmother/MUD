@@ -27,6 +27,8 @@ public class ServerMessageListener extends Thread {
 	public void run() {
 		while(true) {
 
+			System.out.println("ServerMessageSender has woken up!");
+
 			Set<String> dead_clients = new HashSet<>();
 
 			for(Map.Entry<String, ClientConnection> entry : connections.entrySet()) {
@@ -49,15 +51,17 @@ public class ServerMessageListener extends Thread {
 
 					if(msg != null) {
 
-						// Add the message to the inbox if it's not a heartbeat.
-						if(!msg.getAction().equals("HeartBeat")) {
+						if(msg.getAction().equals("HeartBeat")) {
+							// Do nothing for now
+						}
+						else {
 							inbox.add(msg);
 						}
 
 						timestamps.put(entry.getKey(), msg.getTimeStamp());
 					}
 					else {
-						System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+						System.err.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 					}
 				}
 				else {
@@ -75,17 +79,26 @@ public class ServerMessageListener extends Thread {
 			}
 
 			// Remove any dead clients
-			for(String client : dead_clients) {
-				connections.remove(client);
-				System.out.println(client + " timed out!");
+			if(dead_clients.size() != 0) {
+				System.out.format("ServerMessageListener will be removing %d dead clients!%n", dead_clients.size());
+
+				for(String client : dead_clients) {
+					connections.remove(client);
+					System.out.println(client + " timed out!");
+				}
 			}
 
 			// Notify all waiting threads that there are new messages.
 			if(inbox.size() > 0) {
+				System.out.println("ServerMessageListener is notifying all waiting threads that there are new messages!");
 				inbox.notifyAll();
+			}
+			else {
+				System.out.println("ServerMessageListener will not be notifying waiting threads. There are no new messages!");
 			}
 
 			try {
+				System.out.println("ServerMessageListener goes to sleep for half a second...");
 				Thread.sleep(500);
 			}
 			catch(InterruptedException e) {

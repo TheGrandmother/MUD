@@ -5,7 +5,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Mailbox<E> extends ConcurrentLinkedQueue {
 
-	public ArrayList<E> popAll() {
+	/**
+	 * Calls poll on the underlaying ConcurrentLinkedQueue object until it's empty
+	 *
+	 * @return All objects in it, never null, might be empty
+	 */
+	public ArrayList<E> pollAll() {
 		ArrayList<E> messages = new ArrayList<>();
 
 		E msg;
