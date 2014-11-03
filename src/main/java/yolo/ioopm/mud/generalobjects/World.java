@@ -15,6 +15,7 @@ public class World {
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
 	
+	boolean admin_exists;
 	
 	/**
 	 * Creates an empty world...
@@ -24,6 +25,7 @@ public class World {
 		npcs = new HashSet<Npc>();
 		rooms = new HashSet<Room>();
 		items = new HashSet<Item>();
+		admin_exists = false;
 	}
 
 	
