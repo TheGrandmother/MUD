@@ -1,4 +1,4 @@
-package yolo.ioopm.mud.communication.client.threads;
+package yolo.ioopm.mud.communication.client.runnables;
 
 import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;

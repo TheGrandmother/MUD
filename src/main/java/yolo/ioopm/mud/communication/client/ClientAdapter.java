@@ -1,10 +1,9 @@
 package yolo.ioopm.mud.communication.client;
 
 import yolo.ioopm.mud.communication.Adapter;
-import yolo.ioopm.mud.communication.Message;
-import yolo.ioopm.mud.communication.client.threads.ClientHeartbeatSender;
-import yolo.ioopm.mud.communication.client.threads.ClientMessageListener;
-import yolo.ioopm.mud.communication.client.threads.ClientMessageSender;
+import yolo.ioopm.mud.communication.client.runnables.ClientHeartbeatSender;
+import yolo.ioopm.mud.communication.client.runnables.ClientMessageListener;
+import yolo.ioopm.mud.communication.client.runnables.ClientMessageSender;
 
 import java.io.BufferedReader;
 import java.io.IOException;

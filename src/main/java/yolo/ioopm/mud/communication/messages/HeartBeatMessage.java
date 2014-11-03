@@ -8,10 +8,10 @@ public class HeartBeatMessage extends Message {
 	//This is a dummy message that is never added to the servers inbox, but it is logged in ServerMessageListener
 
 	public HeartBeatMessage(String sender, long time_stamp) {
-		super("Server", sender, "HeartBeat", time_stamp, null);
+		super("server", sender, "HeartBeat", time_stamp, null);
 	}
 
 	public HeartBeatMessage(String sender) {
-		super("Server", sender, "HeartBeat", System.currentTimeMillis(), null);
+		super("server", sender, "HeartBeat", System.currentTimeMillis(), null);
 	}
 }

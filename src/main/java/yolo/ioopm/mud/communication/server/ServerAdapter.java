@@ -1,12 +1,14 @@
 package yolo.ioopm.mud.communication.server;
 
 import yolo.ioopm.mud.communication.Adapter;
-import yolo.ioopm.mud.communication.server.threads.ServerConnectionListener;
-import yolo.ioopm.mud.communication.server.threads.ServerMessageListener;
-import yolo.ioopm.mud.communication.server.threads.ServerMessageSender;
+import yolo.ioopm.mud.communication.server.runnables.ServerConnectionListener;
+import yolo.ioopm.mud.communication.server.runnables.ServerConnectionVerifier;
+import yolo.ioopm.mud.communication.server.runnables.ServerMessageListener;
+import yolo.ioopm.mud.communication.server.runnables.ServerMessageSender;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerAdapter extends Adapter {
@@ -17,12 +19,12 @@ public class ServerAdapter extends Adapter {
 	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
 
 		// Async thread - Listens for new connections and adds them to connections.
-		new ServerConnectionListener(new ServerSocket(port), connections, timestamps).start();
+		new Thread(new ServerConnectionListener(new ServerSocket(port), connections)).start();
 
 		// Async thread - Listens for new messages from the clients.
-		new ServerMessageListener(connections, inbox, timestamps).start();
+		new Thread(new ServerMessageListener(connections, inbox, timestamps)).start();
 
 		// Async thread - Sends the messages that are currently in the outbox.
-		new ServerMessageSender(connections, outbox).start();
+		new Thread(new ServerMessageSender(connections, outbox)).start();
 	}
 }

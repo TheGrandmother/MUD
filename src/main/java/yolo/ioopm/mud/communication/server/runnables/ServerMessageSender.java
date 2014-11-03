@@ -1,4 +1,4 @@
-package yolo.ioopm.mud.communication.server.threads;
+package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;
@@ -7,7 +7,7 @@ import yolo.ioopm.mud.communication.server.ClientConnection;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ServerMessageSender extends Thread {
+public class ServerMessageSender implements Runnable {
 
 	private final ConcurrentHashMap<String, ClientConnection> connections;
 	private final Mailbox<Message>                            outbox;
