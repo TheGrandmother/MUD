@@ -1,9 +1,9 @@
 package yolo.ioopm.mud.game;
 
-import java.io.ObjectInputStream.GetField;
-
-import yolo.ioopm.mud.communication.Message;
-import yolo.ioopm.mud.communication.messages.*;
+import yolo.ioopm.mud.communication.messages.ErrorMessage;
+import yolo.ioopm.mud.communication.messages.IncomingMessage;
+import yolo.ioopm.mud.communication.messages.OutgoingMessage;
+import yolo.ioopm.mud.communication.messages.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
@@ -15,7 +15,7 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
  */
 public class Interpreter {
 	
-	public static OutgoingMessage executeAction(IncommingMessage message,World world){
+	public static OutgoingMessage executeAction(IncomingMessage message,World world){
 		
 		String actor = message.getSender();
 		String action = message.getAction();

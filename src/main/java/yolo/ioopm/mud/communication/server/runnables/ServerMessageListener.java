@@ -1,23 +1,24 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
-import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.messages.IncomingMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class ServerMessageListener implements Runnable {
 
 	private final Map<String, ClientConnection> connections;
-	private final Mailbox<Message>              inbox;
+	private final Queue<IncomingMessage>        inbox;
 
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
 
-	public ServerMessageListener(Map<String, ClientConnection> connections, Mailbox<Message> inbox, Map<String, Long> timestamps) {
+	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<IncomingMessage> inbox, Map<String, Long> timestamps) {
 		this.connections = connections;
 		this.inbox = inbox;
 		this.timestamps = timestamps;
@@ -47,7 +48,7 @@ public class ServerMessageListener implements Runnable {
 				}
 
 				if(data != null) {
-					Message msg = Message.deconstructTransmission(data);
+					IncomingMessage msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
 

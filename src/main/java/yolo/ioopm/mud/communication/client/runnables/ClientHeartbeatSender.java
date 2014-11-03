@@ -1,6 +1,6 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
-import yolo.ioopm.mud.communication.messages.HeartBeatMessage;
+import yolo.ioopm.mud.communication.messages.ReplyMessage;
 
 import java.io.PrintWriter;
 
@@ -27,7 +27,7 @@ public class ClientHeartbeatSender extends Thread {
 			}
 
 			synchronized(pw) {
-				pw.write(new HeartBeatMessage(USERNAME).getMessage());
+				pw.write(new ReplyMessage("server", USERNAME, "HeartBeat", System.currentTimeMillis(), null).getMessage());
 			}
 		}
 	}

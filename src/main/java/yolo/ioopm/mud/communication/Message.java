@@ -1,7 +1,7 @@
 package yolo.ioopm.mud.communication;
 
 
-import yolo.ioopm.mud.communication.messages.IncommingMessage;
+import yolo.ioopm.mud.communication.messages.IncomingMessage;
 
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
@@ -88,7 +88,7 @@ public abstract class Message {
 	 * @param transmission
 	 * @return
 	 */
-	public static Message deconstructTransmission(String transmission) {
+	public static IncomingMessage deconstructTransmission(String transmission) {
 
 		String[] sa = transmission.split(";");
 
@@ -111,8 +111,6 @@ public abstract class Message {
 			}
 		}
 
-		Message msg = new IncommingMessage(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns);
-
-		return msg;
+		return new IncomingMessage(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns);
 	}
 }

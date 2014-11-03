@@ -2,13 +2,11 @@ package yolo.ioopm.mud.communication.server;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.server.runnables.ServerConnectionListener;
-import yolo.ioopm.mud.communication.server.runnables.ServerConnectionVerifier;
 import yolo.ioopm.mud.communication.server.runnables.ServerMessageListener;
 import yolo.ioopm.mud.communication.server.runnables.ServerMessageSender;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerAdapter extends Adapter {
