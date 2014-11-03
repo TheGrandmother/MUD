@@ -1,29 +1,22 @@
 package yolo.ioopm.mud.communication;
 
-import java.util.ArrayList;
+import yolo.ioopm.mud.communication.messages.IncommingMessage;
+import yolo.ioopm.mud.communication.messages.OutgoingMessage;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Adapter {
 
-	protected final Mailbox<Message> inbox  = new Mailbox<>();
-	protected final Mailbox<Message> outbox = new Mailbox<>();
+	protected final ConcurrentLinkedQueue<IncommingMessage> inbox  = new ConcurrentLinkedQueue<>();
+	protected final ConcurrentLinkedQueue<OutgoingMessage>  outbox = new ConcurrentLinkedQueue<>();
 
 	/**
-	 * This method calls wait() on the inbox.
-	 * Essentially blocks the thread until a notify() has been called on the inbox.
+	 * Polls the oldest message from the inbox.
 	 *
-	 * @throws InterruptedException
+	 * @return Retrieves and removes head of inbox, null if inbox is empty.
 	 */
-	public void waitForNewMessages() throws InterruptedException {
-		inbox.wait();
-	}
-
-	/**
-	 * Empties the inbox and returns the messages in an arraylist.
-	 *
-	 * @return - ArrayList with all messages in the inbox.
-	 */
-	public ArrayList<Message> pollInbox() {
-		return inbox.pollAll();
+	public IncommingMessage poll() {
+		return inbox.poll();
 	}
 
 	/**
@@ -31,7 +24,7 @@ public abstract class Adapter {
 	 *
 	 * @param message
 	 */
-	public void sendMessage(final Message message) {
+	public void sendMessage(final OutgoingMessage message) {
 
 		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
 		new Thread(new Runnable() {
