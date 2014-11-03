@@ -2,6 +2,7 @@ package yolo.ioopm.mud.game;
 
 import java.io.ObjectInputStream.GetField;
 
+import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.*;
 import yolo.ioopm.mud.generalobjects.World;
@@ -13,7 +14,11 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
  * 
  * @author TheGrandmother
  */
-public class Interpreter {
+public class GameEngine {
+	
+	
+	Server server;
+	
 	
 	public static OutgoingMessage executeAction(IncommingMessage message,World world){
 		
@@ -59,6 +64,7 @@ public class Interpreter {
 	}
 	
 	//package yolo.ioopm.mud.game;
+
 
 
 }
