@@ -23,17 +23,17 @@ public abstract class Message {
 	/**
 	 * This will be a constructor which creates a message to be sent to the Adapter
 	 *
-	 * @param reciever
+	 * @param receiver
 	 * @param sender
 	 * @param action
 	 * @param nouns
 	 */
-	public Message(String reciever, String sender, String action, String... nouns) {
-		this(reciever, sender, action, System.currentTimeMillis(), nouns);
+	public Message(String receiver, String sender, String action, String... nouns) {
+		this(receiver, sender, action, System.currentTimeMillis(), nouns);
 	}
 
-	public Message(String reciever, String sender, String action, long time_stamp, String... nouns) {
-		this.RECEIVER = reciever;
+	public Message(String receiver, String sender, String action, long time_stamp, String... nouns) {
+		this.RECEIVER = receiver;
 		this.SENDER = sender;
 		this.ACTION = action;
 		this.ARGUMENTS = nouns;
