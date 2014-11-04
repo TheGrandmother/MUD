@@ -20,7 +20,7 @@ public class GameEngine {
 	Server server;
 	
 	
-	public static OutgoingMessage executeAction(IncommingMessage message,World world){
+	public static OutgoingMessage executeAction(IncomingMessage message,World world){
 		
 		String actor = message.getSender();
 		String action = message.getAction();
