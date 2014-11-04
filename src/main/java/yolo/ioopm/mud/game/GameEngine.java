@@ -1,6 +1,7 @@
 package yolo.ioopm.mud.game;
 
 import yolo.ioopm.mud.Server;
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.World;
@@ -18,7 +19,7 @@ public class GameEngine {
 	Server server;
 
 
-	public static OutgoingMessage executeAction(IncomingMessage message, World world) {
+	public static Message executeAction(Message message, World world) {
 
 		String actor = message.getSender();
 		String action = message.getAction();
@@ -63,9 +64,10 @@ public class GameEngine {
 		return null;
 	}
 
-	//package yolo.ioopm.mud.game;
-
-
+	public static boolean checkUsernamePassword(String username, String password) {
+		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data, OBS! måste vara trådsäker
+		return false;
+	}
 }
 
 

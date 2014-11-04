@@ -28,9 +28,6 @@ public abstract class Adapter {
 			@Override
 			public void run() {
 				outbox.offer(message);
-
-				// Notify the sender that there are new messages waiting.
-				outbox.notifyAll();
 			}
 		}).start();
 	}

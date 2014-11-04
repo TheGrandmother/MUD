@@ -21,16 +21,12 @@ public class ServerMessageSender implements Runnable {
 		//TODO sleep the thread after every iteration over the box
 		while(true) {
 
-			// Wait for new messages
 			try {
-				outbox.wait();
+				Thread.sleep(500);
 			}
 			catch(InterruptedException e) {
-				//TODO unhandled exception
 				e.printStackTrace();
 			}
-
-			System.out.println("ServerMessageSender has been notified! Attempting to send messages!");
 
 			Message msg;
 			while((msg = outbox.poll()) != null) {

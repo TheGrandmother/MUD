@@ -55,7 +55,7 @@ public class ServerMessageListener implements Runnable {
 							// Do nothing for now
 						}
 						else {
-							inbox.add(msg);
+							inbox.offer(msg);
 						}
 
 						timestamps.put(entry.getKey(), msg.getTimeStamp());
@@ -86,15 +86,6 @@ public class ServerMessageListener implements Runnable {
 					connections.remove(client);
 					System.out.println(client + " timed out!");
 				}
-			}
-
-			// Notify all waiting threads that there are new messages.
-			if(inbox.size() > 0) {
-				System.out.println("ServerMessageListener is notifying all waiting threads that there are new messages!");
-				inbox.notifyAll();
-			}
-			else {
-				System.out.println("ServerMessageListener will not be notifying waiting threads. There are no new messages!");
 			}
 
 			try {
