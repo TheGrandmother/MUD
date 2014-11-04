@@ -1,16 +1,16 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
-import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;
 
 import java.io.BufferedReader;
+import java.util.Queue;
 
-public class ClientMessageListener extends Thread {
+public class ClientMessageListener implements Runnable {
 
 	private final BufferedReader br;
-	private final Mailbox<Message> inbox;
+	private final Queue<Message> inbox;
 
-	public ClientMessageListener(BufferedReader br, Mailbox<Message> inbox) {
+	public ClientMessageListener(BufferedReader br, Queue<Message> inbox) {
 		this.br = br;
 		this.inbox = inbox;
 	}

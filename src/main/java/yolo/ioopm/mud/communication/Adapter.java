@@ -1,21 +1,18 @@
 package yolo.ioopm.mud.communication;
 
-import yolo.ioopm.mud.communication.messages.IncomingMessage;
-import yolo.ioopm.mud.communication.messages.OutgoingMessage;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class Adapter {
 
-	protected final ConcurrentLinkedQueue<IncomingMessage> inbox  = new ConcurrentLinkedQueue<>();
-	protected final ConcurrentLinkedQueue<OutgoingMessage> outbox = new ConcurrentLinkedQueue<>();
+	protected final ConcurrentLinkedQueue<Message> inbox  = new ConcurrentLinkedQueue<>();
+	protected final ConcurrentLinkedQueue<Message> outbox = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Polls the oldest message from the inbox.
 	 *
 	 * @return Retrieves and removes head of inbox, null if inbox is empty.
 	 */
-	public IncomingMessage poll() {
+	public Message poll() {
 		return inbox.poll();
 	}
 
@@ -24,7 +21,7 @@ public abstract class Adapter {
 	 *
 	 * @param message
 	 */
-	public void sendMessage(final OutgoingMessage message) {
+	public void sendMessage(final Message message) {
 
 		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
 		new Thread(new Runnable() {

@@ -4,7 +4,7 @@ import yolo.ioopm.mud.communication.messages.ReplyMessage;
 
 import java.io.PrintWriter;
 
-public class ClientHeartbeatSender extends Thread {
+public class ClientHeartbeatSender implements Runnable {
 
 	private final PrintWriter pw;
 	private final String USERNAME;

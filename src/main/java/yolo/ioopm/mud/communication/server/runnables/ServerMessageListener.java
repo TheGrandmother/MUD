@@ -13,12 +13,12 @@ import java.util.Set;
 public class ServerMessageListener implements Runnable {
 
 	private final Map<String, ClientConnection> connections;
-	private final Queue<IncomingMessage>        inbox;
+	private final Queue<Message>        inbox;
 
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
 
-	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<IncomingMessage> inbox, Map<String, Long> timestamps) {
+	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<Message> inbox, Map<String, Long> timestamps) {
 		this.connections = connections;
 		this.inbox = inbox;
 		this.timestamps = timestamps;

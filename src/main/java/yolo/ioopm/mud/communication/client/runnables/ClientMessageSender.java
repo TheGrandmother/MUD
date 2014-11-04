@@ -1,16 +1,16 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
-import yolo.ioopm.mud.communication.Mailbox;
 import yolo.ioopm.mud.communication.Message;
 
 import java.io.PrintWriter;
+import java.util.Queue;
 
-public class ClientMessageSender extends Thread {
+public class ClientMessageSender implements Runnable {
 
-	private final PrintWriter      pw;
-	private final Mailbox<Message> outbox;
+	private final PrintWriter    pw;
+	private final Queue<Message> outbox;
 
-	public ClientMessageSender(PrintWriter pw, Mailbox<Message> outbox) {
+	public ClientMessageSender(PrintWriter pw, Queue<Message> outbox) {
 		this.pw = pw;
 		this.outbox = outbox;
 	}
@@ -32,8 +32,9 @@ public class ClientMessageSender extends Thread {
 
 			// Send the messages.
 			synchronized(pw) {
-				for(Message msg : outbox.pollAll()) {
-					pw.write(msg.getMessage());
+				Message msg;
+				while((msg = outbox.poll()) != null) {
+					pw.println(msg.getMessage());
 				}
 			}
 		}

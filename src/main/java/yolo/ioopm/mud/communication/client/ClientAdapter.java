@@ -22,9 +22,9 @@ public class ClientAdapter extends Adapter {
 		PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-		new ClientMessageSender(pw, outbox).start();
-		new ClientMessageListener(br, inbox).start();
+		new Thread(new ClientMessageSender(pw, outbox)).start();
+		new Thread(new ClientMessageListener(br, inbox)).start();
 
-		new ClientHeartbeatSender(pw, username).start();
+		new Thread(new ClientHeartbeatSender(pw, username)).start();
 	}
 }
