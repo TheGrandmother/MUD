@@ -1,13 +1,13 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
-import yolo.ioopm.mud.communication.messages.protocol.HeartBeatMessage;
+import yolo.ioopm.mud.communication.messages.client.HeartBeatMessage;
 
 import java.io.PrintWriter;
 
 public class ClientHeartbeatSender implements Runnable {
 
 	private final PrintWriter pw;
-	private final String USERNAME;
+	private final String      USERNAME;
 
 	public ClientHeartbeatSender(PrintWriter pw, String username) {
 		this.pw = pw;

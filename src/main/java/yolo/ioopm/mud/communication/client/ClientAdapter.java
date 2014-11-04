@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 public class ClientAdapter extends Adapter {
 
 	public ClientAdapter(String host, int port, String username)
-		throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
+			throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
 
 		Socket socket = new Socket(host, port);
 

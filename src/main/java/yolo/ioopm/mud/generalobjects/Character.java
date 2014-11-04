@@ -12,10 +12,10 @@ import java.util.HashSet;
 
 public abstract class Character extends Entity {
 
-	private final String        NAME;
-	private 		String			description;
-	private       Room       	location;
-	private       Inventory		inventory;
+	private final String         NAME;
+	private       String         description;
+	private       Room           location;
+	private       Inventory      inventory;
 	private       CharacterSheet cs;
 	private       boolean        lives;
 
@@ -25,7 +25,7 @@ public abstract class Character extends Entity {
 	 * @param name              The name of the character. Needs necessarily not be unique.
 	 * @param starting_location The starting room for the character.
 	 */
-	public Character(String name, String description,Room starting_location) {
+	public Character(String name, String description, Room starting_location) {
 		this.NAME = name;
 		this.description = description;
 		location = starting_location;
@@ -39,7 +39,7 @@ public abstract class Character extends Entity {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}

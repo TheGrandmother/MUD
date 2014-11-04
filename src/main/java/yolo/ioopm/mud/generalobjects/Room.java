@@ -97,19 +97,19 @@ public class Room extends Entity {
 	public HashSet<Door> getExits() {
 		return exits;
 	}
-	
+
 	public HashSet<Item> getItems() {
 		return items;
 	}
-	
+
 	public HashSet<Npc> getNpcs() {
 		return npcs;
 	}
-	
+
 	public HashSet<Pc> getPlayers() {
 		return players;
 	}
-	
+
 	public String getDESCRIPTION() {
 		return DESCRIPTION;
 	}

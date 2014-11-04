@@ -1,7 +1,6 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
-import yolo.ioopm.mud.communication.messages.IncomingMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.util.Set;
 public class ServerMessageListener implements Runnable {
 
 	private final Map<String, ClientConnection> connections;
-	private final Queue<Message>        inbox;
+	private final Queue<Message>                inbox;
 
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
@@ -48,7 +47,7 @@ public class ServerMessageListener implements Runnable {
 				}
 
 				if(data != null) {
-					IncomingMessage msg = Message.deconstructTransmission(data);
+					Message msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
 
