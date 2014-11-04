@@ -3,6 +3,7 @@ package yolo.ioopm.mud.communication.client.runnables;
 import yolo.ioopm.mud.communication.Message;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Queue;
 
 public class ClientMessageListener implements Runnable {
@@ -17,6 +18,33 @@ public class ClientMessageListener implements Runnable {
 
 	@Override
 	public void run() {
+		while(true) {
+			String data;
+			synchronized(br) {
+				try {
+					data = br.readLine();
+				}
+				catch(IOException e) {
+					System.out.println("IOException when reading from BufferedReader! Trying again!");
+					e.printStackTrace();
+					continue;
+				}
+			}
 
+			if(data == null) {
+				System.out.println("Data was null after reading BufferedReader! Did the connection close? Terminating thread!");
+				return;
+			}
+
+			Message msg = Message.deconstructTransmission(data);
+
+			if(msg != null) {
+				inbox.offer(msg);
+			}
+			else {
+				System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+				continue;
+			}
+		}
 	}
 }
