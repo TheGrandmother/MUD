@@ -1,5 +1,7 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
+import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.messages.IncomingMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
@@ -33,6 +35,12 @@ public class ServerConnectionVerifier implements Runnable {
 			return;
 		}
 
-		//TODO parse data to message, only accept ClientRegistrationMessages, then add client to connections
+		//TODO parse data to message, only accept ClientLoginMessages, then add client to connections
+		IncomingMessage msg = Message.deconstructTransmission(data);
+
+		String[] nouns = msg.getArguments();
+		if(nouns != null && nouns.length == 2) {
+
+		}
 	}
 }
