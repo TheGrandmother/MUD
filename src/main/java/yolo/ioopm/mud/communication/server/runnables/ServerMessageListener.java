@@ -52,7 +52,7 @@ public class ServerMessageListener implements Runnable {
 
 					if(msg != null) {
 
-						if(msg.getAction().equals("HeartBeat")) {
+						if(msg.getAction().equals("heartbeat")) {
 							// Do nothing for now
 						}
 						else {

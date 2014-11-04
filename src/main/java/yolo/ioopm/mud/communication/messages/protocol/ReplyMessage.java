@@ -1,4 +1,6 @@
-package yolo.ioopm.mud.communication.messages;
+package yolo.ioopm.mud.communication.messages.protocol;
+
+import yolo.ioopm.mud.communication.messages.OutgoingMessage;
 
 public class ReplyMessage extends OutgoingMessage {
 

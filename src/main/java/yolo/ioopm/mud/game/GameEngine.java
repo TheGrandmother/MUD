@@ -1,10 +1,9 @@
 package yolo.ioopm.mud.game;
 
-import java.io.ObjectInputStream.GetField;
-
 import yolo.ioopm.mud.Server;
-import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.*;
+import yolo.ioopm.mud.communication.messages.protocol.ErrorMessage;
+import yolo.ioopm.mud.communication.messages.protocol.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
