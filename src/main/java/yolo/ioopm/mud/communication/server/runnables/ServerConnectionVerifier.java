@@ -1,7 +1,10 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.messages.server.ClientIncorrectLoginMessage;
+import yolo.ioopm.mud.communication.messages.server.ClientSuccessfullLoginMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
+import yolo.ioopm.mud.game.GameEngine;
 
 import java.io.IOException;
 import java.util.Map;
@@ -18,28 +21,47 @@ public class ServerConnectionVerifier implements Runnable {
 
 	@Override
 	public void run() {
+		while(true) {
+			String data;
+			try {
+				data = client.readLine();
+			}
+			catch(IOException e) {
+				System.out.println("IOException while listening for ClientRegistrationMessage!");
+				e.printStackTrace();
+				return;
+			}
 
-		String data;
-		try {
-			data = client.readLine();
-		}
-		catch(IOException e) {
-			System.out.println("IOException while listening for ClientRegistrationMessage!");
-			e.printStackTrace();
-			return;
-		}
+			if(data == null) {
+				System.out.println("Received null data when listening for ClientRegistrationMessage!");
+				return;
+			}
 
-		if(data == null) {
-			System.out.println("Received null data when listening for ClientRegistrationMessage!");
-			return;
-		}
+			Message msg = Message.deconstructTransmission(data);
 
-		//TODO parse data to message, only accept ClientLoginMessages, then add client to connections
-		Message msg = Message.deconstructTransmission(data);
+			if(msg == null) {
+				System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+				return;
+			}
 
-		String[] nouns = msg.getArguments();
-		if(nouns != null && nouns.length == 2) {
+			String[] nouns = msg.getArguments();
+			if(msg.getAction().equals("login") && nouns != null && nouns.length == 2) {
 
+				String username = nouns[0];
+				String password = nouns[1];
+
+				if(GameEngine.checkUsernamePassword(username, password)) {
+					connections.put(username, client);
+					client.write(new ClientSuccessfullLoginMessage(username).getMessage());
+
+					// Terminate the thread.
+					return;
+				}
+				else {
+					client.write(new ClientIncorrectLoginMessage(username).getMessage());
+					System.out.println("Client tried to authenticate with incorrect details!");
+				}
+			}
 		}
 	}
 }
