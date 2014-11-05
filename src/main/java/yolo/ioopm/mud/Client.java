@@ -26,5 +26,30 @@ public class Client {
 		// Authenticate against server
 		Message msg = new ClientLoginMessage(USERNAME, PASSWORD);
 		adapter.sendMessage(msg);
+
+		// Poll adapter every 0.2 seconds until we receive a correct answer.
+		outer: while(true) {
+
+			Message answer;
+			while((answer = adapter.poll()) == null) {
+				try {
+					Thread.sleep(200);
+				}
+				catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			switch(answer.getAction()) {
+				case "incorrectlogin":
+					System.out.println("You enter the wrong details!");
+					break outer;
+				case "successfulllogin":
+					System.out.println("You successfully authenticated yourself!");
+					break outer;
+				default:
+					System.out.println("Recieved unexpected message! Message: \"" + answer.getMessage() + "\"");
+			}
+		}
 	}
 }

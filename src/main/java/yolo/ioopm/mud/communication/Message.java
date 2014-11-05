@@ -10,7 +10,7 @@ package yolo.ioopm.mud.communication;
  * @author TheGrandmother
  */
 
-public class Message {
+public abstract class Message {
 
 	private final String   RECEIVER;
 	private final String   SENDER;
@@ -67,7 +67,7 @@ public class Message {
 			}
 		}
 
-		return new Message(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns);
+		return new Message(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns) {};
 	}
 
 	public String getReceiver() {
