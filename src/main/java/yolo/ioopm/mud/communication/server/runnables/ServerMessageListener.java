@@ -29,15 +29,12 @@ public class ServerMessageListener implements Runnable {
 		while(true) {
 
 			try {
-				System.out.println("ServerMessageListener goes to sleep...");
 				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception
 				e.printStackTrace();
 			}
-
-			System.out.println("ServerMessageSender has woken up!");
 
 			Set<String> dead_clients = new HashSet<>();
 
@@ -76,7 +73,8 @@ public class ServerMessageListener implements Runnable {
 				}
 				else {
 					//The client has not sent any message, check if they are still alive
-					long latest_time_stamp = timestamps.get(entry.getKey());
+					long latest_time_stamp = timestamps.get(
+							entry.getKey());
 
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 

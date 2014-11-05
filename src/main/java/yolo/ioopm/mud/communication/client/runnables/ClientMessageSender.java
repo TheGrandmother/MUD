@@ -29,12 +29,11 @@ public class ClientMessageSender implements Runnable {
 				e.printStackTrace();
 			}
 
-			System.out.println("ClientMessageSender has been notified! Attempting to send messages!");
-
 			// Send the messages.
 			synchronized(pw) {
 				Message msg;
 				while((msg = outbox.poll()) != null) {
+					System.out.println("Sending msg: \"" + msg.getMessage() + "\"");
 					pw.println(msg.getMessage());
 				}
 			}

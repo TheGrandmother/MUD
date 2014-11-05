@@ -54,6 +54,8 @@ public class ServerConnectionVerifier implements Runnable {
 					connections.put(username, client);
 					client.write(new ClientSuccessfullLoginMessage(username).getMessage());
 
+					System.out.println("Client successfully authenticated against server!");
+
 					// Terminate the thread.
 					return;
 				}
