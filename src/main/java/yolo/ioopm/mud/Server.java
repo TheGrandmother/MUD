@@ -1,8 +1,7 @@
 package yolo.ioopm.mud;
 
 import yolo.ioopm.mud.communication.Adapter;
-import yolo.ioopm.mud.communication.messages.IncomingMessage;
-import yolo.ioopm.mud.communication.messages.OutgoingMessage;
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ServerAdapter;
 
 import java.io.IOException;
@@ -21,11 +20,11 @@ public class Server {
 		}
 	}
 
-	public IncomingMessage pollOldestMessage() {
+	public Message pollOldestMessage() {
 		return adapter.poll();
 	}
 
-	public void sendMessage(OutgoingMessage msg) {
+	public void sendMessage(Message msg) {
 		adapter.sendMessage(msg);
 	}
 }

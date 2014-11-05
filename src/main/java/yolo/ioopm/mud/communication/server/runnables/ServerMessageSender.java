@@ -18,9 +18,7 @@ public class ServerMessageSender implements Runnable {
 
 	@Override
 	public void run() {
-		//TODO sleep the thread after every iteration over the box
 		while(true) {
-
 			try {
 				Thread.sleep(500);
 			}

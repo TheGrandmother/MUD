@@ -66,7 +66,7 @@ public class GameEngine {
 
 	public static boolean checkUsernamePassword(String username, String password) {
 		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data, OBS! måste vara trådsäker
-		return false;
+		return true;
 	}
 }
 
