@@ -79,7 +79,7 @@ public class ServerMessageListener implements Runnable {
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 
 					// If the client hasn't sent any messages during this time, mark them as dead.
-					if(delta > Adapter.HEARTBEAT_FREQUENCY * 2) {
+					if(delta > Adapter.TIMEOUT_SECONDS) {
 						dead_clients.add(entry.getKey());
 					}
 				}

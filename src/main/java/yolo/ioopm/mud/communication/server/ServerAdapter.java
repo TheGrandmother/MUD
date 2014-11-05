@@ -7,17 +7,18 @@ import yolo.ioopm.mud.communication.server.runnables.ServerMessageSender;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerAdapter extends Adapter {
 
-	private final ConcurrentHashMap<String, ClientConnection> connections = new ConcurrentHashMap<>();
-	private final ConcurrentHashMap<String, Long>             timestamps  = new ConcurrentHashMap<>();
+	private final Map<String, ClientConnection> connections = new ConcurrentHashMap<>();
+	private final Map<String, Long>             timestamps  = new ConcurrentHashMap<>();
 
 	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
 
 		// Async thread - Listens for new connections and adds them to connections.
-		new Thread(new ServerConnectionListener(new ServerSocket(port), connections)).start();
+		new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps)).start();
 
 		// Async thread - Listens for new messages from the clients.
 		new Thread(new ServerMessageListener(connections, inbox, timestamps)).start();

@@ -13,10 +13,12 @@ public class ServerConnectionVerifier implements Runnable {
 
 	private final ClientConnection              client;
 	private final Map<String, ClientConnection> connections;
+	private final Map<String, Long>             timestamps;
 
-	public ServerConnectionVerifier(ClientConnection client, Map<String, ClientConnection> connections) {
+	public ServerConnectionVerifier(ClientConnection client, Map<String, ClientConnection> connections, Map<String, Long> timestamps) {
 		this.client = client;
 		this.connections = connections;
+		this.timestamps = timestamps;
 	}
 
 	@Override
@@ -52,9 +54,10 @@ public class ServerConnectionVerifier implements Runnable {
 
 				if(GameEngine.checkUsernamePassword(username, password)) {
 					connections.put(username, client);
-					client.write(new ClientSuccessfullLoginMessage(username).getMessage());
+					timestamps.put(username, System.currentTimeMillis());
 
 					System.out.println("Client successfully authenticated against server!");
+					client.write(new ClientSuccessfullLoginMessage(username).getMessage());
 
 					// Terminate the thread.
 					return;

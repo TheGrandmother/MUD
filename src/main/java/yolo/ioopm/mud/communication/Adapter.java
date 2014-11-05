@@ -12,14 +12,14 @@ public abstract class Adapter {
 	 */
 	public final static int TICKRATE = 2;
 
-	// This is the actual value the listeners/senders reads.
+	// This is the actual value the listeners/senders read.
 	public final static int TICKRATEMILLIS = 1000 / TICKRATE;
 
-	/*
-		Time in milliseconds between each heartbeat message.
-		If a client has not sent a message during twice this time, they will be marked as dead by ServerMessageListener.
-	 */
+	// Time in milliseconds between each heartbeat message.
 	public final static int HEARTBEAT_FREQUENCY = 5000;
+
+	// This defines the time the ServerMessageListener will wait before it marks a client as dead and removes it.
+	public final static int TIMEOUT_SECONDS = HEARTBEAT_FREQUENCY * 5;
 
 	protected final ConcurrentLinkedQueue<Message> inbox  = new ConcurrentLinkedQueue<>();
 	protected final ConcurrentLinkedQueue<Message> outbox = new ConcurrentLinkedQueue<>();

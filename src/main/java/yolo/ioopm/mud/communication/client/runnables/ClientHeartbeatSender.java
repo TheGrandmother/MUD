@@ -1,17 +1,19 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
 import yolo.ioopm.mud.communication.Adapter;
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.client.HeartBeatMessage;
 
 import java.io.PrintWriter;
+import java.util.Queue;
 
 public class ClientHeartbeatSender implements Runnable {
 
-	private final PrintWriter pw;
-	private final String      USERNAME;
+	private final Queue<Message> outbox;
+	private final String         USERNAME;
 
-	public ClientHeartbeatSender(PrintWriter pw, String username) {
-		this.pw = pw;
+	public ClientHeartbeatSender(Queue<Message> outbox, String username) {
+		this.outbox = outbox;
 		this.USERNAME = username;
 	}
 
@@ -27,9 +29,7 @@ public class ClientHeartbeatSender implements Runnable {
 				e.printStackTrace();
 			}
 
-			synchronized(pw) {
-				pw.write(new HeartBeatMessage(USERNAME).getMessage());
-			}
+			outbox.offer(new HeartBeatMessage(USERNAME));
 		}
 	}
 }

@@ -25,6 +25,6 @@ public class ClientAdapter extends Adapter {
 		new Thread(new ClientMessageSender(pw, outbox)).start();
 		new Thread(new ClientMessageListener(br, inbox)).start();
 
-		new Thread(new ClientHeartbeatSender(pw, username)).start();
+		new Thread(new ClientHeartbeatSender(outbox, username)).start();
 	}
 }
