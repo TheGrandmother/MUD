@@ -62,6 +62,12 @@ public class ServerConnectionVerifier implements Runnable {
 					System.out.println("Client tried to authenticate with incorrect details!");
 				}
 			}
+			else if(msg.getAction().equals("heartbeat")) {
+				// Do nothing
+			}
+			else {
+				System.out.println("ServerConnectionVerifier received illegal message! Action: \"" + msg.getAction() + "\"");
+			}
 		}
 	}
 }
