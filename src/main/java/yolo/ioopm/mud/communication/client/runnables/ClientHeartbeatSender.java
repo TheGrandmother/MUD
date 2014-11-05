@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.client.HeartBeatMessage;
 
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ public class ClientHeartbeatSender implements Runnable {
 		while(true) {
 
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(Adapter.HEARTBEAT_FREQUENCY);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception

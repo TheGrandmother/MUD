@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
@@ -26,6 +27,15 @@ public class ServerMessageListener implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
+
+			try {
+				System.out.println("ServerMessageListener goes to sleep...");
+				Thread.sleep(Adapter.TICKRATEMILLIS);
+			}
+			catch(InterruptedException e) {
+				//TODO unhandled exception
+				e.printStackTrace();
+			}
 
 			System.out.println("ServerMessageSender has woken up!");
 
@@ -70,9 +80,8 @@ public class ServerMessageListener implements Runnable {
 
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 
-					// If there has been no new messages for 10 seconds, add them to dead_clients for removal
-					// heartbeats should be sent every 5 seconds.
-					if(delta > 10000) {
+					// If the client hasn't sent any messages during this time, mark them as dead.
+					if(delta > Adapter.HEARTBEAT_FREQUENCY * 2) {
 						dead_clients.add(entry.getKey());
 					}
 				}
@@ -86,15 +95,6 @@ public class ServerMessageListener implements Runnable {
 					connections.remove(client);
 					System.out.println(client + " timed out!");
 				}
-			}
-
-			try {
-				System.out.println("ServerMessageListener goes to sleep for half a second...");
-				Thread.sleep(500);
-			}
-			catch(InterruptedException e) {
-				//TODO unhandled exception
-				e.printStackTrace();
 			}
 		}
 	}

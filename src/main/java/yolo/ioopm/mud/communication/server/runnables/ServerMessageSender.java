@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
@@ -20,7 +21,7 @@ public class ServerMessageSender implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(500);
+				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				e.printStackTrace();

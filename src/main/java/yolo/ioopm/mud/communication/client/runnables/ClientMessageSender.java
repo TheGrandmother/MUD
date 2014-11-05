@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 
 import java.io.PrintWriter;
@@ -19,9 +20,9 @@ public class ClientMessageSender implements Runnable {
 	public void run() {
 		while(true) {
 
-			// Wait for a thread to notify that there are new messages.
+			// Iterate over outbox and send the messages every tick.
 			try {
-				outbox.wait();
+				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception

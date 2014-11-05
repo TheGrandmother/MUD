@@ -18,6 +18,9 @@ public class ClientMessageListener implements Runnable {
 
 	@Override
 	public void run() {
+
+		// There is no need for this thread to sleep, br.readLine() is a blocking method.
+
 		while(true) {
 			String data;
 			synchronized(br) {
@@ -25,9 +28,9 @@ public class ClientMessageListener implements Runnable {
 					data = br.readLine();
 				}
 				catch(IOException e) {
-					System.out.println("IOException when reading from BufferedReader! Trying again!");
+					System.out.println("IOException when reading from BufferedReader! Terminating thread!");
 					e.printStackTrace();
-					continue;
+					return;
 				}
 			}
 

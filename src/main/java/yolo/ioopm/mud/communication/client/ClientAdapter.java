@@ -13,12 +13,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ClientAdapter extends Adapter {
-
 	public ClientAdapter(String host, int port, String username)
 			throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
 
 		Socket socket = new Socket(host, port);
 
+		// Access to these two objects need to be synchronized
 		PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
