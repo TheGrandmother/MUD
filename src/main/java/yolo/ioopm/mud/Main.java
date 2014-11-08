@@ -10,7 +10,7 @@ public class Main {
 				break;
 			case "server":
 				System.out.println("Initiating server...");
-				new Server(Integer.valueOf(args[1]));
+				//new Server(Integer.valueOf(args[1]));
 				break;
 		}
 	}
