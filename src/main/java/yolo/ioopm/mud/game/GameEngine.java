@@ -7,6 +7,7 @@ import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
@@ -57,6 +58,28 @@ public class GameEngine {
 				
 			case Keywords.ECHO:
 				server.sendMessage( new ReplyMessage(actor,"echo_reply", arguments));
+				break;
+				
+			case Keywords.LOOK:
+				See.look(actor, world, server);
+				break;
+				
+			case "drop_players":
+				for (Pc p : world.players) {
+					System.out.println(p.getName());
+				}
+				break;
+				
+			case "am_i_real":
+			System.out.println(actor);
+				for (Pc p : world.players) {
+					if(p.getName().equals(actor)){
+						
+						System.out.println("indeed i am.");
+						break;
+					}
+				}
+				System.out.println("Nobody is in the end.....");
 				break;
 				
 			default:
