@@ -1,5 +1,8 @@
 package yolo.ioopm.mud.game;
 
+import java.util.ArrayList;
+import java.util.concurrent.BrokenBarrierException;
+
 import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
@@ -17,9 +20,15 @@ public class GameEngine {
 
 
 	Server server;
+	World world;
 
-
-	public static Message executeAction(Message message, World world) {
+	public GameEngine(Server server, World world) {
+		// TODO Auto-generated constructor stub
+		this.server = server;
+		this.world = world;
+		
+	}
+	public void executeAction(Message message) {
 
 		String actor = message.getSender();
 		String action = message.getAction();
@@ -27,43 +36,44 @@ public class GameEngine {
 
 		switch(action) {
 			case Keywords.MAGIC_MOVE:
-				if(arguments.length != 1) {
-					return new ErrorMessage(actor, action + " has the wrong number of arguments");
-				}
-				try {
-
-					if(world.findPc(actor).getLocation().getName() == arguments[0]) {
-						return new ReplyMessage(actor, new String[]{"You cant move to the same room where you allready are."});
-					}
-
-					world.moveCharacter(world.findPc(actor), world.findRoom(arguments[0]));
-					return new ReplyMessage(actor, new String[]{"You moved to " + arguments[0]});
-
-				}
-				catch(EntityNotUnique e) {
-					return new ErrorMessage(actor, "Something is not unique.....");
-				}
-				catch(EntityNotPresent e) {
-					return new ErrorMessage(actor, arguments[0] + " Is not a room");
-
-				}
-
-
+				break;
+			
 			case Keywords.SAY:
-
+				if(arguments.length != 1){
+					server.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
+					break;
+				}
+				Talk.say(actor, arguments[0], world, server);
 				break;
 
+			case Keywords.WHISPER:
+				if(arguments.length != 2){
+					server.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
+					break;
+				}
+				Talk.whisper(actor, arguments[0], arguments[1], world, server);
+				break;
+				
+				
 			case Keywords.ECHO:
-				return new ReplyMessage(actor, arguments);
-
+				server.sendMessage( new ReplyMessage(actor,"echo_reply", arguments));
+				break;
+				
 			default:
-				return new ErrorMessage(actor, action + " is not a valid keyword!");
+				server.sendMessage( new ErrorMessage(actor, action + " is not a valid keyword!"));
 		}
 
 
-		return null;
 	}
 
+	/**
+	 * 
+	 * Returns true if user exists, password is correct and user is still logged in.
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public static boolean checkUsernamePassword(String username, String password) {
 		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data, OBS! måste vara trådsäker
 		//TODO denna bör även retunera false om användaren redan är inloggad
