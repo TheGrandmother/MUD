@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class World {
 
 
-	private HashSet<Pc>   players;
+	public  HashSet<Pc>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
@@ -109,7 +109,7 @@ public class World {
 
 	public Room findRoom(String name) throws EntityNotPresent {
 		for(Room e : rooms) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return e;
 			}
 		}
@@ -118,7 +118,7 @@ public class World {
 
 	public Item findItem(String name) throws EntityNotPresent {
 		for(Item e : items) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return e;
 			}
 		}
@@ -127,7 +127,7 @@ public class World {
 
 	public Pc findPc(String name) throws EntityNotPresent {
 		for(Pc e : players) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return e;
 			}
 		}
@@ -136,7 +136,7 @@ public class World {
 
 	public Npc findNpc(String name) throws EntityNotPresent {
 		for(Npc e : npcs) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return e;
 			}
 		}
@@ -154,7 +154,7 @@ public class World {
 	 */
 	public boolean assertUnique(String name, HashSet<? extends Entity> set) {
 		for(Entity e : set) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return false;
 			}
 		}
@@ -168,7 +168,7 @@ public class World {
 	 */
 	public boolean assertExsistence(String name, HashSet<? extends Entity> set) {
 		for(Entity e : set) {
-			if(e.getName() == name) {
+			if(e.getName().equals(name)) {
 				return true;
 			}
 		}

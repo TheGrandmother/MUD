@@ -16,6 +16,7 @@ public class Pc extends Character {
 	 */
 	public Pc(String name, String description, String password,Room starting_location) {
 		super(name, description, starting_location);
+		starting_location.addPlayer(this);
 		logged_in =  false;
 		password = "";
 		is_admin = false;

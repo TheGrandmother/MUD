@@ -110,10 +110,6 @@ public class Room extends Entity {
 		return players;
 	}
 
-	public String getDESCRIPTION() {
-		return DESCRIPTION;
-	}
-
 	/**
 	 * Removes the given player from the room.
 	 *
