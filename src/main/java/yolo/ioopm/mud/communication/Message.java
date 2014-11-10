@@ -109,6 +109,7 @@ public abstract class Message {
 
 		sb.append(RECEIVER).append(';');
 		sb.append(SENDER).append(';');
+		sb.append(TYPE).append(';');
 		sb.append(ACTION).append(';');
 		sb.append(TIME_STAMP).append(';');
 
