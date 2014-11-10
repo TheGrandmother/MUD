@@ -24,7 +24,7 @@ public class GameEngine {
 	World world;
 
 	public GameEngine(Server server, World world) {
-		// TODO Auto-generated constructor stub
+	
 		this.server = server;
 		this.world = world;
 		
@@ -65,14 +65,14 @@ public class GameEngine {
 				break;
 				
 			case "drop_players":
-				for (Pc p : world.players) {
+				for (Pc p : world.getPlayers()) {
 					System.out.println(p.getName());
 				}
 				break;
 				
 			case "am_i_real":
 			System.out.println(actor);
-				for (Pc p : world.players) {
+				for (Pc p : world.getPlayers()) {
 					if(p.getName().equals(actor)){
 						
 						System.out.println("indeed i am.");

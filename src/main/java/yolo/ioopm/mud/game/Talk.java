@@ -69,6 +69,7 @@ public abstract class Talk {
 			}
 		} catch (EntityNotPresent e) {
 			server.sendMessage( new ErrorMessage(actor, recipient + " not inna da room."));
+			return;
 		}
 	}
 	
