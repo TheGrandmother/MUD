@@ -1,0 +1,61 @@
+THIS FILE SPECIFIES ALL THE MESSAGES AND THEIR RETURNS.
+
+
+ECHO: echo <string>
+	arguments:
+		string: any old string
+	returns: ECHO_REPLY
+	description:
+		Just sends a message with a string to the server and returns a the same string from the server
+		used for testing.
+
+SAY: say <message>
+	arguments:
+		message: what to be said
+	returns: SAY_REPLY
+	description:
+		User says something to all the other players in the room.
+
+WHIPSPER: whisper <recipient> <message>
+	arguments:
+		recipient: the recipient of the message
+		message: what is to be said
+	returns: WHISPER_REPLY
+	description:
+		Says something to a specified player also in the room.
+
+LOOK: look
+	arguments: NONE
+	returns: LOOK_REPLY
+	description:
+		"Looks" at a room.
+		
+
+		
+=========REPLYS=======
+
+
+ECHO_REPLY: echo_reply <string>
+	arguments: returned string
+
+SAY_REPLY: say_reply <speaker> <message>
+	arguments:
+		speaker: who said what
+		message: what was said
+
+WHISPER_REPLY: whisper_reply <speaker> <message>
+	arguments:
+		speaker: who said what
+		message: what was said
+		
+LOOK_REPLY: look_reply <name> <description> <exits> <players> <npcs> <items>
+	arguments:
+		name: the name of the room.
+		description: the description of the room
+		exits: a "," separated list of all the exits
+		players: a "," separated list of all the players
+		npcs: a "," separated list of all the npcs.
+		items: a "," separated list of all the items.
+
+
+	
