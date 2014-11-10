@@ -1,14 +1,12 @@
 package yolo.ioopm.mud.communication.messages.server;
 
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 
 
 public class IncommingMessage extends Message {
 
-	public IncommingMessage(String receiver, String sender, String action,
-			String[] nouns) {
-		super(receiver, sender, action, nouns);
-		// TODO Auto-generated constructor stub
+	public IncommingMessage(String receiver, String sender, MessageType type, String action, String[] nouns) {
+		super(receiver, sender, type, action, nouns);
 	}
-
 }

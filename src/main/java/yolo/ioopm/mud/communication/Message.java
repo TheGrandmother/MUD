@@ -12,11 +12,12 @@ package yolo.ioopm.mud.communication;
 
 public abstract class Message {
 
-	private final String   RECEIVER;
-	private final String   SENDER;
-	private final String   ACTION;
-	private final String[] ARGUMENTS;
-	private final long     TIME_STAMP;
+	private final String      RECEIVER;
+	private final String      SENDER;
+	private final MessageType TYPE;
+	private final String      ACTION;
+	private final String[]    ARGUMENTS;
+	private final long        TIME_STAMP;
 
 	/**
 	 * This will be a constructor which creates a message to be sent to the Adapter
@@ -26,13 +27,14 @@ public abstract class Message {
 	 * @param action
 	 * @param nouns
 	 */
-	public Message(String receiver, String sender, String action, String... nouns) {
-		this(receiver, sender, action, System.currentTimeMillis(), nouns);
+	public Message(String receiver, String sender, MessageType type, String action, String... nouns) {
+		this(receiver, sender, type, action, System.currentTimeMillis(), nouns);
 	}
 
-	public Message(String receiver, String sender, String action, long time_stamp, String... nouns) {
+	public Message(String receiver, String sender, MessageType type, String action, long time_stamp, String... nouns) {
 		this.RECEIVER = receiver;
 		this.SENDER = sender;
+		this.TYPE = type;
 		this.ACTION = action;
 		this.ARGUMENTS = nouns;
 		this.TIME_STAMP = time_stamp;
@@ -49,17 +51,17 @@ public abstract class Message {
 		String[] sa = transmission.split(";");
 
 		// Length of smallest message, currently the heartbeat
-		if(sa.length < 4) {
+		if(sa.length < 5) {
 			return null;
 		}
 
-		int delta = sa.length - 4;
+		int delta = sa.length - 5;
 		String[] nouns = null;
 
 		if(delta > 0) {
 			nouns = new String[delta];
 			try {
-				System.arraycopy(sa, 4, nouns, 0, delta);
+				System.arraycopy(sa, 5, nouns, 0, delta);
 			}
 			catch(ArrayIndexOutOfBoundsException e) {
 				System.out.println("System.arraycopy failed! ArrayIndexOutOfBounds! delta:" + delta);
@@ -67,7 +69,9 @@ public abstract class Message {
 			}
 		}
 
-		return new Message(sa[0], sa[1], sa[2], Long.valueOf(sa[3]), nouns) {};
+		return new Message(sa[0], sa[1], MessageType.valueOf(sa[2]), sa[3], Long.valueOf(sa[4]), nouns) {
+			// "Instantiate" the Message-class by creating an empty sub-class
+		};
 	}
 
 	public String getReceiver() {
@@ -76,6 +80,10 @@ public abstract class Message {
 
 	public String getSender() {
 		return SENDER;
+	}
+
+	public MessageType getType() {
+		return TYPE;
 	}
 
 	public String getAction() {
