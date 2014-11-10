@@ -6,7 +6,7 @@ import yolo.ioopm.mud.communication.MessageType;
 
 public class IncommingMessage extends Message {
 
-	public IncommingMessage(String receiver, String sender, MessageType type, String action, String[] nouns) {
-		super(receiver, sender, type, action, nouns);
+	public IncommingMessage(String receiver, String sender, String action, String[] nouns) {
+		super(receiver, sender, MessageType.GENERAL_ACTION, action, nouns);
 	}
 }
