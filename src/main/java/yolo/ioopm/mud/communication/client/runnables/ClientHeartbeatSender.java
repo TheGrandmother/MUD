@@ -4,7 +4,6 @@ import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.client.HeartBeatMessage;
 
-import java.io.PrintWriter;
 import java.util.Queue;
 
 public class ClientHeartbeatSender implements Runnable {

@@ -2,8 +2,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
-import yolo.ioopm.mud.communication.messages.server.ClientIncorrectLoginMessage;
-import yolo.ioopm.mud.communication.messages.server.ClientSuccessfullLoginMessage;
+import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 import yolo.ioopm.mud.game.GameEngine;
 
@@ -58,13 +57,13 @@ public class ServerConnectionVerifier implements Runnable {
 					timestamps.put(username, System.currentTimeMillis());
 
 					System.out.println("Client successfully authenticated against server!");
-					client.write(new ClientSuccessfullLoginMessage(username).getMessage());
+					client.write(new AuthenticationReplyMessage(username, true).getMessage());
 
 					// Terminate the thread.
 					return;
 				}
 				else {
-					client.write(new ClientIncorrectLoginMessage(username).getMessage());
+					client.write(new AuthenticationReplyMessage(username, false).getMessage());
 					System.out.println("Client tried to authenticate with incorrect details!");
 				}
 			}
