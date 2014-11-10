@@ -1,6 +1,7 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.messages.server.ClientIncorrectLoginMessage;
 import yolo.ioopm.mud.communication.messages.server.ClientSuccessfullLoginMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
@@ -47,7 +48,7 @@ public class ServerConnectionVerifier implements Runnable {
 			}
 
 			String[] nouns = msg.getArguments();
-			if(msg.getAction().equals("login") && nouns != null && nouns.length == 2) {
+			if(msg.getType() == MessageType.AUTHENTICATION && nouns != null && nouns.length == 2) {
 
 				String username = nouns[0];
 				String password = nouns[1];
@@ -67,11 +68,11 @@ public class ServerConnectionVerifier implements Runnable {
 					System.out.println("Client tried to authenticate with incorrect details!");
 				}
 			}
-			else if(msg.getAction().equals("heartbeat")) {
+			else if(msg.getType() == MessageType.HEARTBEAT) {
 				// Do nothing
 			}
 			else {
-				System.out.println("ServerConnectionVerifier received illegal message! Action: \"" + msg.getAction() + "\"");
+				System.out.println("ServerConnectionVerifier received illegal message! Type: \"" + msg.getType() + "\"");
 			}
 		}
 	}

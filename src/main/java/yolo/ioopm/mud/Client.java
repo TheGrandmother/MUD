@@ -2,8 +2,9 @@ package yolo.ioopm.mud;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.client.ClientAdapter;
-import yolo.ioopm.mud.communication.messages.client.ClientLoginMessage;
+import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class Client {
 		}
 
 		// Authenticate against server
-		Message msg = new ClientLoginMessage(USERNAME, PASSWORD);
+		Message msg = new AuthenticationMessage(USERNAME, PASSWORD);
 		adapter.sendMessage(msg);
 
 		// Poll adapter every 0.2 seconds until we receive a correct answer.
@@ -40,15 +41,17 @@ public class Client {
 				}
 			}
 
-			switch(answer.getAction()) {
-				case "incorrectlogin":
-					System.out.println("You enter the wrong details!");
-					break outer;
-				case "successfulllogin":
-					System.out.println("You successfully authenticated yourself!");
-					break outer;
-				default:
-					System.out.println("Recieved unexpected message! Message: \"" + answer.getMessage() + "\"");
+			if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
+				switch(answer.getArguments()[0]) {
+					case "incorrectlogin":
+						System.out.println("You enter the wrong details!");
+						break outer;
+					case "successfulllogin":
+						System.out.println("You successfully authenticated yourself!");
+						break outer;
+					default:
+						System.out.println("Recieved unexpected message! Message: \"" + answer.getMessage() + "\"");
+				}
 			}
 		}
 	}

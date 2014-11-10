@@ -2,6 +2,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class ServerMessageListener implements Runnable {
 
 					if(msg != null) {
 
-						if(msg.getAction().equals("heartbeat")) {
+						if(msg.getType() == MessageType.HEARTBEAT) {
 							// Do nothing for now
 						}
 						else {
