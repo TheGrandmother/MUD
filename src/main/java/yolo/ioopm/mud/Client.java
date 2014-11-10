@@ -44,13 +44,13 @@ public class Client {
 			if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
 				switch(answer.getArguments()[0]) {
 					case "incorrectlogin":
-						System.out.println("You enter the wrong details!");
+						System.out.println("You entered the wrong details!");
 						break outer;
 					case "successfulllogin":
 						System.out.println("You successfully authenticated yourself!");
 						break outer;
 					default:
-						System.out.println("Recieved unexpected message! Message: \"" + answer.getMessage() + "\"");
+						System.out.println("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
 				}
 			}
 		}

@@ -6,12 +6,17 @@ import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class ServerMessageListener implements Runnable {
+
+	/*
+	 	These message types will not be added to the inbox when received!
+	 	Their timestamp however will be logged.
+	  */
+	private static final EnumSet<MessageType> ignored_messages = EnumSet.of(
+		MessageType.HEARTBEAT
+	);
 
 	private final Map<String, ClientConnection> connections;
 	private final Queue<Message>                inbox;
@@ -58,11 +63,7 @@ public class ServerMessageListener implements Runnable {
 					Message msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
-
-						if(msg.getType() == MessageType.HEARTBEAT) {
-							// Do nothing for now
-						}
-						else {
+						if(!ignored_messages.contains(msg.getType())) {
 							inbox.offer(msg);
 						}
 
@@ -74,8 +75,7 @@ public class ServerMessageListener implements Runnable {
 				}
 				else {
 					//The client has not sent any message, check if they are still alive
-					long latest_time_stamp = timestamps.get(
-							entry.getKey());
+					long latest_time_stamp = timestamps.get(entry.getKey());
 
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 

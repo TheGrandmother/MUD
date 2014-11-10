@@ -44,6 +44,7 @@ public abstract class Message {
 	/**
 	 * This function takes a string received by the adapter and converts it to a Message object;
 	 *
+	 * @throws java.lang.IllegalArgumentException
 	 * @param transmission
 	 * @return
 	 */
@@ -53,7 +54,7 @@ public abstract class Message {
 
 		// Length of smallest message, currently the heartbeat
 		if(sa.length < 5) {
-			return null;
+			throw new IllegalArgumentException("The transmission was not correctly formed!");
 		}
 
 		int delta = sa.length - 5;
