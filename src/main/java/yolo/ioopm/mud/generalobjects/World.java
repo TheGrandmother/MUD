@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class World {
 
 
-	public  HashSet<Pc>   players;
+	private  HashSet<Pc>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
@@ -113,7 +113,7 @@ public class World {
 				return e;
 			}
 		}
-		throw new EntityNotPresent();
+		throw new EntityNotPresent(name);
 	}
 
 	public Item findItem(String name) throws EntityNotPresent {
@@ -122,7 +122,7 @@ public class World {
 				return e;
 			}
 		}
-		throw new EntityNotPresent();
+		throw new EntityNotPresent(name);
 	}
 
 	public Pc findPc(String name) throws EntityNotPresent {
@@ -140,7 +140,7 @@ public class World {
 				return e;
 			}
 		}
-		throw new EntityNotPresent();
+		throw new EntityNotPresent(name);
 	}
 
 
@@ -175,6 +175,22 @@ public class World {
 		return false;
 	}
 
+	public HashSet<Item> getItems() {
+		return items;
+	}
+	
+	public HashSet<Npc> getNpcs() {
+		return npcs;
+	}
+	
+	public HashSet<Pc> getPlayers() {
+		return players;
+	}
+	
+	public HashSet<Room> getRooms() {
+		return rooms;
+	}
+	
 	@SuppressWarnings("serial")
 	public class EntityNotUnique extends Exception {
 		public EntityNotUnique() {
@@ -192,6 +208,10 @@ public class World {
 		public EntityNotPresent(String name) {
 			super();
 			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
 		}
 	}
 
