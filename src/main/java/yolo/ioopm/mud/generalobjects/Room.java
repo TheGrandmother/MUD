@@ -2,6 +2,8 @@ package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
 
+import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+
 public class Room extends Entity {
 
 	private final String NAME;
@@ -48,6 +50,7 @@ public class Room extends Entity {
 		return exits.add(new Door(r, locked));
 	}
 
+	//TODO needs to check that player is not already present
 	/**
 	 * Adds a player to the room.
 	 *
@@ -58,6 +61,7 @@ public class Room extends Entity {
 		return players.add(p);
 	}
 
+	//TODO needs to check that player is not already present
 	/**
 	 * Adds an NPC to the room.
 	 *
@@ -78,6 +82,24 @@ public class Room extends Entity {
 		return items.add(i);
 	}
 
+	
+	/**
+	 * Gets exit to specific room
+	 * @param name The name of the room which you want.
+	 * @return null if no exit to room exists.
+	 * @throws EntityNotPresent
+	 */
+	public Door getExit(String name){
+		for (Door door : exits) {
+			if(door.getName().equals(name)){
+				return door;
+			}
+		}
+		
+		return null;
+	}
+	
+	
 	/**
 	 * Returns an array with the names of all rooms that this room is connected too.
 	 *
@@ -140,7 +162,8 @@ public class Room extends Entity {
 		return items.remove(i);
 	}
 
-	class Door {
+	//This needs to be accessible. From the outside.
+	public class Door {
 		private final Room    otherside;
 		private       boolean is_locked;
 
