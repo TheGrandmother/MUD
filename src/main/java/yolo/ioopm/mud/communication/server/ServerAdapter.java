@@ -21,7 +21,8 @@ public class ServerAdapter extends Adapter {
 		new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps)).start();
 
 		// Async thread - Listens for new messages from the clients.
-		new Thread(new ServerMessageListener(connections, inbox, timestamps)).start();
+		// Needs outbox to be able to reply to hearbeats.
+		new Thread(new ServerMessageListener(connections, inbox, outbox, timestamps)).start();
 
 		// Async thread - Sends the messages that are currently in the outbox.
 		new Thread(new ServerMessageSender(connections, outbox)).start();
