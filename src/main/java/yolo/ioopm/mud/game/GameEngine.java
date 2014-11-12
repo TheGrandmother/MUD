@@ -36,9 +36,7 @@ public class GameEngine {
 		String[] arguments = message.getArguments();
 
 		switch(action) {
-			case Keywords.MAGIC_MOVE:
-				break;
-			
+
 			case Keywords.SAY:
 				if(arguments.length != 1){
 					server.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
@@ -62,6 +60,10 @@ public class GameEngine {
 				
 			case Keywords.LOOK:
 				See.look(actor, world, server);
+				break;
+				
+			case Keywords.MOVE:
+				Movement.move(actor, arguments, world, server);
 				break;
 				
 			case "drop_players":

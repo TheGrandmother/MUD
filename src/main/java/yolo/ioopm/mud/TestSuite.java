@@ -33,7 +33,13 @@ public class TestSuite {
 		
 		try {
 			t.world.addRoom(new Room("room1", "of doom"));
+			t.world.addRoom(new Room("room2","super silly"));
+			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), false);
+			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
 		} catch (EntityNotUnique e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EntityNotPresent e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

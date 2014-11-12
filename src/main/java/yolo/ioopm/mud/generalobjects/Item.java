@@ -3,22 +3,35 @@ package yolo.ioopm.mud.generalobjects;
 public abstract class Item extends Entity {
 	private final String NAME;
 	private final String DESCRIPTION;
-	private       int    uses;
-	private       Type   type;
-	private final int    size;
+	/**
+	 * -1 uses correspond to unlimited uses.
+	 */
+	private int uses;
+	private Type type;
+	private final int size;
 	boolean dropable;
+	private final int level;
 
 
-	//The implementation needs to specify what class the target need to be.
-	abstract void use(Character user, Entity target);
+	/**
+	 * 
+	 * Returns true if use was successful. Although successful does not necessarily mean that
+	 * the desired outcome of the use was achieved just that it was possible to use the action.
+	 * 
+	 * @param user
+	 * @param target
+	 * @return true if use was successful
+	 */
+	public abstract boolean use(Character user, Entity target);
 
-	public Item(String name, String description, int uses, Type type, Boolean dropable, int size) {
+	public Item(String name, String description, int uses, Type type, Boolean dropable, int size, int level) {
 		NAME = name;
 		DESCRIPTION = description;
 		this.uses = uses;
 		this.type = type;
 		this.dropable = dropable;
 		this.size = size;
+		this.level= level;
 
 	}
 
@@ -47,8 +60,25 @@ public abstract class Item extends Entity {
 		this.uses = uses;
 	}
 
-	private enum Type {
-		CONSUMABLE, USABLE, EQUIPABLE
+	public enum Type {
+		KEY, WEAPON, CONSUMABLE, ARMOR, DOCUMENT
 	}
+	
+	@SuppressWarnings("serial")
+	public class UseFailedException extends Exception{
+
+		private final String reason;
+		
+		public UseFailedException(String reason) {
+			super();
+			this.reason = reason;
+		}
+		
+		public String getReason(){
+			return reason;
+		}
+		
+	}
+
 
 }

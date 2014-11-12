@@ -1,6 +1,7 @@
 package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
@@ -50,7 +51,6 @@ public class Room extends Entity {
 		return exits.add(new Door(r, locked));
 	}
 
-	//TODO needs to check that player is not already present
 	/**
 	 * Adds a player to the room.
 	 *
@@ -58,10 +58,15 @@ public class Room extends Entity {
 	 * @return True if player was successfully added.
 	 */
 	public boolean addPlayer(Pc p) {
-		return players.add(p);
+		if(World.assertUnique(p.getName(), players)){
+			return players.add(p);
+		}else{
+			return false;
+		}
+
+		
 	}
 
-	//TODO needs to check that player is not already present
 	/**
 	 * Adds an NPC to the room.
 	 *
@@ -69,9 +74,18 @@ public class Room extends Entity {
 	 * @return True if NPC was successfully added.
 	 */
 	public boolean addNPC(Npc n) {
+		for (Pc npc : players) {
+			if(npc.getName().equals(n.getName())){
+				return false;
+			}
+		}
 		return npcs.add(n);
 	}
 
+	
+	
+	//TODO
+	//FIX PROPPER ITEM SUPPORT!
 	/**
 	 * Adds an item to the room.
 	 *

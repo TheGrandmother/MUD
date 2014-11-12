@@ -152,7 +152,7 @@ public class World {
 	 * @param set
 	 * @return True if name is unique.
 	 */
-	public boolean assertUnique(String name, HashSet<? extends Entity> set) {
+	public static boolean assertUnique(String name, HashSet<? extends Entity> set) {
 		for(Entity e : set) {
 			if(e.getName().equals(name)) {
 				return false;
@@ -166,7 +166,7 @@ public class World {
 	 * @param set
 	 * @return Returns true if name exists.
 	 */
-	public boolean assertExsistence(String name, HashSet<? extends Entity> set) {
+	public static boolean assertExsistence(String name, HashSet<? extends Entity> set) {
 		for(Entity e : set) {
 			if(e.getName().equals(name)) {
 				return true;
