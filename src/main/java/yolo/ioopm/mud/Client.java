@@ -24,35 +24,41 @@ public class Client {
 			e.printStackTrace();
 		}
 
+		authenticate(USERNAME, PASSWORD);
+	}
+
+	private boolean authenticate(String username, String password) {
 		// Authenticate against server
-		Message msg = new AuthenticationMessage(USERNAME, PASSWORD);
+		Message msg = new AuthenticationMessage(username, password);
 		adapter.sendMessage(msg);
 
-		// Poll adapter every 0.2 seconds until we receive a correct answer.
-		outer: while(true) {
-
-			Message answer;
-			while((answer = adapter.poll()) == null) {
-				try {
-					Thread.sleep(200);
-				}
-				catch(InterruptedException e) {
-					e.printStackTrace();
-				}
+		// Poll adapter every 0.2 seconds until we receive an answer.
+		Message answer;
+		while((answer = adapter.poll()) == null) {
+			try {
+				Thread.sleep(200);
 			}
-
-			if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
-				switch(answer.getArguments()[0]) {
-					case "incorrectlogin":
-						System.out.println("You entered the wrong details!");
-						break outer;
-					case "successfulllogin":
-						System.out.println("You successfully authenticated yourself!");
-						break outer;
-					default:
-						System.out.println("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
-				}
+			catch(InterruptedException e) {
+				e.printStackTrace();
 			}
+		}
+
+		if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
+			switch(answer.getArguments()[0]) {
+				case "incorrectlogin":
+					System.out.println("You entered the wrong details!");
+					return false;
+				case "successfulllogin":
+					System.out.println("You successfully authenticated yourself!");
+					return true;
+				default:
+					System.out.println("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+					return false;
+			}
+		}
+		else {
+			System.out.println("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			return false;
 		}
 	}
 }

@@ -3,6 +3,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
+import yolo.ioopm.mud.communication.messages.server.HeartbeatReplyMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
@@ -20,13 +21,15 @@ public class ServerMessageListener implements Runnable {
 
 	private final Map<String, ClientConnection> connections;
 	private final Queue<Message>                inbox;
+	private final Queue<Message>                outbox;
 
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
 
-	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<Message> inbox, Map<String, Long> timestamps) {
+	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<Message> inbox, Queue<Message> outbox, Map<String, Long> timestamps) {
 		this.connections = connections;
 		this.inbox = inbox;
+		this.outbox = outbox;
 		this.timestamps = timestamps;
 	}
 
@@ -65,6 +68,10 @@ public class ServerMessageListener implements Runnable {
 					if(msg != null) {
 						if(!ignored_messages.contains(msg.getType())) {
 							inbox.offer(msg);
+						}
+						else if(msg.getType() == MessageType.HEARTBEAT) {
+							// Immediately reply to heartbeats from clients
+							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
 						}
 
 						timestamps.put(entry.getKey(), msg.getTimeStamp());
