@@ -6,11 +6,11 @@ public class Main {
 		switch(args[0].toLowerCase()) {
 			case "client":
 				System.out.println("Initiating client...");
-				new Client(args[1], Integer.valueOf(args[2]));
+				new Client();
 				break;
 			case "server":
 				System.out.println("Initiating server...");
-				//new Server(Integer.valueOf(args[1]));
+				new Server(Integer.valueOf(args[1]));
 				break;
 		}
 	}

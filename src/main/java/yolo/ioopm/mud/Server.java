@@ -8,12 +8,20 @@ import java.io.IOException;
 
 public class Server {
 
-	protected Adapter adapter = null;
+	private Adapter adapter = null;
 
-	public Server(int port, Adapter adapter) {
+	public Server(int port) {
+		try {
+			adapter = new ServerAdapter(port);
+		}
+		catch(IOException e) {
+			System.err.format("Server failed to create ServerAdapter on port: %d%n", port);
+			e.printStackTrace();
+		}
+	}
 
-			this.adapter = adapter;
-
+	protected Server(Adapter a) {
+		adapter = a;
 	}
 
 	/**

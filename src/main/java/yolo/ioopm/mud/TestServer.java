@@ -1,22 +1,22 @@
 package yolo.ioopm.mud;
 
-import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.TestServerAdapter;
 
 public class TestServer extends Server {
 
+	TestServerAdapter testAdapter;
+
 	public TestServer() {
-		super(0, new TestServerAdapter());
-		// TODO Auto-generated constructor stub
+		super(new TestServerAdapter());
 	}
 	
 	public void addMessage(Message msg){
-		((TestServerAdapter)adapter).addMessage(msg);
+		testAdapter.addMessage(msg);
 	}
 	
 	public Message readMessage(){
-		return ((TestServerAdapter)adapter).readMessage();
+		return testAdapter.readMessage();
 	}
 
 }
