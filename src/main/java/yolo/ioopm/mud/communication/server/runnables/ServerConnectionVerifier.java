@@ -52,7 +52,7 @@ public class ServerConnectionVerifier implements Runnable {
 				String username = nouns[0];
 				String password = nouns[1];
 
-				if(GameEngine.checkUsernamePassword(username, password)) {
+				if(!connections.containsKey(username) && GameEngine.checkUsernamePassword(username, password)) {
 					connections.put(username, client);
 					timestamps.put(username, System.currentTimeMillis());
 
@@ -64,7 +64,7 @@ public class ServerConnectionVerifier implements Runnable {
 				}
 				else {
 					client.write(new AuthenticationReplyMessage(username, false).getMessage());
-					System.out.println("Client tried to authenticate with incorrect details!");
+					System.out.println("Client tried to authenticate with incorrect details, or username is already in use!");
 				}
 			}
 			else if(msg.getType() == MessageType.HEARTBEAT) {

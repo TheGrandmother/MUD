@@ -42,6 +42,7 @@ public class ClientMessageListener implements Runnable {
 			Message msg = Message.deconstructTransmission(data);
 
 			if(msg != null) {
+				System.out.println("Received msg: \"" + msg.getMessage() + "\"");
 				inbox.offer(msg);
 			}
 			else {

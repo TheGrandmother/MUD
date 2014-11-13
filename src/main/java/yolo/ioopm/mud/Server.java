@@ -20,6 +20,10 @@ public class Server {
 		}
 	}
 
+	protected Server(Adapter a) {
+		adapter = a;
+	}
+
 	/**
 	 * Retrieves and removes oldest message from the inbox-queue.
 	 *
