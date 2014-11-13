@@ -85,7 +85,7 @@ public abstract class Character extends Entity {
 	 *
 	 * @author TheGrandmother
 	 */
-	class CharacterSheet {
+	public class CharacterSheet {
 		private int hp;
 		private int health;
 		private int max_health;
@@ -204,62 +204,86 @@ public abstract class Character extends Entity {
 	 */
 	class Inventory {
 
-		HashSet<Item> items;
+		HashSet<ItemContainer> items;
 		private int volume;
 		private int max_volume = 10;
 
 		public Inventory() {
 			volume = 0;
-			items = new HashSet<Item>();
+			items = new HashSet<ItemContainer>();
 		}
 
-
+		
 		/**
-		 * Decrements the number of uses for an item. Deletes item from list if uses is 0.
-		 * Returns false if item is not found.
-		 *
-		 * @param name The name of the item
-		 * @return Returns false if the object was not found in the inventory.
+		 * Tries to retrive an item from the items set.
+		 * NOTE: this does not remove the item!
+		 * 
+		 * @param name
+		 * @param type
+		 * @return Returns null if no silly item was found
 		 */
-		public boolean removeItem(String name) {
-			for(Item item : items) {
-				if(item.getName() == name) {
-					if(item.getUses() == 0) {
-						volume -= item.getSize();
-						items.remove(item);
+		public Item findItem(String name, Item.Type type){
+			for (ItemContainer i : items) {
+				if(type == i.getType() && i.getName().equals(name)){
+					return i.getItem();
+				}
+			}
+			return null;
+			
+		}
+		
+		/**
+		 * Tries to remove the item. Either removes the item completely or just decreases the amount.
+		 * 
+		 * @param name
+		 * @param type
+		 * @return false if item does not exist
+		 */
+		public boolean removeItem(String name, Item.Type type){
+			
+			for (ItemContainer i : items) {
+				if(type == i.getType() && i.getName().equals(name)){
+					if(i.getAmount() == 1){
+						volume -= i.getItem().getSize();
+						items.remove(i);
 						return true;
-					}
-					else {
-						item.setUses(item.getUses() - 1);
+					}else{
+						volume -= i.getItem().getSize();
+						i.setAmount(i.getAmount()-1);
 						return true;
 					}
 				}
 			}
+			
 			return false;
 		}
-
-		//TODO Add item method.
-
-		//TODO Write pickup method.
-
-		//TODO Write drop method.
-
+		
+		
 		/**
-		 * Searches trough the for the item specified by name.
-		 *
-		 * @param name The name of the item to search for
-		 * @return returns null if item was not found.
+		 * 
+		 * Ads an item to the inventory
+		 * 
+		 * @param item item to be added
+		 * @throws InventoryOverflow gets thrown if item does not fit.
 		 */
-		//Returns null if item is not found.
-		public Item getItem(String name) {
-			for(Item item : items) {
-				if(item.getName() == name) {
-					return item;
+		public void addItem(Item item) throws InventoryOverflow{
+			for (ItemContainer i : items) {
+				if(item.getType() == i.getType() && item.getName().equals(i.getName())){
+					if(item.getSize()+volume > max_volume){
+						throw new InventoryOverflow();
+					}else{
+						volume += item.getSize();
+						i.setAmount(i.getAmount()+1);
+					}
 				}
 			}
-
-			return null;
-
+			if(item.getSize()+volume > max_volume){
+				throw new InventoryOverflow();
+			}else{
+				volume += item.getSize();
+				items.add(new ItemContainer(item));
+			}
+			
 		}
 
 		public int getMax_volume() {
@@ -279,14 +303,16 @@ public abstract class Character extends Entity {
 		}
 
 
-		/**
-		 * @return The set of items in the inventory
-		 */
-		public HashSet<Item> getItems() {
-			return items;
+		
+		class InventoryOverflow extends Exception{
+			public InventoryOverflow() {
+				super();
+			}
 		}
-
-
+		
+	
+		
+		
 	}
 
 

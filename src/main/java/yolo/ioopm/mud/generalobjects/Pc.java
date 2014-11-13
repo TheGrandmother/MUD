@@ -3,12 +3,12 @@ package yolo.ioopm.mud.generalobjects;
 public class Pc extends Character {
 
 	private boolean logged_in;
-	private String password;
+	private final String password;
 	private boolean is_admin;
 
 	/**
 	 * 
-	 * Initial password is empty!
+	 * 
 	 * 
 	 * @param name
 	 * @param description
@@ -18,16 +18,16 @@ public class Pc extends Character {
 		super(name, description, starting_location);
 		starting_location.addPlayer(this);
 		logged_in =  false;
-		password = "";
+		this.password = password;
 		is_admin = false;
 	}
 	
-	public void setPassword(String password){
-		this.password = password;
-	}
+	//public void setPassword(String password){
+	//	this.password = password;
+	//}
 	
 	public boolean checkPassword(String password){
-		return this.password == password;
+		return this.password.equals(password);
 	}
 	
 	public void setAdmin(boolean is_admin) {
