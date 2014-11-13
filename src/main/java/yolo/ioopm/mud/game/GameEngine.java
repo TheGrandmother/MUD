@@ -102,7 +102,12 @@ public class GameEngine {
 	public static boolean checkUsernamePassword(String username, String password) {
 		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data, OBS! måste vara trådsäker
 		//TODO denna bör även retunera false om användaren redan är inloggad
-		return true;
+		for (Pc pc : World.players) {
+			if(pc.getName().equals(username) && pc.checkPassword(password)){
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
