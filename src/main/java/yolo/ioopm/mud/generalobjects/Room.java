@@ -13,7 +13,7 @@ public class Room extends Entity {
 	private HashSet<Door> exits   = new HashSet<Door>();
 	private HashSet<Pc>   players = new HashSet<Pc>();
 	private HashSet<Npc>  npcs    = new HashSet<Npc>();
-	private HashSet<Item> items   = new HashSet<Item>();
+	private HashSet<ItemContainer> items   = new HashSet<ItemContainer>();
 
 	/**
 	 * Constructs the Room-object.
@@ -82,10 +82,6 @@ public class Room extends Entity {
 		return npcs.add(n);
 	}
 
-	
-	
-	//TODO
-	//FIX PROPPER ITEM SUPPORT!
 	/**
 	 * Adds an item to the room.
 	 *
@@ -93,7 +89,34 @@ public class Room extends Entity {
 	 * @return True if the item was successfully added.
 	 */
 	public boolean addItem(Item i) {
-		return items.add(i);
+		for (ItemContainer container : items) {
+			if(container.getName().equals(i.getName()) && container.getType()==i.getType()){
+				container.setAmount(container.getAmount()+1);
+				return true;
+			}
+		}
+		items.add(new ItemContainer(i));
+		return true;
+	}
+	
+	
+	/**
+	 * tries to remove the specified item
+	 * @param name
+	 * @return returns true if the item could be removed
+	 */
+	public boolean removeItem(Item i){
+		for (ItemContainer container : items) {
+			if(container.getName().equals(i.getName())){
+				if(container.amount == 1){
+					items.remove(container);
+				}else{
+					container.setAmount(container.getAmount()-1);
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	
@@ -134,7 +157,7 @@ public class Room extends Entity {
 		return exits;
 	}
 
-	public HashSet<Item> getItems() {
+	public HashSet<ItemContainer> getItems() {
 		return items;
 	}
 
@@ -166,15 +189,6 @@ public class Room extends Entity {
 		return npcs.remove(n);
 	}
 
-	/**
-	 * Removes the given item from the room.
-	 *
-	 * @param i The item to remove.
-	 * @return True if the item was successfully removed.
-	 */
-	public boolean removeItem(Item i) {
-		return items.remove(i);
-	}
 
 	//This needs to be accessible. From the outside.
 	public class Door {
