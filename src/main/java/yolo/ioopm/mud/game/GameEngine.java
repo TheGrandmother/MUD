@@ -66,6 +66,10 @@ public class GameEngine {
 				Movement.move(actor, arguments, world, server);
 				break;
 				
+			case Keywords.TAKE:
+				ItemInteraction.Take(actor, arguments, world, server);
+				break;
+				
 			case "drop_players":
 				for (Pc p : world.getPlayers()) {
 					System.out.println(p.getName());
