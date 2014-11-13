@@ -14,6 +14,7 @@ import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
+import yolo.ioopm.mud.generalobjects.items.Key;
 
 public class TestSuite {
 
@@ -34,6 +35,8 @@ public class TestSuite {
 		try {
 			t.world.addRoom(new Room("room1", "of doom"));
 			t.world.addRoom(new Room("room2","super silly"));
+			t.world.addItem(new Key("room1", "room2", 0));
+			t.world.findRoom("room1").addItem(t.world.findItem("room1->room2"));
 			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), false);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
 		} catch (EntityNotUnique e) {

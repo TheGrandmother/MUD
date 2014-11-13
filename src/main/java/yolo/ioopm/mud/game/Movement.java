@@ -39,6 +39,9 @@ public abstract class Movement {
 		}
 		
 		if(door.isLocked()){
+			
+			
+			
 			server.sendMessage(new ErrorMessage(actor, "Door is locked and keys are not yet implemented."));
 			return;
 		}

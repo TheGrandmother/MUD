@@ -202,7 +202,7 @@ public abstract class Character extends Entity {
 	 *
 	 * @author TheGrandmother
 	 */
-	class Inventory {
+	 public  class Inventory {
 
 		HashSet<ItemContainer> items;
 		private int volume;
@@ -304,7 +304,8 @@ public abstract class Character extends Entity {
 
 
 		
-		class InventoryOverflow extends Exception{
+		@SuppressWarnings("serial")
+		public class InventoryOverflow extends Exception{
 			public InventoryOverflow() {
 				super();
 			}

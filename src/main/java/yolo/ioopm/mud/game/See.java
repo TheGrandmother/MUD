@@ -65,8 +65,9 @@ public final class See {
 			if(current_room.getItems().isEmpty()){
 				observation[5] = "";
 			}else{
-				for (Item item : current_room.getItems()) {
-					observation[5] += item.getName()+", ";
+				for (ItemContainer item : current_room.getItems()) {
+					observation[5] += "( "+ item.getAmount() + " "+item.getName()+
+							"), ";
 				}
 				observation[5] = observation[5].substring(0, observation[5].length()-2);
 			}

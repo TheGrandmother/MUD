@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class World {
 
 
-	private  HashSet<Pc>   players;
+	public  static HashSet<Pc>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
