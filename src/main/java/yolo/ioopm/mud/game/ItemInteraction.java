@@ -53,7 +53,7 @@ public abstract class ItemInteraction {
 			return;
 		}
 		
-		server.sendMessage(new ReplyMessage(actor, Keywords.TAKE_REPLY, new String[]{"You picked up a/an" + item_name +"."}));
+		server.sendMessage(new ReplyMessage(actor, Keywords.TAKE_REPLY, new String[]{"You picked up a/an " + item_name +"."}));
 		
 		
 		

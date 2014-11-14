@@ -204,7 +204,7 @@ public abstract class Character extends Entity {
 	 */
 	 public  class Inventory {
 
-		HashSet<ItemContainer> items;
+		private HashSet<ItemContainer> items;
 		private int volume;
 		private int max_volume = 10;
 
@@ -213,6 +213,9 @@ public abstract class Character extends Entity {
 			items = new HashSet<ItemContainer>();
 		}
 
+		public HashSet<ItemContainer> getitems(){
+			return this.items;
+		}
 		
 		/**
 		 * Tries to retrive an item from the items set.

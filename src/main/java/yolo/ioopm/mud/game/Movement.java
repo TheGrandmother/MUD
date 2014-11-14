@@ -5,10 +5,15 @@ import java.util.Iterator;
 import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.generalobjects.Character.CharacterSheet;
+import yolo.ioopm.mud.generalobjects.Character.Inventory;
+import yolo.ioopm.mud.generalobjects.Item.UseFailedException;
+import yolo.ioopm.mud.generalobjects.ItemContainer;
 import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+import yolo.ioopm.mud.generalobjects.items.Key;
 
 public abstract class Movement {
 	
@@ -39,10 +44,25 @@ public abstract class Movement {
 		}
 		
 		if(door.isLocked()){
-			
-			
-			
-			server.sendMessage(new ErrorMessage(actor, "Door is locked and keys are not yet implemented."));
+			Inventory inventory = player.getInventory();
+			for (ItemContainer i : inventory.getitems()) {
+				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRomm() ) ){
+					try {
+						if(((Key)i.getItem()).use(player, destination_room)){
+							current_room.removePlayer(player);
+							destination_room.addPlayer(player);
+							player.setLocation(destination_room);
+							
+							server.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
+							return;
+						}
+					} catch (UseFailedException e) {
+						server.sendMessage(new ErrorMessage(actor,e.getReason()));
+						return;
+					}
+				}
+			}
+			server.sendMessage(new ErrorMessage(actor, "You dont have the keey to " + destination_name+ "."));
 			return;
 		}
 		

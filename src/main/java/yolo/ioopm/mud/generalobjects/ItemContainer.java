@@ -12,7 +12,7 @@ public class ItemContainer{
 		amount = 1;
 	}
 	
-	Item getItem(){
+	public Item getItem(){
 		return item;
 	}
 	

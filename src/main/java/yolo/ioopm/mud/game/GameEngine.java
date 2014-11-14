@@ -70,6 +70,10 @@ public class GameEngine {
 				ItemInteraction.Take(actor, arguments, world, server);
 				break;
 				
+			//TODO implement drop action
+				
+			//TODO implement inspect inventory action
+				
 			case "drop_players":
 				for (Pc p : world.getPlayers()) {
 					System.out.println(p.getName());
