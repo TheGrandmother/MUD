@@ -12,11 +12,14 @@ public class TestServer extends Server {
 	}
 	
 	public void addMessage(Message msg){
-		testAdapter.addMessage(msg);
+		//testAdapter.addMessage(msg);
+		((TestServerAdapter)getAdapter()).addMessage(msg);
 	}
 	
 	public Message readMessage(){
-		return testAdapter.readMessage();
+		//return testAdapter.readMessage();
+		return ((TestServerAdapter)getAdapter()).readMessage();
+		
 	}
 
 }
