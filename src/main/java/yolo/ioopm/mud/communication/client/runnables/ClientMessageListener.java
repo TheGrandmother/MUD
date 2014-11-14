@@ -1,12 +1,18 @@
 package yolo.ioopm.mud.communication.client.runnables;
 
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.Queue;
 
 public class ClientMessageListener implements Runnable {
+
+	private final EnumSet<MessageType> ignored_types = EnumSet.of(
+		MessageType.HEARTBEAT_REPLY
+	);
 
 	private final BufferedReader br;
 	private final Queue<Message> inbox;
@@ -40,9 +46,10 @@ public class ClientMessageListener implements Runnable {
 			}
 
 			Message msg = Message.deconstructTransmission(data);
+			System.out.println("Received msg: \"" + msg.getMessage() + "\"");
 
-			if(msg != null) {
-				System.out.println("Received msg: \"" + msg.getMessage() + "\"");
+			if(msg != null && !ignored_types.contains(msg.getType())) {
+				System.out.println("Added message to inbox");
 				inbox.offer(msg);
 			}
 			else {

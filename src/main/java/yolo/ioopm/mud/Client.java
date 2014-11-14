@@ -14,11 +14,33 @@ import java.io.InputStreamReader;
 
 public class Client {
 
-	private static final String MENU = "1. Connect to server\n";
+	private enum MenuItem {
+		CONNECT(1);
+
+		private final int INDEX;
+
+		private MenuItem(int index) {
+			INDEX = index;
+		}
+
+		public int getIndex() {
+			return INDEX;
+		}
+
+		public static MenuItem getFromIndex(int index) {
+			for(MenuItem item : values()) {
+				if(item.getIndex() == index) {
+					return item;
+				}
+			}
+
+			return null;
+		}
+	}
 
 	//TODO read these values from user
-	private final String USERNAME;
-	private final String PASSWORD;
+	private String username = null;
+	private String password = null;
 
 	private final BufferedReader keyboard_reader;
 
@@ -26,13 +48,26 @@ public class Client {
 
 	public Client() {
 		AnsiConsole.systemInstall();
-
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		USERNAME = getUsername();
-		PASSWORD = getPassword();
+		run();
+	}
 
-		if(USERNAME == null || PASSWORD == null) {
+	private void run() {
+		while(true) {
+			switch(retreiveMenuChoice()) {
+				case CONNECT:
+					connect();
+					break;
+			}
+		}
+	}
+
+	private void connect() {
+		username = getUsername();
+		password = getPassword();
+
+		if(username == null || password == null) {
 			System.out.println("Something went wrong when retrieving username and/or password!");
 			return;
 		}
@@ -40,7 +75,7 @@ public class Client {
 		String host = "localhost";
 		int port = 1337;
 		try {
-			adapter = new ClientAdapter(host, port, USERNAME);
+			adapter = new ClientAdapter(host, port, username);
 		}
 		catch(IOException e) {
 			System.out.println("Failed to create ClientAdapter!");
@@ -48,8 +83,8 @@ public class Client {
 			return;
 		}
 
-		if(authenticate(USERNAME, PASSWORD)) {
-			printMenu();
+		if(authenticate(username, password)) {
+			System.out.println("You successfully authenticated yourself!");
 		}
 		else {
 			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
@@ -132,7 +167,7 @@ public class Client {
 		return password;
 	}
 
-	private void printMenu() {
+	private MenuItem retreiveMenuChoice() {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(Ansi.ansi().eraseScreen());
@@ -142,9 +177,33 @@ public class Client {
 		sb.append("^^^^^^^^^^ INPUT ^^^^^^^^^^");
 		sb.append(Ansi.ansi().bg(Ansi.Color.DEFAULT));
 		sb.append(Ansi.ansi().cursor(2,0));
-		sb.append(MENU);
+
+		for(MenuItem item : MenuItem.values()) {
+			sb.append(item.getIndex() + ". " + item.name());
+		}
+
 		sb.append(Ansi.ansi().cursor(0,0));
 
 		AnsiConsole.out.print(sb.toString());
+
+		String choice;
+		try {
+			choice = keyboard_reader.readLine();
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		int index;
+		try {
+			index = Integer.valueOf(choice);
+		}
+		catch(NumberFormatException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return MenuItem.getFromIndex(index);
 	}
 }

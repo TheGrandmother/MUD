@@ -65,6 +65,7 @@ public class ServerConnectionVerifier implements Runnable {
 				else {
 					client.write(new AuthenticationReplyMessage(username, false).getMessage());
 					System.out.println("Client tried to authenticate with incorrect details, or username is already in use!");
+					return;
 				}
 			}
 			else if(msg.getType() == MessageType.HEARTBEAT) {
