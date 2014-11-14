@@ -18,13 +18,19 @@ public class ServerAdapter extends Adapter {
 	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
 
 		// Async thread - Listens for new connections and adds them to connections.
-		new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps)).start();
+		Thread scl = new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps));
+		scl.setName("ServerConnectionListener");
+		scl.start();
 
 		// Async thread - Listens for new messages from the clients.
 		// Needs outbox to be able to reply to hearbeats.
-		new Thread(new ServerMessageListener(connections, inbox, outbox, timestamps)).start();
+		Thread sml = new Thread(new ServerMessageListener(connections, inbox, outbox, timestamps));
+		sml.setName("ServerMessageListener");
+		sml.start();
 
 		// Async thread - Sends the messages that are currently in the outbox.
-		new Thread(new ServerMessageSender(connections, outbox)).start();
+		Thread sms = new Thread(new ServerMessageSender(connections, outbox));
+		sms.setName("ServerMessageSender");
+		sms.start();
 	}
 }

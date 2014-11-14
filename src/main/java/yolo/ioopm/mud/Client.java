@@ -129,7 +129,7 @@ public class Client {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(Ansi.ansi().eraseScreen());
-		sb.append(Ansi.ansi().cursor(0,0));
+//		sb.append(Ansi.ansi().cursor(0,0));
 		sb.append("Please enter your username:");
 
 		AnsiConsole.out.println(sb);
@@ -150,7 +150,7 @@ public class Client {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(Ansi.ansi().eraseScreen());
-		sb.append(Ansi.ansi().cursor(0,0));
+//		sb.append(Ansi.ansi().cursor(0,0));
 		sb.append("Please enter your password:");
 
 		AnsiConsole.out.println(sb);
@@ -170,19 +170,19 @@ public class Client {
 	private MenuItem retreiveMenuChoice() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(Ansi.ansi().eraseScreen());
-		sb.append(Ansi.ansi().cursor(0,0));
-		sb.append(Ansi.ansi().cursor(1,0));
+//		sb.append(Ansi.ansi().eraseScreen());
+//		sb.append(Ansi.ansi().cursor(0,0));
+//		sb.append(Ansi.ansi().cursor(1,0));
 		sb.append(Ansi.ansi().bg(Ansi.Color.GREEN));
 		sb.append("^^^^^^^^^^ INPUT ^^^^^^^^^^");
 		sb.append(Ansi.ansi().bg(Ansi.Color.DEFAULT));
-		sb.append(Ansi.ansi().cursor(2,0));
+//		sb.append(Ansi.ansi().cursor(2,0));
 
 		for(MenuItem item : MenuItem.values()) {
-			sb.append(item.getIndex() + ". " + item.name());
+			sb.append(item.getIndex() + ". " + item.name() + "\n");
 		}
 
-		sb.append(Ansi.ansi().cursor(0,0));
+//		sb.append(Ansi.ansi().cursor(0,0));
 
 		AnsiConsole.out.print(sb.toString());
 
