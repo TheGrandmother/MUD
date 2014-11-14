@@ -28,7 +28,9 @@ public class ServerConnectionListener implements Runnable {
 				String ip = socket.getLocalAddress().toString();
 				System.out.println("New connection: " + ip);
 
-				new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps)).start();
+				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps));
+				scv.setName("ServerConnectionVerifier - IP: " + ip);
+				scv.start();
 			}
 			catch(IOException e) {
 				e.printStackTrace();
