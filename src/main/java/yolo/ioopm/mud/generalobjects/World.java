@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class World {
 
 
-	public  static HashSet<Pc>   players;
+	public static HashSet<Pc> players = new HashSet<>();
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
@@ -21,7 +21,6 @@ public class World {
 	 * Creates an empty world...
 	 */
 	public World() {
-		players = new HashSet<Pc>();
 		npcs = new HashSet<Npc>();
 		rooms = new HashSet<Room>();
 		items = new HashSet<Item>();
