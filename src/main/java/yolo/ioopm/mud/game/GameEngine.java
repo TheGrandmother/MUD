@@ -71,6 +71,9 @@ public class GameEngine {
 				break;
 				
 			//TODO implement drop action
+			case Keywords.DROP:
+				ItemInteraction.drop(actor, arguments, world, server);
+				break;
 				
 			//TODO implement inspect inventory action
 				

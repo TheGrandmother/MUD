@@ -242,10 +242,10 @@ public abstract class Character extends Entity {
 		 * @param type
 		 * @return false if item does not exist
 		 */
-		public boolean removeItem(String name, Item.Type type){
+		public boolean removeItem(String name){
 			
 			for (ItemContainer i : items) {
-				if(type == i.getType() && i.getName().equals(name)){
+				if(i.getName().equals(name)){
 					if(i.getAmount() == 1){
 						volume -= i.getItem().getSize();
 						items.remove(i);

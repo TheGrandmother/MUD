@@ -15,5 +15,7 @@ public abstract class Keywords {
 	static final String MOVE_REPLY		= "move_reply";
 	static final String TAKE = "take";
 	static final String TAKE_REPLY = "take_reply";
+	static final String DROP = "drop";
+	static final String DROP_REPLY = "drop_reply";
 
 }
