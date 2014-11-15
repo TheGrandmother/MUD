@@ -1,7 +1,6 @@
 package yolo.ioopm.mud;
 
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
+import yolo.ioopm.mud.ansi.GeneralAnsiCodes;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
@@ -47,13 +46,19 @@ public class Client {
 	private Adapter adapter = null;
 
 	public Client() {
-		AnsiConsole.systemInstall();
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
 		run();
 	}
 
 	private void run() {
+
+		displayWelcomeMessage();
+
+		// Retrieve username from user
+		username = getUsername();
+		password = getPassword();
+
 		while(true) {
 			switch(retreiveMenuChoice()) {
 				case CONNECT:
@@ -63,15 +68,17 @@ public class Client {
 		}
 	}
 
+	private void clearScreen() {
+		System.out.println(GeneralAnsiCodes.CLEAR_SCREEN);
+		System.out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
+	}
+
+	private void displayWelcomeMessage() {
+		clearScreen();
+		System.out.println("Welcome to MUD!");
+	}
+
 	private void connect() {
-		username = getUsername();
-		password = getPassword();
-
-		if(username == null || password == null) {
-			System.out.println("Something went wrong when retrieving username and/or password!");
-			return;
-		}
-
 		String host = "localhost";
 		int port = 1337;
 		try {
@@ -126,13 +133,7 @@ public class Client {
 	}
 
 	private String getUsername() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(Ansi.ansi().eraseScreen());
-//		sb.append(Ansi.ansi().cursor(0,0));
-		sb.append("Please enter your username:");
-
-		AnsiConsole.out.println(sb);
+		System.out.println("Please enter your username:");
 
 		String username;
 		try {
@@ -147,13 +148,7 @@ public class Client {
 	}
 
 	private String getPassword() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(Ansi.ansi().eraseScreen());
-//		sb.append(Ansi.ansi().cursor(0,0));
-		sb.append("Please enter your password:");
-
-		AnsiConsole.out.println(sb);
+		System.out.println("Please enter your password:");
 
 		String password;
 		try {
@@ -170,21 +165,20 @@ public class Client {
 	private MenuItem retreiveMenuChoice() {
 		StringBuilder sb = new StringBuilder();
 
-//		sb.append(Ansi.ansi().eraseScreen());
-//		sb.append(Ansi.ansi().cursor(0,0));
-//		sb.append(Ansi.ansi().cursor(1,0));
-		sb.append(Ansi.ansi().bg(Ansi.Color.GREEN));
+		clearScreen();
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(2).setIntTwo(0));
 		sb.append("^^^^^^^^^^ INPUT ^^^^^^^^^^");
-		sb.append(Ansi.ansi().bg(Ansi.Color.DEFAULT));
-//		sb.append(Ansi.ansi().cursor(2,0));
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(3).setIntTwo(0));
 
+		int i = 4;
 		for(MenuItem item : MenuItem.values()) {
-			sb.append(item.getIndex() + ". " + item.name() + "\n");
+			sb.append(item.getIndex() + ". " + item.name());
+			sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(i++).setIntTwo(0));
 		}
 
-//		sb.append(Ansi.ansi().cursor(0,0));
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
 
-		AnsiConsole.out.print(sb.toString());
+		System.out.print(sb.toString());
 
 		String choice;
 		try {
