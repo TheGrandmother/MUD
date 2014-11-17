@@ -1,11 +1,13 @@
 package yolo.ioopm.mud.communication.server.runnables;
 
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,11 +18,13 @@ public class ServerConnectionListener implements Runnable {
 	private final ServerSocket                  server_socket;
 	private final Map<String, ClientConnection> connections;
 	private final Map<String, Long>             timestamps;
+	private final Queue<Message>                inbox;
 
-	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps) {
+	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox) {
 		this.server_socket = socket;
 		this.connections = connections;
 		this.timestamps = timestamps;
+		this.inbox = inbox;
 	}
 
 	@Override
@@ -34,7 +38,7 @@ public class ServerConnectionListener implements Runnable {
 				logger.fine("New connection: " + ip);
 
 				logger.fine("Creating new ServerConnectionVerifier for new connection!");
-				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps));
+				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps, inbox));
 				scv.setName("ServerConnectionVerifier - IP: " + ip);
 				scv.start();
 			}

@@ -120,6 +120,19 @@ public class GameEngine {
 		}
 		return false;
 	}
+
+	/**
+	 * Registers the user at the server.
+	 *
+	 * @param username
+	 * @param password
+	 * @return true if successfull, else false
+	 */
+	public static boolean register(String username, String password) {
+		// TODO registrerar användaren på servern, returnerar sant om det gick, annars falskt
+		// TODO måste vara trådsäker
+		return false;
+	}
 }
 
 

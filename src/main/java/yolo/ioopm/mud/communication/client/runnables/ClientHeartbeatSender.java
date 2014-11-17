@@ -26,7 +26,6 @@ public class ClientHeartbeatSender implements Runnable {
 		while(true) {
 
 			try {
-				logger.fine("Sleeping...");
 				Thread.sleep(Adapter.HEARTBEAT_FREQUENCY);
 			}
 			catch(InterruptedException e) {

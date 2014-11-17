@@ -125,6 +125,10 @@ public class Client {
 	}
 
 	private void login() {
+		clearScreen();
+
+		System.out.println("Attempting to login to server...");
+
 		if(authenticate(username, password)) {
 			System.out.println("You successfully authenticated yourself!");
 			is_connected = true;
@@ -143,10 +147,10 @@ public class Client {
 		}
 	}
 
-	private boolean register() {
+	private void register() {
 		clearScreen();
 
-		System.out.println("Attempting to register at server");
+		System.out.println("Attempting to register at server...");
 
 		adapter.sendMessage(new RegistrationMessage(username, username, password));
 
@@ -165,19 +169,17 @@ public class Client {
 		if(answer.getType() == MessageType.REGISTRATION_REPLY) {
 			switch(answer.getArguments()[0]) {
 				case "false":
-					return false;
+					System.out.println("Registration failed! That username is probably already in use!");
 				case "true":
-					return true;
+					System.out.println("Successfully registered at server! You can now log in!");
 				default:
 					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
 					has_crashed = true;
-					return false;
 			}
 		}
 		else {
 			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			has_crashed = true;
-			return false;
 		}
 	}
 

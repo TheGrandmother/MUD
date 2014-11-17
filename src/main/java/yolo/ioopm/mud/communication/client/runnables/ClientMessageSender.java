@@ -5,7 +5,6 @@ import yolo.ioopm.mud.communication.Message;
 
 import java.io.PrintWriter;
 import java.util.Queue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ClientMessageSender implements Runnable {
@@ -26,15 +25,12 @@ public class ClientMessageSender implements Runnable {
 
 			// Iterate over outbox and send the messages every tick.
 			try {
-				logger.fine("Sleeping...");
 				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception
 				e.printStackTrace();
 			}
-
-			logger.fine("Attempting to send any new messages");
 
 			// Send the messages.
 			synchronized(pw) {
