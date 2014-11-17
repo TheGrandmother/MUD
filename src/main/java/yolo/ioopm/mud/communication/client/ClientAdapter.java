@@ -11,17 +11,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class ClientAdapter extends Adapter {
+
+	private static final Logger logger = Logger.getLogger(ClientAdapter.class.getName());
+
 	public ClientAdapter(String host, int port, String username)
 			throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
 
+		logger.fine("Attempting to bind socket!");
 		Socket socket = new Socket(host, port);
 
 		// Access to these two objects need to be synchronized
 		PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		logger.fine("Socket and in/out-streams bound successfully!");
 
+		logger.fine("Initiating threads!");
 		Thread cms = new Thread(new ClientMessageSender(pw, outbox));
 		cms.setName("ClientMessageSender");
 		cms.start();
@@ -33,5 +40,7 @@ public class ClientAdapter extends Adapter {
 		Thread chs = new Thread(new ClientHeartbeatSender(outbox, username));
 		chs.setName("ClientHeartbeatSender");
 		chs.start();
+
+		logger.fine("Startup sequence finished!");
 	}
 }

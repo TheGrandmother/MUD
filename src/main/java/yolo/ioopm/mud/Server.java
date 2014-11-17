@@ -5,18 +5,23 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ServerAdapter;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
 
+	private static final Logger logger = Logger.getLogger(Server.class.getName());
+
+	public final static int DEFAULT_PORT = 1337;
+
 	private Adapter adapter = null;
 
-	public Server(int port) {
+	public Server() {
 		try {
-			adapter = new ServerAdapter(port);
+			adapter = new ServerAdapter(DEFAULT_PORT);
 		}
 		catch(IOException e) {
-			System.err.format("Server failed to create ServerAdapter on port: %d%n", port);
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Server failed to create ServerAdapter on port: " + DEFAULT_PORT, e);
 		}
 	}
 

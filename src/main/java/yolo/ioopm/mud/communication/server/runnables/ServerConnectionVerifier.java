@@ -8,8 +8,12 @@ import yolo.ioopm.mud.game.GameEngine;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerConnectionVerifier implements Runnable {
+
+	private static final Logger logger = Logger.getLogger(ServerConnectionVerifier.class.getName());
 
 	private final ClientConnection              client;
 	private final Map<String, ClientConnection> connections;
@@ -19,6 +23,7 @@ public class ServerConnectionVerifier implements Runnable {
 		this.client = client;
 		this.connections = connections;
 		this.timestamps = timestamps;
+		logger.fine("New ServerConnectionVerifier created!");
 	}
 
 	@Override
@@ -29,20 +34,19 @@ public class ServerConnectionVerifier implements Runnable {
 				data = client.readLine();
 			}
 			catch(IOException e) {
-				System.out.println("IOException while listening for ClientRegistrationMessage!");
-				e.printStackTrace();
+				logger.log(Level.SEVERE, "IOException while listening for ClientRegistrationMessage!", e);
 				return;
 			}
 
 			if(data == null) {
-				System.out.println("Received null data when listening for ClientRegistrationMessage!");
+				logger.severe("Received null data when listening for ClientRegistrationMessage!");
 				return;
 			}
 
 			Message msg = Message.deconstructTransmission(data);
 
 			if(msg == null) {
-				System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+				logger.severe("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 				return;
 			}
 
@@ -56,7 +60,7 @@ public class ServerConnectionVerifier implements Runnable {
 					connections.put(username, client);
 					timestamps.put(username, System.currentTimeMillis());
 
-					System.out.println("Client successfully authenticated against server!");
+					logger.fine("Client successfully authenticated against server!");
 					client.write(new AuthenticationReplyMessage(username, true).getMessage());
 
 					// Terminate the thread.
@@ -64,7 +68,7 @@ public class ServerConnectionVerifier implements Runnable {
 				}
 				else {
 					client.write(new AuthenticationReplyMessage(username, false).getMessage());
-					System.out.println("Client tried to authenticate with incorrect details, or username is already in use!");
+					logger.fine("Client tried to authenticate with incorrect details, or username is already in use!");
 					return;
 				}
 			}
@@ -72,7 +76,7 @@ public class ServerConnectionVerifier implements Runnable {
 				// Do nothing
 			}
 			else {
-				System.out.println("ServerConnectionVerifier received illegal message! Type: \"" + msg.getType() + "\"");
+				logger.warning("ServerConnectionVerifier received illegal message! Type: \"" + msg.getType() + "\"");
 			}
 		}
 	}

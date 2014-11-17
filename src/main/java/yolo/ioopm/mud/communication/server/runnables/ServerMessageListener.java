@@ -8,8 +8,12 @@ import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerMessageListener implements Runnable {
+
+	private static final Logger logger = Logger.getLogger(ServerMessageListener.class.getName());
 
 	/*
 	 	These message types will not be added to the inbox when received!
@@ -38,15 +42,16 @@ public class ServerMessageListener implements Runnable {
 		while(true) {
 
 			try {
+				logger.fine("Sleeping...");
 				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
-				//TODO unhandled exception
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 
 			Set<String> dead_clients = new HashSet<>();
 
+			logger.fine("Initiating iteration over connections...");
 			for(Map.Entry<String, ClientConnection> entry : connections.entrySet()) {
 				ClientConnection cc = entry.getValue();
 
@@ -54,12 +59,12 @@ public class ServerMessageListener implements Runnable {
 
 				try {
 					if(cc.hasUnreadData()) {
+						logger.fine("Reading data from client...");
 						data = cc.readLine();
 					}
 				}
 				catch(IOException e) {
-					//TODO unhandled exception
-					e.printStackTrace();
+					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 
 				if(data != null) {
@@ -70,14 +75,15 @@ public class ServerMessageListener implements Runnable {
 							inbox.offer(msg);
 						}
 						else if(msg.getType() == MessageType.HEARTBEAT) {
-							// Immediately reply to heartbeats from clients
+							logger.fine("Responding to client heartbeat!");
 							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
 						}
 
+						logger.fine("Adding timestamp to log");
 						timestamps.put(entry.getKey(), msg.getTimeStamp());
 					}
 					else {
-						System.err.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+						logger.severe("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 					}
 				}
 				else {
@@ -88,6 +94,7 @@ public class ServerMessageListener implements Runnable {
 
 					// If the client hasn't sent any messages during this time, mark them as dead.
 					if(delta > Adapter.TIMEOUT_SECONDS) {
+						logger.fine("Found dead client!");
 						dead_clients.add(entry.getKey());
 					}
 				}
@@ -95,11 +102,11 @@ public class ServerMessageListener implements Runnable {
 
 			// Remove any dead clients
 			if(dead_clients.size() != 0) {
-				System.out.format("ServerMessageListener will be removing %d dead clients!%n", dead_clients.size());
+				logger.fine("ServerMessageListener will be removing " + dead_clients.size() + " dead clients!");
 
 				for(String client : dead_clients) {
 					connections.remove(client);
-					System.out.println(client + " timed out!");
+					logger.info(client + " timed out!");
 				}
 			}
 		}

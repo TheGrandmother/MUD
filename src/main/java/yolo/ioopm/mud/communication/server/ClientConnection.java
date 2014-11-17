@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientConnection {
+
+	private static final Logger logger = Logger.getLogger(ClientConnection.class.getName());
 
 	private final Socket socket;
 	private PrintWriter    print_writer    = null;
@@ -20,7 +24,7 @@ public class ClientConnection {
 			this.buffered_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		}
 		catch(IOException e) {
-			System.out.println("Failed to create PrintWriter or BufferedReader for ip-address: " + socket.getLocalAddress().toString());
+			logger.log(Level.SEVERE, "Failed to create PrintWriter or BufferedReader for ip-address: " + socket.getLocalAddress().toString(), e);
 			throw e;
 		}
 	}

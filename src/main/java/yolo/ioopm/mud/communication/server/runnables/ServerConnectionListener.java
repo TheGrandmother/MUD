@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerConnectionListener implements Runnable {
+
+	private static final Logger logger = Logger.getLogger(ServerConnectionListener.class.getName());
 
 	private final ServerSocket                  server_socket;
 	private final Map<String, ClientConnection> connections;
@@ -23,17 +27,19 @@ public class ServerConnectionListener implements Runnable {
 	public void run() {
 		while(true) {
 			try {
+				logger.fine("Waiting for connection...");
 				Socket socket = this.server_socket.accept();
 
 				String ip = socket.getLocalAddress().toString();
-				System.out.println("New connection: " + ip);
+				logger.fine("New connection: " + ip);
 
+				logger.fine("Creating new ServerConnectionVerifier for new connection!");
 				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps));
 				scv.setName("ServerConnectionVerifier - IP: " + ip);
 				scv.start();
 			}
 			catch(IOException e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

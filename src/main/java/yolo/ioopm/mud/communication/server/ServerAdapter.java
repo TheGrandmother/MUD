@@ -9,13 +9,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 public class ServerAdapter extends Adapter {
+
+	private static final Logger logger = Logger.getLogger(ServerAdapter.class.getName());
 
 	private final Map<String, ClientConnection> connections = new ConcurrentHashMap<>();
 	private final Map<String, Long>             timestamps  = new ConcurrentHashMap<>();
 
 	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
+
+		logger.fine("Initiating ServerAdapter!");
 
 		// Async thread - Listens for new connections and adds them to connections.
 		Thread scl = new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps));
@@ -32,5 +37,7 @@ public class ServerAdapter extends Adapter {
 		Thread sms = new Thread(new ServerMessageSender(connections, outbox));
 		sms.setName("ServerMessageSender");
 		sms.start();
+
+		logger.fine("All threads started!");
 	}
 }

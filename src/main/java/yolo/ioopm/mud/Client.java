@@ -10,8 +10,11 @@ import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 
 public class Client {
+
+	private static final Logger logger = Logger.getLogger(Client.class.getName());
 
 	private enum MenuItem {
 		CONNECT(1);
@@ -46,21 +49,24 @@ public class Client {
 	private Adapter adapter = null;
 
 	public Client() {
+		logger.fine("Initiating client!");
+
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
 		run();
 	}
 
 	private void run() {
+		logger.fine("Run() has been called!");
 
 		displayWelcomeMessage();
 
 		// Retrieve username from user
-		username = getUsername();
-		password = getPassword();
+		username = askForUsername();
+		password = askForPassword();
 
 		while(true) {
-			switch(retreiveMenuChoice()) {
+			switch(showMenu()) {
 				case CONNECT:
 					connect();
 					break;
@@ -69,32 +75,35 @@ public class Client {
 	}
 
 	private void clearScreen() {
-		System.out.println(GeneralAnsiCodes.CLEAR_SCREEN);
-		System.out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
+		logger.info(GeneralAnsiCodes.CLEAR_SCREEN.toString());
+		logger.info(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
 	}
 
 	private void displayWelcomeMessage() {
 		clearScreen();
-		System.out.println("Welcome to MUD!");
+		logger.info("Welcome to MUD!");
 	}
 
 	private void connect() {
-		String host = "localhost";
-		int port = 1337;
+		clearScreen();
+
+		String host = askForHostname();
+		int port = Server.DEFAULT_PORT;
+
 		try {
 			adapter = new ClientAdapter(host, port, username);
 		}
 		catch(IOException e) {
-			System.out.println("Failed to create ClientAdapter!");
+			logger.severe("Failed to create ClientAdapter!");
 			e.printStackTrace();
 			return;
 		}
 
 		if(authenticate(username, password)) {
-			System.out.println("You successfully authenticated yourself!");
+			logger.info("You successfully authenticated yourself!");
 		}
 		else {
-			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
+			logger.info("Failed to authenticate against server! Is the name is use or are the details incorrect?");
 			return;
 		}
 	}
@@ -122,47 +131,44 @@ public class Client {
 				case "true":
 					return true;
 				default:
-					System.out.println("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
 					return false;
 			}
 		}
 		else {
-			System.out.println("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			return false;
 		}
 	}
 
-	private String getUsername() {
-		System.out.println("Please enter your username:");
+	private String askForUsername() {
+		return ask("Please enter your username:");
+	}
 
-		String username;
+	private String askForPassword() {
+		return ask("Please enter your password:");
+	}
+
+	private String askForHostname() {
+		return ask("Please enter hostname:");
+	}
+
+	private String ask(String question) {
+		logger.info(question);
+
+		String answer;
 		try {
-			username = keyboard_reader.readLine();
+			answer = keyboard_reader.readLine();
 		}
-		catch(IOException e) {
+		catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 
-		return username;
+		return answer;
 	}
 
-	private String getPassword() {
-		System.out.println("Please enter your password:");
-
-		String password;
-		try {
-			password = keyboard_reader.readLine();
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return password;
-	}
-
-	private MenuItem retreiveMenuChoice() {
+	private MenuItem showMenu() {
 		StringBuilder sb = new StringBuilder();
 
 		clearScreen();
@@ -178,7 +184,7 @@ public class Client {
 
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
 
-		System.out.print(sb.toString());
+		logger.info(sb.toString());
 
 		String choice;
 		try {

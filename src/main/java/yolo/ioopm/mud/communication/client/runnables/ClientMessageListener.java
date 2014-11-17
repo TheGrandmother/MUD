@@ -7,10 +7,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientMessageListener implements Runnable {
 
-	private final EnumSet<MessageType> ignored_types = EnumSet.of(
+	private static final Logger logger = Logger.getLogger(ClientMessageListener.class.getName());
+
+	private static final EnumSet<MessageType> ignored_types = EnumSet.of(
 		MessageType.HEARTBEAT_REPLY
 	);
 
@@ -25,35 +29,37 @@ public class ClientMessageListener implements Runnable {
 	@Override
 	public void run() {
 
+		logger.fine("Initiated!");
+
 		// There is no need for this thread to sleep, br.readLine() is a blocking method.
 
 		while(true) {
 			String data;
 			synchronized(br) {
 				try {
+					logger.fine("Waiting for data...");
 					data = br.readLine();
 				}
 				catch(IOException e) {
-					System.out.println("IOException when reading from BufferedReader! Terminating thread!");
-					e.printStackTrace();
+					logger.log(Level.SEVERE, "IOException when reading from BufferedReader! Terminating thread!", e);
 					return;
 				}
 			}
 
 			if(data == null) {
-				System.out.println("Data was null after reading BufferedReader! Did the connection close? Terminating thread!");
+				logger.severe("Data was null after reading BufferedReader! Did the connection close? Terminating thread!");
 				return;
 			}
 
 			Message msg = Message.deconstructTransmission(data);
-			System.out.println("Received msg: \"" + msg.getMessage() + "\"");
+			logger.fine("Received msg: \"" + msg.getMessage() + "\"");
 
 			if(msg != null && !ignored_types.contains(msg.getType())) {
-				System.out.println("Added message to inbox");
+				logger.fine("Added message to inbox");
 				inbox.offer(msg);
 			}
 			else {
-				System.out.println("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+				logger.warning("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 				continue;
 			}
 		}
