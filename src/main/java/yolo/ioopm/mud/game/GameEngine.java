@@ -1,10 +1,8 @@
 package yolo.ioopm.mud.game;
 
-import java.util.ArrayList;
-import java.util.concurrent.BrokenBarrierException;
-
 import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Pc;
@@ -84,7 +82,7 @@ public class GameEngine {
 				break;
 				
 			case "am_i_real":
-			System.out.println(actor);
+				System.out.println(actor);
 				for (Pc p : world.getPlayers()) {
 					if(p.getName().equals(actor)){
 						
