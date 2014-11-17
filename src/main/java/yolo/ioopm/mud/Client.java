@@ -6,18 +6,24 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.client.ClientAdapter;
 import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
+import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Client {
 
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
 
+	private boolean is_connected = false;
+	private boolean has_crashed = false;
+
 	private enum MenuItem {
-		CONNECT(1);
+		LOGIN(1),
+		REGISTER(2);
 
 		private final int INDEX;
 
@@ -53,38 +59,37 @@ public class Client {
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		run();
-	}
-
-	private void run() {
-		logger.fine("Run() has been called!");
-
 		displayWelcomeMessage();
 
 		// Retrieve username from user
 		username = askForUsername();
 		password = askForPassword();
 
-		while(true) {
+		while(!is_connected) {
+
+			while(adapter == null) {
+				connect();
+			}
+
 			switch(showMenu()) {
-				case CONNECT:
-					connect();
+				case LOGIN:
+					login();
 					break;
+				case REGISTER:
+					register();
+					break;
+			}
+
+			if(has_crashed) {
+				logger.severe("The client crashed unexpectedly! Please refer to log.");
+				return;
 			}
 		}
 	}
 
-	private void clearScreen() {
-		System.out.println(GeneralAnsiCodes.CLEAR_SCREEN.toString());
-		System.out.println(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
-	}
-
-	private void displayWelcomeMessage() {
-		clearScreen();
-		System.out.println("Welcome to MUD!");
-	}
-
 	private void connect() {
+		System.out.println("Connecting to server...");
+
 		clearScreen();
 
 		String host = askForHostname();
@@ -94,17 +99,85 @@ public class Client {
 			adapter = new ClientAdapter(host, port, username);
 		}
 		catch(IOException e) {
-			logger.severe("Failed to create ClientAdapter!");
-			e.printStackTrace();
+			logger.log(Level.FINER, "Failed to create ClientAdapter for host \"" + host + "\"!", e);
+			System.out.println("Could not connect to server! Please wait...");
+
+			// Wait three seconds before printing the menu again.
+			try {
+				Thread.sleep(3000);
+			}
+			catch(InterruptedException e1) {
+				logger.log(Level.SEVERE, e1.getMessage(), e1);
+			}
+
 			return;
 		}
+	}
 
+	private void clearScreen() {
+		System.out.print(GeneralAnsiCodes.CLEAR_SCREEN.toString());
+		System.out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
+	}
+
+	private void displayWelcomeMessage() {
+		clearScreen();
+		System.out.println("Welcome to MUD!");
+	}
+
+	private void login() {
 		if(authenticate(username, password)) {
 			System.out.println("You successfully authenticated yourself!");
+			is_connected = true;
 		}
 		else {
 			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
-			return;
+			System.out.println("If you have not registered yourself on this server, please do so prior to connecting!");
+
+			// Wait three seconds before printing the menu again.
+			try {
+				Thread.sleep(3000);
+			}
+			catch(InterruptedException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+	}
+
+	private boolean register() {
+		clearScreen();
+
+		System.out.println("Attempting to register at server");
+
+		adapter.sendMessage(new RegistrationMessage(username, username, password));
+
+		logger.fine("Waiting for server to reply...");
+
+		Message answer;
+		while((answer = adapter.poll()) == null) {
+			try {
+				Thread.sleep(200);
+			}
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if(answer.getType() == MessageType.REGISTRATION_REPLY) {
+			switch(answer.getArguments()[0]) {
+				case "false":
+					return false;
+				case "true":
+					return true;
+				default:
+					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+					has_crashed = true;
+					return false;
+			}
+		}
+		else {
+			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			has_crashed = true;
+			return false;
 		}
 	}
 
@@ -112,6 +185,8 @@ public class Client {
 		// Authenticate against server
 		Message msg = new AuthenticationMessage(username, password);
 		adapter.sendMessage(msg);
+
+		logger.fine("Waiting for server to reply...");
 
 		// Poll adapter every 0.2 seconds until we receive an answer.
 		Message answer;
@@ -132,11 +207,13 @@ public class Client {
 					return true;
 				default:
 					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+					has_crashed = true;
 					return false;
 			}
 		}
 		else {
 			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			has_crashed = true;
 			return false;
 		}
 	}
@@ -184,7 +261,7 @@ public class Client {
 
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
 
-		System.out.println(sb.toString());
+		System.out.print(sb.toString());
 
 		String choice;
 		try {

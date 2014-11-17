@@ -24,6 +24,8 @@ public class Server {
 		catch(IOException e) {
 			logger.log(Level.SEVERE, "Server failed to create ServerAdapter on port: " + DEFAULT_PORT, e);
 		}
+
+		logger.info("Server initiated!");
 	}
 
 	protected Server(Adapter a) {

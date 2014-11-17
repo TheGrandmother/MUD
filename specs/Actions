@@ -16,7 +16,7 @@ SAY: say <message>
 	description:
 		User says something to all the other players in the room.
 
-WHIPSPER: whisper <recipient> <message>
+WHISPER: whisper <recipient> <message>
 	arguments:
 		recipient: the recipient of the message
 		message: what is to be said
