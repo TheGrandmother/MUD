@@ -75,13 +75,13 @@ public class Client {
 	}
 
 	private void clearScreen() {
-		logger.info(GeneralAnsiCodes.CLEAR_SCREEN.toString());
-		logger.info(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
+		System.out.println(GeneralAnsiCodes.CLEAR_SCREEN.toString());
+		System.out.println(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
 	}
 
 	private void displayWelcomeMessage() {
 		clearScreen();
-		logger.info("Welcome to MUD!");
+		System.out.println("Welcome to MUD!");
 	}
 
 	private void connect() {
@@ -100,10 +100,10 @@ public class Client {
 		}
 
 		if(authenticate(username, password)) {
-			logger.info("You successfully authenticated yourself!");
+			System.out.println("You successfully authenticated yourself!");
 		}
 		else {
-			logger.info("Failed to authenticate against server! Is the name is use or are the details incorrect?");
+			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
 			return;
 		}
 	}
@@ -154,7 +154,7 @@ public class Client {
 	}
 
 	private String ask(String question) {
-		logger.info(question);
+		System.out.println(question);
 
 		String answer;
 		try {
@@ -184,7 +184,7 @@ public class Client {
 
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
 
-		logger.info(sb.toString());
+		System.out.println(sb.toString());
 
 		String choice;
 		try {

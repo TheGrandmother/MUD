@@ -1,10 +1,9 @@
 package yolo.ioopm.mud;
 
+import yolo.ioopm.mud.misc.HTMLFormatter;
+
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public class Main {
 
@@ -12,32 +11,38 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		Logger root_logger = Logger.getLogger("");
+		root_logger.setLevel(Level.ALL);
+
 		FileHandler log_file;
 		try {
-			log_file = new FileHandler("MUD-log.txt");
+			log_file = new FileHandler("MUD-log.html");
 		}
 		catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			return;
 		}
 
-		Logger root_logger = Logger.getLogger("");
-		root_logger.addHandler(log_file);
-		root_logger.addHandler(new ConsoleHandler());
-		root_logger.setLevel(Level.INFO);
+		// Log everything to log file
+		log_file.setFormatter(new HTMLFormatter());
+		log_file.setLevel(Level.ALL);
 
-		Logger communication_logger = Logger.getLogger("yolo.ioopm.mud.communication");
-		communication_logger.setLevel(Level.ALL);
+		ConsoleHandler console = new ConsoleHandler();
+
+		root_logger.addHandler(log_file);
+		root_logger.addHandler(console);
 
 		logger.fine("Program has been started!");
 
 		switch(args[0].toLowerCase()) {
 			case "client":
 				logger.fine("Initiating client...");
+				console.setLevel(Level.WARNING);
 				new Client();
 				break;
 			case "server":
 				logger.fine("Initiating server...");
+				console.setLevel(Level.INFO);
 				new Server();
 				break;
 		}

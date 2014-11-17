@@ -42,7 +42,6 @@ public class ServerMessageListener implements Runnable {
 		while(true) {
 
 			try {
-				logger.fine("Sleeping...");
 				Thread.sleep(Adapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
@@ -51,7 +50,6 @@ public class ServerMessageListener implements Runnable {
 
 			Set<String> dead_clients = new HashSet<>();
 
-			logger.fine("Initiating iteration over connections...");
 			for(Map.Entry<String, ClientConnection> entry : connections.entrySet()) {
 				ClientConnection cc = entry.getValue();
 

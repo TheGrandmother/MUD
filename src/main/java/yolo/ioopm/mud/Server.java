@@ -17,6 +17,7 @@ public class Server {
 	private Adapter adapter = null;
 
 	public Server() {
+		logger.fine("Attempting to create server adapter...");
 		try {
 			adapter = new ServerAdapter(DEFAULT_PORT);
 		}
