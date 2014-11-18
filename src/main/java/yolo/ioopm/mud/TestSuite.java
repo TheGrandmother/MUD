@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.TestServerAdapter;
 import yolo.ioopm.mud.communication.messages.server.IncommingMessage;
@@ -18,31 +19,33 @@ import yolo.ioopm.mud.generalobjects.items.Key;
 
 public class TestSuite {
 
-	World world = new World();
-	TestServer server = new TestServer();	
-	GameEngine game = new GameEngine(server, world);
-	
+	World             world   = new World();
+	TestServerAdapter adapter = new TestServerAdapter();
+	GameEngine        game    = new GameEngine(adapter, world);
+
 	public Boolean quit = false;
-	
+
 	public TestSuite() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println("Starting test suite");
 		TestSuite t = new TestSuite();
-		
+
 		try {
 			t.world.addRoom(new Room("room1", "of doom"));
-			t.world.addRoom(new Room("room2","super silly"));
+			t.world.addRoom(new Room("room2", "super silly"));
 			t.world.addItem(new Key("room1", "room2", 0));
 			t.world.findRoom("room1").addItem(t.world.findItem("Key to room2"));
 			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), true);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
-		} catch (EntityNotUnique e) {
+		}
+		catch(EntityNotUnique e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (EntityNotPresent e) {
+		}
+		catch(EntityNotPresent e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -68,14 +71,14 @@ public class TestSuite {
 		}
 		
 		
-		Thread read_outgoing =  new Thread(t.new Listener(t.server), "listen");
-		Thread send =  new Thread(t.new Writer(t.server), "sänd");
+		Thread read_outgoing =  new Thread(t.new Listener(t.adapter), "listen");
+		Thread send =  new Thread(t.new Writer(t.adapter), "sänd");
 		
 		read_outgoing.start();
 		send.start();
 		
 		while(true){
-			Message msg = t.server.pollOldestMessage();
+			Message msg = t.adapter.poll();
 			if(msg != null){
 				t.game.executeAction(msg);
 			}
@@ -87,9 +90,9 @@ public class TestSuite {
 	}
 
 	class Listener implements Runnable{
-		TestServer server;
-		public Listener(TestServer server) {
-			this.server = server;
+		TestServerAdapter adapter;
+		public Listener(TestServerAdapter a) {
+			this.adapter = a;
 			}
 		
 		Message msg;
@@ -97,7 +100,7 @@ public class TestSuite {
 		public void run() {
 			while(!quit){
 				
-				msg = server.readMessage();
+				msg = adapter.readMessage();
 				if(msg != null){
 					System.out.print(msg.getSender() +"->"+msg.getReceiver()+": ");
 					System.out.print(msg.getAction()+"\n");
@@ -113,13 +116,12 @@ public class TestSuite {
 	}
 	
 	class Writer implements Runnable{
-		TestServer server;
-		public Writer(TestServer server) {
-			this.server = server;
+		TestServerAdapter adapter;
+		public Writer(TestServerAdapter a) {
+			this.adapter = a;
 			}
 		BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
-		
-		Message msg;
+
 		String actor;
 		String action;
 		String[] nouns;
@@ -135,7 +137,7 @@ public class TestSuite {
 					if(action.equals("q")){quit=true;}
 					System.out.println("Tajp arguments sepparated by one sweet colon");
 					nouns = buff.readLine().split(",");
-					server.addMessage(new IncommingMessage("server", actor, action, nouns));
+					adapter.addMessage(new IncommingMessage("server", actor, action, nouns));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

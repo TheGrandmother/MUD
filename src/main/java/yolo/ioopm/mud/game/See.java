@@ -1,12 +1,9 @@
 package yolo.ioopm.mud.game;
 
-import java.util.Iterator;
-
-import yolo.ioopm.mud.Server;
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.*;
-import yolo.ioopm.mud.generalobjects.Room.Door;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 /**
@@ -19,7 +16,7 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 public final class See {
 
 	
-	public static void look(String actor,World world, Server server){
+	public static void look(String actor,World world, Adapter server){
 		try {
 			Room current_room  = world.findPc(actor).getLocation();
 			String[] observation = new String[6];

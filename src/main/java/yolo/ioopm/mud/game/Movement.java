@@ -1,6 +1,6 @@
 package yolo.ioopm.mud.game;
 
-import yolo.ioopm.mud.Server;
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
@@ -16,7 +16,7 @@ public abstract class Movement {
 	
 	//TODO
 	//TEST THIS FUNCTION LIKE A BOSS
-	public static void move(String actor, String[] arguments, World world, Server server){
+	public static void move(String actor, String[] arguments, World world, Adapter server){
 		if(arguments.length != 1){
 			server.sendMessage(new ErrorMessage(actor, "Wrong nuber of arguments for move operation."));
 		}

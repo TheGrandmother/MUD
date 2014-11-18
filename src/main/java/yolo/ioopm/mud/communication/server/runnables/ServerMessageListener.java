@@ -69,6 +69,9 @@ public class ServerMessageListener implements Runnable {
 					Message msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
+
+						logger.fine("Received message of type \"" + msg.getType() + "\" from user \"" + msg.getSender() + "\"");
+
 						if(!ignored_messages.contains(msg.getType())) {
 							inbox.offer(msg);
 						}

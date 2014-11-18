@@ -54,7 +54,13 @@ public class ClientMessageListener implements Runnable {
 			Message msg = Message.deconstructTransmission(data);
 			logger.fine("Received msg: \"" + msg.getMessage() + "\"");
 
-			if(msg != null && !ignored_types.contains(msg.getType())) {
+			if(msg != null) {
+
+				// Skip unwanted messages
+				if(ignored_types.contains(msg.getType())) {
+					continue;
+				}
+
 				logger.fine("Added message to inbox");
 				inbox.offer(msg);
 			}

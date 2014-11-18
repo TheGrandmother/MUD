@@ -57,7 +57,7 @@ public class ServerConnectionVerifier implements Runnable {
 				continue;
 			}
 
-			logger.fine("New client sent message, adding them to connections and message to inbox.");
+			logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
 			logger.info("New connection registered! IP: " + client.getIPAdress());
 
 			inbox.offer(msg);

@@ -1,6 +1,6 @@
 package yolo.ioopm.mud.game;
 
-import yolo.ioopm.mud.Server;
+import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
@@ -9,8 +9,6 @@ import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
-import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 
 /**
  * This class is responsible for handling the interpreting of the actions passed to the server.
@@ -19,10 +17,10 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
  */
 public class GameEngine {
 
-	Server server;
-	World  world;
+	Adapter server;
+	World   world;
 
-	public GameEngine(Server server, World world) {
+	public GameEngine(Adapter server, World world) {
 		this.server = server;
 		this.world = world;
 	}

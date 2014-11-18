@@ -1,12 +1,14 @@
 package yolo.ioopm.mud.game;
 
-import java.util.ArrayList;
-
-import yolo.ioopm.mud.Server;
-import yolo.ioopm.mud.communication.Message;
-import yolo.ioopm.mud.communication.messages.server.*;
-import yolo.ioopm.mud.generalobjects.*;
+import yolo.ioopm.mud.communication.Adapter;
+import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
+import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.generalobjects.Pc;
+import yolo.ioopm.mud.generalobjects.Room;
+import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+
+import java.util.ArrayList;
 
 /**
  * As the name suggest this class contains methods to handle the talking/chating
@@ -25,7 +27,7 @@ public abstract class Talk {
 	 * @param world		Where does he say it
 	 * @param server	Whit what does he say it.
 	 */
-	public static void say(String actor, String message, World world, Server server){
+	public static void say(String actor, String message, World world, Adapter server){
 		
 			Room actor_location= null;
 			try {
@@ -58,7 +60,7 @@ public abstract class Talk {
 	 * @param world where does the whispering occur
 	 * @param server whit what is it wispered
 	 */
-	public static void whisper(String actor, String recipient, String message, World world, Server server){
+	public static void whisper(String actor, String recipient, String message, World world, Adapter server){
 		try {
 			Room actor_location = world.findPc(actor).getLocation();
 			if(actor_location.getPlayers().contains(world.findPc(recipient))){

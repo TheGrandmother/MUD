@@ -18,9 +18,6 @@ public class Client {
 
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
 
-	private boolean is_connected = false;
-	private boolean has_crashed = false;
-
 	private enum MenuItem {
 		LOGIN(1),
 		REGISTER(2);
@@ -119,7 +116,6 @@ public class Client {
 
 		if(authenticate(username, password)) {
 			System.out.println("You successfully authenticated yourself!");
-			is_connected = true;
 		}
 		else {
 			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
@@ -144,30 +140,30 @@ public class Client {
 
 		logger.fine("Waiting for server to reply...");
 
-		Message answer;
-		while((answer = adapter.poll()) == null) {
-			try {
-				Thread.sleep(200);
+		while(true) {
+			Message answer;
+			while((answer = adapter.poll()) == null) {
+				try {
+					Thread.sleep(200);
+				}
+				catch(InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-			catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 
-		if(answer.getType() == MessageType.REGISTRATION_REPLY) {
-			switch(answer.getArguments()[0]) {
-				case "false":
-					System.out.println("Registration failed! That username is probably already in use!");
-				case "true":
-					System.out.println("Successfully registered at server! You can now log in!");
-				default:
-					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
-					has_crashed = true;
+			if(answer.getType() == MessageType.REGISTRATION_REPLY) {
+				switch(answer.getArguments()[0]) {
+					case "false":
+						System.out.println("Registration failed! That username is probably already in use!");
+					case "true":
+						System.out.println("Successfully registered at server! You can now log in!");
+					default:
+						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+				}
 			}
-		}
-		else {
-			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
-			has_crashed = true;
+			else {
+				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			}
 		}
 	}
 
@@ -179,32 +175,31 @@ public class Client {
 		logger.fine("Waiting for server to reply...");
 
 		// Poll adapter every 0.2 seconds until we receive an answer.
-		Message answer;
-		while((answer = adapter.poll()) == null) {
-			try {
-				Thread.sleep(200);
+		while(true) {
+			Message answer;
+			while((answer = adapter.poll()) == null) {
+				try {
+					Thread.sleep(200);
+				}
+				catch(InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-			catch(InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 
-		if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
-			switch(answer.getArguments()[0]) {
-				case "false":
-					return false;
-				case "true":
-					return true;
-				default:
-					logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
-					has_crashed = true;
-					return false;
+			if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
+				switch(answer.getArguments()[0]) {
+					case "false":
+						return false;
+					case "true":
+						return true;
+					default:
+						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+						return false;
+				}
 			}
-		}
-		else {
-			logger.severe("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
-			has_crashed = true;
-			return false;
+			else {
+				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+			}
 		}
 	}
 
@@ -250,7 +245,7 @@ public class Client {
 		}
 
 		sb.append("Input:");
-		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(++i).setIntTwo(0));
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(i).setIntTwo(0));
 
 		System.out.print(sb.toString());
 
