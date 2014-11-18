@@ -5,7 +5,6 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.client.HeartBeatMessage;
 
 import java.util.Queue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ClientHeartbeatSender implements Runnable {

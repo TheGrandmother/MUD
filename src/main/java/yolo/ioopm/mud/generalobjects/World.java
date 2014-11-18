@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class World {
 
 
-	public static HashSet<Pc> players = new HashSet<>();
+	public  HashSet<Pc>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
@@ -21,9 +21,10 @@ public class World {
 	 * Creates an empty world...
 	 */
 	public World() {
-		npcs = new HashSet<Npc>();
-		rooms = new HashSet<Room>();
-		items = new HashSet<Item>();
+		players      = new HashSet<>();
+		npcs         = new HashSet<>();
+		rooms        = new HashSet<>();
+		items        = new HashSet<>();
 		admin_exists = false;
 	}
 
@@ -177,19 +178,19 @@ public class World {
 	public HashSet<Item> getItems() {
 		return items;
 	}
-	
+
 	public HashSet<Npc> getNpcs() {
 		return npcs;
 	}
-	
+
 	public HashSet<Pc> getPlayers() {
 		return players;
 	}
-	
+
 	public HashSet<Room> getRooms() {
 		return rooms;
 	}
-	
+
 	@SuppressWarnings("serial")
 	public class EntityNotUnique extends Exception {
 		public EntityNotUnique() {
@@ -208,7 +209,7 @@ public class World {
 			super();
 			this.name = name;
 		}
-		
+
 		public String getName() {
 			return name;
 		}

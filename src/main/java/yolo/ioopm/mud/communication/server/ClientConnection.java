@@ -44,4 +44,8 @@ public class ClientConnection {
 	public synchronized void killSocket() throws IOException {
 		this.socket.close();
 	}
+
+	public synchronized String getIPAdress() {
+		return socket.getLocalAddress().toString();
+	}
 }

@@ -2,11 +2,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
-import yolo.ioopm.mud.communication.messages.internal.NewConnectionMessage;
-import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
-import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
-import yolo.ioopm.mud.game.GameEngine;
 
 import java.io.IOException;
 import java.util.Map;
@@ -55,51 +51,20 @@ public class ServerConnectionVerifier implements Runnable {
 				return;
 			}
 
-			String[] nouns = msg.getArguments();
-			if(msg.getType() == MessageType.AUTHENTICATION && nouns != null && nouns.length == 2) {
-
-				String username = nouns[0];
-				String password = nouns[1];
-
-				if(!connections.containsKey(username) && GameEngine.checkUsernamePassword(username, password)) {
-					connections.put(username, client);
-					timestamps.put(username, System.currentTimeMillis());
-
-					logger.fine("Client successfully authenticated against server!");
-					client.write(new AuthenticationReplyMessage(username, true).getMessage());
-
-					inbox.offer(new NewConnectionMessage(username));
-
-					// Terminate the thread.
-					return;
-				}
-				else {
-					client.write(new AuthenticationReplyMessage(username, false).getMessage());
-					logger.fine("Client tried to authenticate with incorrect details, or username is already in use!");
-					return;
-				}
+			// Skip heartbeats
+			if(msg.getType() == MessageType.HEARTBEAT) {
+				logger.fine("Received heartbeat");
+				continue;
 			}
-			else if(msg.getType() == MessageType.REGISTRATION && nouns != null && nouns.length == 2) {
 
-				String username = nouns[0];
-				String password = nouns[1];
+			logger.fine("New client sent message, adding them to connections and message to inbox.");
+			logger.info("New connection registered! IP: " + client.getIPAdress());
 
-				logger.fine("User is attempting to register at server! Username: \"" + username + "\", Password: \"" + password + "\"");
+			inbox.offer(msg);
+			connections.put(msg.getSender(), client);
+			timestamps.put(msg.getSender(), System.currentTimeMillis());
 
-				boolean success = false;
-				if(GameEngine.register(username, password)) {
-					logger.fine("Client successfully registered at server!");
-					success = true;
-				}
-
-				client.write(new RegistrationReplyMessage(username, success).getMessage());
-			}
-			else if(msg.getType() == MessageType.HEARTBEAT) {
-				// Do nothing
-			}
-			else {
-				logger.warning("ServerConnectionVerifier received illegal message! Type: \"" + msg.getType() + "\"");
-			}
+			return; // terminate thread
 		}
 	}
 }

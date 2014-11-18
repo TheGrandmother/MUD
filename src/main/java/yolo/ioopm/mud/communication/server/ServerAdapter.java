@@ -23,7 +23,7 @@ public class ServerAdapter extends Adapter {
 		logger.fine("Initiating ServerAdapter!");
 
 		// Async thread - Listens for new connections and adds them to connections.
-		Thread scl = new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps));
+		Thread scl = new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps, inbox));
 		scl.setName("ServerConnectionListener");
 		scl.start();
 

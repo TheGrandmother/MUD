@@ -6,6 +6,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class HTMLFormatter extends Formatter {
+
 	public String format(LogRecord record) {
 		StringBuilder builder = new StringBuilder();
 
@@ -30,7 +31,7 @@ public class HTMLFormatter extends Formatter {
 	}
 
 	public String getHead(Handler h) {
-		return ("<html>\n  <body>\n" + "<Table border>\n<tr><td>Level</td><td>Time</td><td>Logger</td><td>Function</td><td>Log Message</td><td>Stack trace</td><</tr>\n");
+		return ("<html>\n <body>\n <Table border>\n<tr><td>Level</td><td>Time</td><td>Logger</td><td>Function</td><td>Log Message</td><td>Stack trace</td><</tr>\n");
 	}
 
 	public String getTail(Handler h) {

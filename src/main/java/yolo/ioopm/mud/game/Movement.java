@@ -1,11 +1,8 @@
 package yolo.ioopm.mud.game;
 
-import java.util.Iterator;
-
 import yolo.ioopm.mud.Server;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
-import yolo.ioopm.mud.generalobjects.Character.CharacterSheet;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.Item.UseFailedException;
 import yolo.ioopm.mud.generalobjects.ItemContainer;

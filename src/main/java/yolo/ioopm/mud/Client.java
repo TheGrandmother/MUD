@@ -61,16 +61,11 @@ public class Client {
 
 		displayWelcomeMessage();
 
-		// Retrieve username from user
+		String address = askForHostname();
 		username = askForUsername();
 		password = askForPassword();
 
-		while(!is_connected) {
-
-			while(adapter == null) {
-				connect();
-			}
-
+		if(connect(address)) {
 			switch(showMenu()) {
 				case LOGIN:
 					login();
@@ -79,38 +74,31 @@ public class Client {
 					register();
 					break;
 			}
-
-			if(has_crashed) {
-				logger.severe("The client crashed unexpectedly! Please refer to log.");
-				return;
-			}
 		}
 	}
 
-	private void connect() {
+	private boolean connect(String host) {
 		System.out.println("Connecting to server...");
 
-		clearScreen();
-
-		String host = askForHostname();
 		int port = Server.DEFAULT_PORT;
 
 		try {
 			adapter = new ClientAdapter(host, port, username);
+			return true;
 		}
 		catch(IOException e) {
 			logger.log(Level.FINER, "Failed to create ClientAdapter for host \"" + host + "\"!", e);
 			System.out.println("Could not connect to server! Please wait...");
 
-			// Wait three seconds before printing the menu again.
+			// Wait before printing the menu again.
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(2500);
 			}
 			catch(InterruptedException e1) {
 				logger.log(Level.SEVERE, e1.getMessage(), e1);
 			}
 
-			return;
+			return false;
 		}
 	}
 
@@ -137,9 +125,9 @@ public class Client {
 			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
 			System.out.println("If you have not registered yourself on this server, please do so prior to connecting!");
 
-			// Wait three seconds before printing the menu again.
+			// Wait before printing the menu again.
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(2500);
 			}
 			catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -185,7 +173,7 @@ public class Client {
 
 	private boolean authenticate(String username, String password) {
 		// Authenticate against server
-		Message msg = new AuthenticationMessage(username, password);
+		Message msg = new AuthenticationMessage(username, username, password);
 		adapter.sendMessage(msg);
 
 		logger.fine("Waiting for server to reply...");
@@ -229,7 +217,7 @@ public class Client {
 	}
 
 	private String askForHostname() {
-		return ask("Please enter hostname:");
+		return ask("Please enter server address:");
 	}
 
 	private String ask(String question) {
@@ -251,17 +239,18 @@ public class Client {
 		StringBuilder sb = new StringBuilder();
 
 		clearScreen();
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
+		sb.append("Please enter index number of what you would like to do:");
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(2).setIntTwo(0));
-		sb.append("^^^^^^^^^^ INPUT ^^^^^^^^^^");
-		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(3).setIntTwo(0));
 
-		int i = 4;
+		int i = 3;
 		for(MenuItem item : MenuItem.values()) {
 			sb.append(item.getIndex() + ". " + item.name());
 			sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(i++).setIntTwo(0));
 		}
 
-		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
+		sb.append("Input:");
+		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(++i).setIntTwo(0));
 
 		System.out.print(sb.toString());
 
