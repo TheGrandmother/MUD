@@ -35,6 +35,12 @@ public class ServerMessageSender implements Runnable {
 			while((msg = outbox.poll()) != null) {
 				logger.fine("Sending message: \"" + msg.getMessage() + "\"");
 				ClientConnection cc = connections.get(msg.getReceiver());
+
+				if(cc == null) {
+					logger.severe("Call to connections.get resulted in null! msg.receiver(): \"" + msg.getReceiver() + "\"");
+					continue;
+				}
+
 				cc.write(msg.getMessage());
 			}
 		}

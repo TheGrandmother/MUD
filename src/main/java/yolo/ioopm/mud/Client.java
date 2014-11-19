@@ -6,7 +6,9 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.client.ClientAdapter;
 import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
+import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
 import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
+import yolo.ioopm.mud.game.Keywords;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,19 +60,58 @@ public class Client {
 
 		displayWelcomeMessage();
 
-		String address = askForHostname();
-		username = askForUsername();
-		password = askForPassword();
+		String address = promptForHostname();
+		username = promptForUsername();
+		password = promptForPassword();
 
 		if(connect(address)) {
-			switch(showMenu()) {
-				case LOGIN:
-					login();
-					break;
-				case REGISTER:
-					register();
-					break;
+			while(true) {
+				switch(showMenu()) {
+					case LOGIN:
+						if(login()) {
+							run();
+						}
+						break;
+					case REGISTER:
+						register();
+						break;
+				}
 			}
+		}
+	}
+
+	/**
+	 * Starts to prompt the user for actions etc.
+	 */
+	private void run() {
+		while(true) {
+			String action = promptForAction().toLowerCase();
+
+			String[] temp = prompt("Please enter arguments, separated by \",\":").split(",");
+
+			adapter.sendMessage(new GeneralActionMessage(username, action, temp));
+
+			Message msg;
+			while((msg = adapter.poll()) == null) {
+				try {
+					Thread.sleep(100);
+				}
+				catch(InterruptedException e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
+			}
+
+			System.out.println(msg.getMessage());
+
+//			switch(action) {
+//				case Keywords.MOVE:
+//					break;
+//
+//				default:
+//					logger.fine("User entered non implemented action! Action: \"" + action + "\"");
+//					System.out.println("You entered an incorrect action!");
+//					break;
+//			}
 		}
 	}
 
@@ -246,7 +287,7 @@ public class Client {
 	 * Prompts the user for a username.
 	 * @return the value entered by the user
 	 */
-	private String askForUsername() {
+	private String promptForUsername() {
 		return prompt("Please enter your username:");
 	}
 
@@ -254,7 +295,7 @@ public class Client {
 	 * Prompts the user for password
 	 * @return the value entered by the user
 	 */
-	private String askForPassword() {
+	private String promptForPassword() {
 		return prompt("Please enter your password:");
 	}
 
@@ -262,8 +303,16 @@ public class Client {
 	 * Prompts the user for a host name
 	 * @return the value entered by the user
 	 */
-	private String askForHostname() {
+	private String promptForHostname() {
 		return prompt("Please enter server address:");
+	}
+
+	/**
+	 * Prompts the user for an action.
+	 * @return value entered by user.
+	 */
+	private String promptForAction() {
+		return prompt("Please enter action:");
 	}
 
 	/**

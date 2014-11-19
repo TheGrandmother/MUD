@@ -93,6 +93,11 @@ public abstract class Message {
 	}
 
 	public String[] getArguments() {
+
+		if(ARGUMENTS == null) {
+			return null;
+		}
+
 		String[] new_array = new String[ARGUMENTS.length];
 
 		// Just to make sure the receiver can't modify the original array as a precaution.
