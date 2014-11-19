@@ -21,6 +21,11 @@ public class ClientMessageListener implements Runnable {
 	private final BufferedReader br;
 	private final Queue<Message> inbox;
 
+	/**
+	 * Listens for messages on the given BufferedReader and adds them to the given inbox.
+	 * @param br Reader to listen on
+	 * @param inbox Inbox to put the messages in
+	 */
 	public ClientMessageListener(BufferedReader br, Queue<Message> inbox) {
 		this.br = br;
 		this.inbox = inbox;

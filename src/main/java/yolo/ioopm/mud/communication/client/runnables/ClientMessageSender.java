@@ -14,6 +14,11 @@ public class ClientMessageSender implements Runnable {
 	private final PrintWriter    pw;
 	private final Queue<Message> outbox;
 
+	/**
+	 * Sends the messages in the given outbox to the given PrintWriter.
+	 * @param pw PrintWriter to write to
+	 * @param outbox Outbox to poll from
+	 */
 	public ClientMessageSender(PrintWriter pw, Queue<Message> outbox) {
 		this.pw = pw;
 		this.outbox = outbox;

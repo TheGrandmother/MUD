@@ -20,6 +20,17 @@ public class ServerConnectionListener implements Runnable {
 	private final Map<String, Long>             timestamps;
 	private final Queue<Message>                inbox;
 
+	/**
+	 * Listens for new connections on the given socket.
+	 * Upon a new connection it starts an auxiliary thread that assures it is a legit connection
+	 * and then adds it to the given connections and timestamps maps.
+	 * Any messages received in that auxiliary thread is added to the inbox.
+	 *
+	 * @param socket - socket to listen on.
+	 * @param connections - The map to add new connections to.
+	 * @param timestamps - Map with the latest message timestamps.
+	 * @param inbox - Inbox to add new messages to.
+	 */
 	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox) {
 		this.server_socket = socket;
 		this.connections = connections;

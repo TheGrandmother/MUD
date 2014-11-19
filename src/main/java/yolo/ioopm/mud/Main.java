@@ -25,7 +25,7 @@ public class Main {
 
 		// Log everything to log file
 		log_file.setFormatter(new HTMLFormatter());
-		log_file.setLevel(Level.ALL);
+		log_file.setLevel(Level.FINER);
 
 		root_logger.addHandler(log_file);
 

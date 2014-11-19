@@ -17,6 +17,19 @@ public class ClientAdapter extends Adapter {
 
 	private static final Logger logger = Logger.getLogger(ClientAdapter.class.getName());
 
+	/**
+	 * Attempts to connect to the server on the given host-address and port.
+	 * Then starts the necessary threads that listens/sends messages to/from the client.
+	 *
+	 * @param host - Host address to connect to.
+	 * @param port - Port on the host.
+	 * @param username - Username to sign heartbeats with.
+	 *
+	 * @throws UnknownHostException - if the IP address of the host could not be determined.
+	 * @throws IOException - if an I/O error occurs when creating the socket.
+	 * @throws IllegalArgumentException - if a security manager exists and its checkConnect method doesn't allow the operation.
+	 * @throws SecurityException - if the port parameter is outside the specified range of valid port values, which is between 0 and 65535, inclusive.
+	 */
 	public ClientAdapter(String host, int port, String username)
 			throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
 

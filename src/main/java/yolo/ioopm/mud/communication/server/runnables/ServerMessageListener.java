@@ -76,7 +76,7 @@ public class ServerMessageListener implements Runnable {
 							inbox.offer(msg);
 						}
 						else if(msg.getType() == MessageType.HEARTBEAT) {
-							logger.fine("Responding to client heartbeat!");
+							logger.finest("Responding to client heartbeat!");
 							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
 						}
 

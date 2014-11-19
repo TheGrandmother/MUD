@@ -74,6 +74,13 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Connects to the server at the given host address.
+	 * Uses the default port defined in Server.DEFAULT_PORT
+	 *
+	 * @param host Address to connect to, might be an IP-address or URL.
+	 * @return true if connection was established
+	 */
 	private boolean connect(String host) {
 		System.out.println("Connecting to server...");
 
@@ -99,23 +106,36 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Outputs ANSI escape codes to the terminal that clears it and resets the cursor to the upper left position.
+	 */
 	private void clearScreen() {
 		System.out.print(GeneralAnsiCodes.CLEAR_SCREEN.toString());
 		System.out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
 	}
 
+	/**
+	 * Clears the screen and prints out the welcome message.
+	 */
 	private void displayWelcomeMessage() {
 		clearScreen();
 		System.out.println("Welcome to MUD!");
 	}
 
-	private void login() {
+	/**
+	 * Attempts to login to the server.
+	 * NOTE, a connection has be have been established prior to the call to this method!
+	 *
+	 * @return true if the log in attempt was successful.
+	 */
+	private boolean login() {
 		clearScreen();
 
 		System.out.println("Attempting to login to server...");
 
 		if(authenticate(username, password)) {
 			System.out.println("You successfully authenticated yourself!");
+			return true;
 		}
 		else {
 			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
@@ -128,10 +148,18 @@ public class Client {
 			catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
+
+			return false;
 		}
 	}
 
-	private void register() {
+	/**
+	 * Attempts to register at the serer.
+	 * NOTE, a connection has be have been established prior to the call to this method!
+	 *
+	 * @return true if the method was successful
+	 */
+	private boolean register() {
 		clearScreen();
 
 		System.out.println("Attempting to register at server...");
@@ -155,10 +183,13 @@ public class Client {
 				switch(answer.getArguments()[0]) {
 					case "false":
 						System.out.println("Registration failed! That username is probably already in use!");
+						return false;
 					case "true":
 						System.out.println("Successfully registered at server! You can now log in!");
+						return true;
 					default:
 						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+						return false;
 				}
 			}
 			else {
@@ -167,6 +198,14 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Sends an AuthenticationMessage to the server with the given username and password.
+	 * NOTE, a connection has be have been established prior to the call to this method!
+	 *
+	 * @param username
+	 * @param password
+	 * @return true if server responds with successful
+	 */
 	private boolean authenticate(String username, String password) {
 		// Authenticate against server
 		Message msg = new AuthenticationMessage(username, username, password);
@@ -203,19 +242,36 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Prompts the user for a username.
+	 * @return the value entered by the user
+	 */
 	private String askForUsername() {
-		return ask("Please enter your username:");
+		return prompt("Please enter your username:");
 	}
 
+	/**
+	 * Prompts the user for password
+	 * @return the value entered by the user
+	 */
 	private String askForPassword() {
-		return ask("Please enter your password:");
+		return prompt("Please enter your password:");
 	}
 
+	/**
+	 * Prompts the user for a host name
+	 * @return the value entered by the user
+	 */
 	private String askForHostname() {
-		return ask("Please enter server address:");
+		return prompt("Please enter server address:");
 	}
 
-	private String ask(String question) {
+	/**
+	 * Prompts the user with the given question.
+	 * @param question
+	 * @return value entered by the user
+	 */
+	private String prompt(String question) {
 		System.out.println(question);
 
 		String answer;
@@ -230,6 +286,10 @@ public class Client {
 		return answer;
 	}
 
+	/**
+	 * Prints the menu to the terminal and prompts the user for input
+	 * @return the MenuItem chosen by the user
+	 */
 	private MenuItem showMenu() {
 		StringBuilder sb = new StringBuilder();
 
@@ -254,7 +314,7 @@ public class Client {
 			choice = keyboard_reader.readLine();
 		}
 		catch(IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 			return null;
 		}
 
@@ -263,7 +323,7 @@ public class Client {
 			index = Integer.valueOf(choice);
 		}
 		catch(NumberFormatException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "Index chosen is not a valid integer!", e);
 			return null;
 		}
 

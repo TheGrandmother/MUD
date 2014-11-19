@@ -19,6 +19,16 @@ public class ServerConnectionVerifier implements Runnable {
 	private final Map<String, Long>             timestamps;
 	private final Queue<Message>                inbox;
 
+	/**
+	 * Listens for data from the client and tries to interpret it.
+	 * If the clients communicates according to the protocol it adds the client to the connections and timestamps maps
+	 * and any messages the client sent to the inbox.
+	 *
+	 * @param client - Client to listen on.
+	 * @param connections - Map to put the client in.
+	 * @param timestamps - as connections.
+	 * @param inbox - Where to put messages in.
+	 */
 	public ServerConnectionVerifier(ClientConnection client, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox) {
 		this.client = client;
 		this.connections = connections;

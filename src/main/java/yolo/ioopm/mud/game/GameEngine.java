@@ -8,7 +8,11 @@ import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Pc;
+import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for handling the interpreting of the actions passed to the server.
@@ -16,6 +20,8 @@ import yolo.ioopm.mud.generalobjects.World;
  * @author TheGrandmother
  */
 public class GameEngine {
+
+	private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
 
 	Adapter server;
 	World   world;
@@ -122,11 +128,13 @@ public class GameEngine {
 	public boolean checkUsernamePassword(String username, String password) {
 		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data
 		//TODO denna bör även retunera false om användaren redan är inloggad
+
 		for (Pc pc : world.players) {
 			if(pc.getName().equals(username) && pc.checkPassword(password)){
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -135,34 +143,32 @@ public class GameEngine {
 	 *
 	 * @param username
 	 * @param password
-	 * @return true if successfull, else false
+	 * @return true if successful, else false
 	 */
 	public boolean register(String username, String password) {
-		// TODO registrerar användaren på servern, returnerar sant om det gick, annars falskt
+
+		// Check to see if there already is a player with that name registered
+		for(Pc p : world.players) {
+			if(p.getName().equals(username)) {
+				logger.fine("Client tried to register already registered username! Username: \"" + username + "\"");
+				return false;
+			}
+		}
+
+		Room[] rooms = world.getRooms().toArray(new Room[world.getRooms().size()]);
+		Room rand_room = rooms[((int) (Math.random() * rooms.length))];
+
+		try {
+			world.addCharacter(new Pc(username, "New player", password, rand_room));
+
+			logger.info("New player registered on the server! Username: \"" + username + "\"");
+
+			return true;
+		}
+		catch(World.EntityNotUnique e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
+		}
+
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

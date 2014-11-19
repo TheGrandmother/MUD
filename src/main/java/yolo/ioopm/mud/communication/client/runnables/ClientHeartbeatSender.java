@@ -14,6 +14,11 @@ public class ClientHeartbeatSender implements Runnable {
 	private final Queue<Message> outbox;
 	private final String         USERNAME;
 
+	/**
+	 * Adds HeartBeatMessage's to the given outbox with the given username.
+	 * @param outbox the outbox to put the messages in
+	 * @param username the username to sign the messages with
+	 */
 	public ClientHeartbeatSender(Queue<Message> outbox, String username) {
 		this.outbox = outbox;
 		this.USERNAME = username;
@@ -32,7 +37,6 @@ public class ClientHeartbeatSender implements Runnable {
 				e.printStackTrace();
 			}
 
-			logger.fine("Sending heartbeat!");
 			outbox.offer(new HeartBeatMessage(USERNAME));
 		}
 	}
