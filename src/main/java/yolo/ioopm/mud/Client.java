@@ -91,6 +91,7 @@ public class Client {
 
 			adapter.sendMessage(new GeneralActionMessage(username, action, temp));
 
+			// Poll adapter until we receive a message
 			Message msg;
 			while((msg = adapter.poll()) == null) {
 				try {
@@ -101,7 +102,10 @@ public class Client {
 				}
 			}
 
-			System.out.println(msg.getMessage());
+			// Print out previously fetched message and poll adapter until the inbox is empty
+			do {
+				System.out.println(msg.getMessage());
+			} while((msg = adapter.poll()) != null);
 
 //			switch(action) {
 //				case Keywords.MOVE:
