@@ -69,18 +69,16 @@ public class ServerMessageListener implements Runnable {
 					Message msg = Message.deconstructTransmission(data);
 
 					if(msg != null) {
-
-						logger.fine("Received message of type \"" + msg.getType() + "\" from user \"" + msg.getSender() + "\"");
-
 						if(!ignored_messages.contains(msg.getType())) {
+							logger.fine("Received message of type \"" + msg.getType() + "\" from user \"" + msg.getSender() + "\"");
 							inbox.offer(msg);
 						}
 						else if(msg.getType() == MessageType.HEARTBEAT) {
-							logger.finest("Responding to client heartbeat!");
+//							logger.finest("Responding to client heartbeat!");
 							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
 						}
 
-						logger.fine("Adding timestamp to log");
+//						logger.fine("Adding timestamp to log");
 						timestamps.put(entry.getKey(), msg.getTimeStamp());
 					}
 					else {

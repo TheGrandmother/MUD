@@ -2,6 +2,7 @@ package yolo.ioopm.mud.communication.client.runnables;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 
 import java.io.PrintWriter;
 import java.util.Queue;
@@ -41,7 +42,9 @@ public class ClientMessageSender implements Runnable {
 			synchronized(pw) {
 				Message msg;
 				while((msg = outbox.poll()) != null) {
-					logger.fine("Sending msg: \"" + msg.getMessage() + "\"");
+					if(msg.getType() != MessageType.HEARTBEAT) {
+						logger.fine("Sending msg: \"" + msg.getMessage() + "\"");
+					}
 					pw.println(msg.getMessage());
 				}
 			}
