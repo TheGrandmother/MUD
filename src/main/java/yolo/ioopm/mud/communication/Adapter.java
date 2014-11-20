@@ -33,6 +33,8 @@ public abstract class Adapter {
 		return inbox.poll();
 	}
 
+	//TODO
+	//Fix so that we can adda message to say stuff like, username does not exist and things like that.
 	/**
 	 * Tries to send a message trough the adapter
 	 *
