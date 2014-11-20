@@ -9,6 +9,7 @@ import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
 import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
 import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
 import yolo.ioopm.mud.game.Keywords;
+import yolo.ioopm.mud.userinterface.ClientInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,65 +59,13 @@ public class Client {
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		displayWelcomeMessage();
+		username = "player2";
+		password = "123";
+		connect("192.168.1.102");
+		login();
 
-		String address = promptForHostname();
-		username = promptForUsername();
-		password = promptForPassword();
-
-		if(connect(address)) {
-			while(true) {
-				switch(showMenu()) {
-					case LOGIN:
-						if(login()) {
-							run();
-						}
-						break;
-					case REGISTER:
-						register();
-						break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Starts to prompt the user for actions etc.
-	 */
-	private void run() {
-		while(true) {
-			String action = promptForAction().toLowerCase();
-
-			String[] temp = prompt("Please enter arguments, separated by \",\":").split(",");
-
-			adapter.sendMessage(new GeneralActionMessage(username, action, temp));
-
-			// Poll adapter until we receive a message
-			Message msg;
-			while((msg = adapter.poll()) == null) {
-				try {
-					Thread.sleep(100);
-				}
-				catch(InterruptedException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			}
-
-			// Print out previously fetched message and poll adapter until the inbox is empty
-			do {
-				System.out.println(msg.getMessage());
-			} while((msg = adapter.poll()) != null);
-
-//			switch(action) {
-//				case Keywords.MOVE:
-//					break;
-//
-//				default:
-//					logger.fine("User entered non implemented action! Action: \"" + action + "\"");
-//					System.out.println("You entered an incorrect action!");
-//					break;
-//			}
-		}
+		ClientInterface ui = new ClientInterface(this, System.out, keyboard_reader);
+		ui.run();
 	}
 
 	/**
@@ -152,19 +101,24 @@ public class Client {
 	}
 
 	/**
-	 * Outputs ANSI escape codes to the terminal that clears it and resets the cursor to the upper left position.
+	 * Polls the adapter until a message has been received.
+	 * Warning! This is a blocking method!
+	 *
+	 * @return - First message in message-queue.
 	 */
-	private void clearScreen() {
-		System.out.print(GeneralAnsiCodes.CLEAR_SCREEN.toString());
-		System.out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1).toString());
-	}
+	public Message pollMessage() {
 
-	/**
-	 * Clears the screen and prints out the welcome message.
-	 */
-	private void displayWelcomeMessage() {
-		clearScreen();
-		System.out.println("Welcome to MUD!");
+		Message msg;
+		while((msg = adapter.poll()) == null) {
+			try {
+				Thread.sleep(50);
+			}
+			catch(InterruptedException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+
+		return msg;
 	}
 
 	/**
@@ -174,7 +128,6 @@ public class Client {
 	 * @return true if the log in attempt was successful.
 	 */
 	private boolean login() {
-		clearScreen();
 
 		System.out.println("Attempting to login to server...");
 
@@ -205,7 +158,6 @@ public class Client {
 	 * @return true if the method was successful
 	 */
 	private boolean register() {
-		clearScreen();
 
 		System.out.println("Attempting to register at server...");
 
@@ -288,65 +240,12 @@ public class Client {
 	}
 
 	/**
-	 * Prompts the user for a username.
-	 * @return the value entered by the user
-	 */
-	private String promptForUsername() {
-		return prompt("Please enter your username:");
-	}
-
-	/**
-	 * Prompts the user for password
-	 * @return the value entered by the user
-	 */
-	private String promptForPassword() {
-		return prompt("Please enter your password:");
-	}
-
-	/**
-	 * Prompts the user for a host name
-	 * @return the value entered by the user
-	 */
-	private String promptForHostname() {
-		return prompt("Please enter server address:");
-	}
-
-	/**
-	 * Prompts the user for an action.
-	 * @return value entered by user.
-	 */
-	private String promptForAction() {
-		return prompt("Please enter action:");
-	}
-
-	/**
-	 * Prompts the user with the given question.
-	 * @param question
-	 * @return value entered by the user
-	 */
-	private String prompt(String question) {
-		System.out.println(question);
-
-		String answer;
-		try {
-			answer = keyboard_reader.readLine();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return answer;
-	}
-
-	/**
 	 * Prints the menu to the terminal and prompts the user for input
 	 * @return the MenuItem chosen by the user
 	 */
 	private MenuItem showMenu() {
 		StringBuilder sb = new StringBuilder();
 
-		clearScreen();
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(0));
 		sb.append("Please enter index number of what you would like to do:");
 		sb.append(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(2).setIntTwo(0));
