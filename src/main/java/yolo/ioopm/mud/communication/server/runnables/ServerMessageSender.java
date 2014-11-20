@@ -2,6 +2,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.util.Map;
@@ -33,7 +34,9 @@ public class ServerMessageSender implements Runnable {
 
 			Message msg;
 			while((msg = outbox.poll()) != null) {
-				logger.fine("Sending message: \"" + msg.getMessage() + "\"");
+				if(msg.getType() != MessageType.HEARTBEAT) {
+					logger.fine("Sending message: \"" + msg.getMessage() + "\"");
+				}
 				ClientConnection cc = connections.get(msg.getReceiver());
 
 				if(cc == null) {

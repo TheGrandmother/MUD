@@ -57,7 +57,6 @@ public class ClientMessageListener implements Runnable {
 			}
 
 			Message msg = Message.deconstructTransmission(data);
-			logger.fine("Received msg: \"" + msg.getMessage() + "\"");
 
 			if(msg != null) {
 
@@ -66,6 +65,7 @@ public class ClientMessageListener implements Runnable {
 					continue;
 				}
 
+				logger.fine("Received msg: \"" + msg.getMessage() + "\"");
 				logger.fine("Added message to inbox");
 				inbox.offer(msg);
 			}
