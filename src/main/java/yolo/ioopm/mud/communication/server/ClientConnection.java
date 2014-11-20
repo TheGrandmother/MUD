@@ -46,6 +46,6 @@ public class ClientConnection {
 	}
 
 	public synchronized String getIPAdress() {
-		return socket.getLocalAddress().toString();
+		return socket.getRemoteSocketAddress().toString();
 	}
 }

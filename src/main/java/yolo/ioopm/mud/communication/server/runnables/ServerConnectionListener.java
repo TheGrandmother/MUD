@@ -45,7 +45,7 @@ public class ServerConnectionListener implements Runnable {
 				logger.fine("Waiting for connection...");
 				Socket socket = this.server_socket.accept();
 
-				String ip = socket.getLocalAddress().toString();
+				String ip = socket.getRemoteSocketAddress().toString();
 				logger.fine("New connection: " + ip);
 
 				logger.fine("Creating new ServerConnectionVerifier for new connection!");

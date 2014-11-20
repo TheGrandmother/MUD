@@ -3,6 +3,7 @@ package yolo.ioopm.mud.ansi;
 public enum GeneralAnsiCodes {
 
 	CLEAR_SCREEN("\u001b[2J"),
+	CLEAR_LINE("\u001b[2K"),
 
 	CURSOR_MOVE_DOWN_N_LINES("\u001b[$B"),
 	CURSOR_MOVE_UP_N_LINES("\u001b[$A"),
