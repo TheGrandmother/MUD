@@ -29,6 +29,12 @@ LOOK: look
 	returns: LOOK_REPLY
 	description:
 		"Looks" at a room.
+		
+INVENTORY: inventory
+	arguments: None
+	returns: INVENTORY_REPLY
+	descriptions:
+		returns the contents of your inventory
 
 TAKE: take <item>
 	arguments: 
@@ -66,7 +72,8 @@ LOOK_REPLY: look_reply <name> <description> <exits> <players> <npcs> <items>
 		exits: a "," separated list of all the exits
 		players: a "," separated list of all the players
 		npcs: a "," separated list of all the npcs.
-		items: a "," separated list of all the items.
+		items: a "," separated list of all the items in item containers like this (5 sword).
+				meaning there are 5 swords in the room
 
 TAKE_REPLY: take_reply <message>
 	arguments:
