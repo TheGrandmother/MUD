@@ -66,11 +66,6 @@ public class GameEngine {
 				server.sendMessage(new AuthenticationReplyMessage(actor, false));
 				return;
 			}
-			
-			
-			
-			
-			
 
 			server.sendMessage(new AuthenticationReplyMessage(actor, checkUsernamePassword(username, password)));
 		}else if(type == MessageType.REGISTRATION) {
@@ -177,8 +172,7 @@ public class GameEngine {
 	
 	
 	/**
-	 * 
-	 * Gets the lobby to wich this player is supposed to go to.
+	 * Gets the lobby to which this player is supposed to go to.
 	 * 
 	 * As of now this is ugly and it should be done in a more general way.
 	 * 
@@ -197,7 +191,6 @@ public class GameEngine {
 	}
 
 	/**
-	 * 
 	 * Returns true if user exists and has the correct passowrd..
 	 * 
 	 * @param username
@@ -205,16 +198,11 @@ public class GameEngine {
 	 * @return
 	 */
 	public boolean checkUsernamePassword(String username, String password) {
-
-
 		try {
 			return (world.findPc(username).checkPassword(password));
 		} catch (EntityNotPresent e) {
 			//Player not present
 			return false;
 		}
-		
-		
 	}
-
 }
