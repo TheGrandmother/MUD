@@ -217,37 +217,4 @@ public class GameEngine {
 		
 	}
 
-	/**
-	 * Registers the user at the server.
-	 *
-	 * @param username
-	 * @param password
-	 * @return true if successful, else false
-	 */
-	public boolean register(String username, String password) {
-
-		// Check to see if there already is a player with that name registered
-		for(Pc p : world.players) {
-			if(p.getName().equals(username)) {
-				logger.fine("Client tried to register already registered username! Username: \"" + username + "\"");
-				return false;
-			}
-		}
-
-		Room[] rooms = world.getRooms().toArray(new Room[world.getRooms().size()]);
-		Room rand_room = rooms[((int) (Math.random() * rooms.length))];
-
-		try {
-			world.addCharacter(new Pc(username, "New player", password, rand_room));
-
-			logger.info("New player registered on the server! Username: \"" + username + "\"");
-
-			return true;
-		}
-		catch(World.EntityNotUnique e) {
-			logger.log(Level.WARNING, e.getMessage(), e);
-		}
-
-		return false;
-	}
 }
