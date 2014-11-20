@@ -7,9 +7,12 @@ import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
+import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +33,8 @@ public class GameEngine {
 		this.server = server;
 		this.world = world;
 	}
-
+	
+	//TODO Implement logging out so that players gets removed from rooms before the log out.
 	public void executeAction(Message message) {
 
 		String actor = message.getSender();
@@ -38,18 +42,72 @@ public class GameEngine {
 		String[] arguments = message.getArguments();
 
 		if(type == MessageType.AUTHENTICATION) {
+			//TODO Fix so that players gets added to the lobby when they log in!
 			String username = arguments[0];
 			String password = arguments[1];
+			Pc player = null;
+			try {
+				player = world.findPc(username);
+				if(player.isLogedIn()){
+					server.sendMessage(new AuthenticationReplyMessage(actor, false));
+					return;
+				}
+				if(checkUsernamePassword(username, password)){
+					player.setLocation(get_lobby(player));
+					player.getLocation().addPlayer(player);
+					player.setLoggedIn(true);
+					server.sendMessage(new AuthenticationReplyMessage(actor, true));
+				}else{
+					server.sendMessage(new AuthenticationReplyMessage(actor, false));
+					return;
+				}
+				
+			} catch (EntityNotPresent e) {
+				server.sendMessage(new AuthenticationReplyMessage(actor, false));
+				return;
+			}
+			
+			
+			
+			
+			
 
 			server.sendMessage(new AuthenticationReplyMessage(actor, checkUsernamePassword(username, password)));
-		}
-		else if(type == MessageType.REGISTRATION) {
+		}else if(type == MessageType.REGISTRATION) {
 			String username = arguments[0];
 			String password = arguments[1];
+			
+			try {
+				world.addCharacter(new Pc(username, "", password, get_lobby(null)));
+				world.findPc(username).getLocation().addPlayer(world.findPc(username));
+				world.findPc(username).isLogedIn();
+			} catch (EntityNotUnique e) {
+				server.sendMessage(new ErrorMessage(actor, "The name " + username + " is taken" ));
+				server.sendMessage(new RegistrationReplyMessage(actor, false));
+				return;
+				
+			} catch (EntityNotPresent e) {
+				server.sendMessage(new SeriousErrorMessage(actor, "The lobby does not exist" ));
+				server.sendMessage(new RegistrationReplyMessage(actor, false));
+				return;
+			}
 
-			server.sendMessage(new RegistrationReplyMessage(actor, register(username, password)));
+			server.sendMessage(new RegistrationReplyMessage(actor, true));
+			return;
+			//server.sendMessage(new RegistrationReplyMessage(actor, register(username, password)));
 		}
 		else if(type == MessageType.GENERAL_ACTION) {
+			try {
+				if(!world.findPc(actor).isLogedIn()){
+					server.sendMessage(new SeriousErrorMessage(actor, "Actor is not logged in!"));
+					return;
+				}
+			} catch (EntityNotPresent e) {
+				server.sendMessage(new SeriousErrorMessage(actor, "Actor does not exist!"));
+				return;
+			}
+			
+			
 			String action = message.getAction();
 
 			switch(action) {
@@ -116,26 +174,47 @@ public class GameEngine {
 			}
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * Gets the lobby to wich this player is supposed to go to.
+	 * 
+	 * As of now this is ugly and it should be done in a more general way.
+	 * 
+	 * @param player
+	 * @return
+	 * @throws EntityNotPresent 
+	 */
+	private Room get_lobby(Pc player) throws EntityNotPresent{
+		if(player == null){
+			return world.findRoom("room1");
+		}else{
+			//TODO
+			//wrtie an actual usefull thing here.
+			return world.findRoom("room1");
+		}
+	}
 
 	/**
 	 * 
-	 * Returns true if user exists, password is correct and user is still logged in.
+	 * Returns true if user exists and has the correct passowrd..
 	 * 
 	 * @param username
 	 * @param password
 	 * @return
 	 */
 	public boolean checkUsernamePassword(String username, String password) {
-		//TODO returnerar sant om användarnamn och lösen stämmer med sparad data
-		//TODO denna bör även retunera false om användaren redan är inloggad
 
-		for (Pc pc : world.players) {
-			if(pc.getName().equals(username) && pc.checkPassword(password)){
-				return true;
-			}
+
+		try {
+			return (world.findPc(username).checkPassword(password));
+		} catch (EntityNotPresent e) {
+			//Player not present
+			return false;
 		}
-
-		return false;
+		
+		
 	}
 
 	/**
