@@ -62,7 +62,6 @@ public class Client {
 		username = "player2";
 		password = "123";
 		connect("192.168.1.102");
-		login();
 
 		ClientInterface ui = new ClientInterface(this, System.out, keyboard_reader);
 		ui.run();
@@ -122,48 +121,22 @@ public class Client {
 	}
 
 	/**
-	 * Attempts to login to the server.
-	 * NOTE, a connection has be have been established prior to the call to this method!
-	 *
-	 * @return true if the log in attempt was successful.
-	 */
-	private boolean login() {
-
-		System.out.println("Attempting to login to server...");
-
-		if(authenticate(username, password)) {
-			System.out.println("You successfully authenticated yourself!");
-			return true;
-		}
-		else {
-			System.out.println("Failed to authenticate against server! Is the name is use or are the details incorrect?");
-			System.out.println("If you have not registered yourself on this server, please do so prior to connecting!");
-
-			// Wait before printing the menu again.
-			try {
-				Thread.sleep(2500);
-			}
-			catch(InterruptedException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-
-			return false;
-		}
-	}
-
-	/**
 	 * Attempts to register at the serer.
 	 * NOTE, a connection has be have been established prior to the call to this method!
 	 *
 	 * @return true if the method was successful
 	 */
-	private boolean register() {
+	public boolean register() throws IOException {
 
-		System.out.println("Attempting to register at server...");
+		if(adapter == null) {
+			throw new IOException("No connection has been established!");
+		}
+
+//		System.out.println("Attempting to register at server...");
 
 		adapter.sendMessage(new RegistrationMessage(username, username, password));
 
-		logger.fine("Waiting for server to reply...");
+//		logger.fine("Waiting for server to reply...");
 
 		while(true) {
 			Message answer;
@@ -179,18 +152,18 @@ public class Client {
 			if(answer.getType() == MessageType.REGISTRATION_REPLY) {
 				switch(answer.getArguments()[0]) {
 					case "false":
-						System.out.println("Registration failed! That username is probably already in use!");
+//						System.out.println("Registration failed! That username is probably already in use!");
 						return false;
 					case "true":
-						System.out.println("Successfully registered at server! You can now log in!");
+//						System.out.println("Successfully registered at server! You can now log in!");
 						return true;
 					default:
-						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
-						return false;
+//						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+						throw new IOException("Reply message was illegally formed!");
 				}
 			}
 			else {
-				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+//				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			}
 		}
 	}
@@ -203,10 +176,14 @@ public class Client {
 	 * @param password
 	 * @return true if server responds with successful
 	 */
-	private boolean authenticate(String username, String password) {
+	public boolean authenticate() throws IOException {
+
+		if(adapter == null) {
+			throw new IOException("No connection has been established!");
+		}
+
 		// Authenticate against server
-		Message msg = new AuthenticationMessage(username, username, password);
-		adapter.sendMessage(msg);
+		adapter.sendMessage(new AuthenticationMessage(username, username, password));
 
 		logger.fine("Waiting for server to reply...");
 
@@ -229,8 +206,7 @@ public class Client {
 					case "true":
 						return true;
 					default:
-						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
-						return false;
+						throw new IOException("Reply message was illegally formed!");
 				}
 			}
 			else {
@@ -280,5 +256,13 @@ public class Client {
 		}
 
 		return MenuItem.getFromIndex(index);
+	}
+
+	public void setUsername(String n) {
+		username = n;
+	}
+
+	public void setPassword(String p) {
+		password = p;
 	}
 }
