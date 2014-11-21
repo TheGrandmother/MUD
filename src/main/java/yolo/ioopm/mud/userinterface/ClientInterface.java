@@ -1,6 +1,7 @@
 package yolo.ioopm.mud.userinterface;
 
 import yolo.ioopm.mud.Client;
+import yolo.ioopm.mud.ansi.AnsiColorCodes;
 import yolo.ioopm.mud.ansi.GeneralAnsiCodes;
 import yolo.ioopm.mud.communication.Message;
 
@@ -30,11 +31,21 @@ public class ClientInterface {
 		// Prepare the terminal
 		formatTerminal();
 
-		client.setServerAddress(prompt("Please enter server address:"));
-		client.setUsername(prompt("Please enter username:"));
-		client.setPassword(prompt("Please enter password:"));
+		while(true) {
+			client.setServerAddress(prompt("Please enter server address:"));
+			client.setUsername(prompt("Please enter username:"));
 
-		client.connect();
+			if(client.connect()) {
+				printToOut("Connected to server!");
+				break;
+			}
+			else {
+				printToOut("Could not connect to specified address!");
+				printToOut("Please try again!");
+			}
+		}
+
+		client.setPassword(prompt("Please enter password:"));
 
 		// Show the initial menu
 		MenuItem menu;
@@ -118,6 +129,9 @@ public class ClientInterface {
 						client.performAction(action.toString().toLowerCase(), arguments);
 						break;
 					case QUIT:
+						synchronized(out) {
+							out.print(GeneralAnsiCodes.RESET_SETTINGS);
+						}
 						System.exit(0);
 				}
 			}
@@ -133,7 +147,9 @@ public class ClientInterface {
 			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
 			out.print("Welcome to MUD!");
 			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
+			out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
 			out.print("What would you like to do?");
+			out.print(AnsiColorCodes.RESET_ATTRIBUTES);
 			out.print(GeneralAnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
 			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
 		}

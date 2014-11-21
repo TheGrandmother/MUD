@@ -2,6 +2,8 @@ package yolo.ioopm.mud.ansi;
 
 public enum GeneralAnsiCodes {
 
+	RESET_SETTINGS("\u001bc"),
+
 	CLEAR_SCREEN("\u001b[2J"),
 	CLEAR_LINE("\u001b[2K"),
 

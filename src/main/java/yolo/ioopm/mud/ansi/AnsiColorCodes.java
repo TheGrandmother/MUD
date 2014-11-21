@@ -2,7 +2,8 @@ package yolo.ioopm.mud.ansi;
 
 public enum AnsiColorCodes {
 
-	;
+	RESET_ATTRIBUTES("\u001b[0m"),
+	WHITE_BACKGROUND_BLACK_TEXT("\u001b[30;47m");
 
 	private final String CODE;
 
