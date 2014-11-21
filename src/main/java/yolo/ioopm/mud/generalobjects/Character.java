@@ -261,6 +261,13 @@ public abstract class Character extends Entity {
 			return false;
 		}
 		
+		/**
+		 * 
+		 * @return the hashset of item containers
+		 */
+		public HashSet<ItemContainer> getItemSet(){
+			return items;
+		}
 		
 		/**
 		 * 
@@ -288,19 +295,36 @@ public abstract class Character extends Entity {
 			}
 			
 		}
-
+		
+		/**
+		 * 
+		 * @return the maximum volume of the inventory
+		 */
 		public int getMax_volume() {
 			return max_volume;
 		}
 
+		/**
+		 * How much space is occupied
+		 * 
+		 * @return the current volume of the inventory
+		 */
 		public int getVolume() {
 			return volume;
 		}
 
+		/**
+		 * increases the capacity of the inventory
+		 * @param max_volume new max volume
+		 */
 		public void setMax_volume(int max_volume) {
 			this.max_volume = max_volume;
 		}
-
+		/**
+		 * sets the current volume
+		 * 
+		 * @param volume
+		 */
 		public void setVolume(int volume) {
 			this.volume = volume;
 		}

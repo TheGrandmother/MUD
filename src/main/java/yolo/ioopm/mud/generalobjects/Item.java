@@ -66,8 +66,8 @@ public abstract class Item extends Entity {
 		this.uses = uses;
 	}
 
-	public enum Type {
-		KEY, WEAPON, CONSUMABLE, ARMOR, DOCUMENT
+	public static enum Type {
+		KEY, WEAPON, CONSUMABLE, EQUIPABLE, DOCUMENT
 	}
 	
 	@SuppressWarnings("serial")

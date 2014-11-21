@@ -131,6 +131,10 @@ public class GameEngine {
 				case Keywords.LOOK:
 					See.look(actor, world, server);
 					break;
+					
+				case Keywords.INVENTORY:
+					See.inventory(actor, world, server);
+					break;
 
 				case Keywords.MOVE:
 					Movement.move(actor, arguments, world, server);

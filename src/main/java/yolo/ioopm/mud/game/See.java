@@ -6,6 +6,7 @@ import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.generalobjects.*;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
+import yolo.ioopm.mud.generalobjects.Item.Type;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 /**
@@ -71,7 +72,7 @@ public final class See {
 				observation[5] = observation[5].substring(0, observation[5].length()-2);
 			}
 			
-			server.sendMessage(new ReplyMessage(actor, "look_reply", observation));
+			server.sendMessage(new ReplyMessage(actor, Keywords.LOOK_REPLY, observation));
 				
 		} catch (EntityNotPresent e) {
 			server.sendMessage(new SeriousErrorMessage(actor, "Wtf..... you do not exist....."));
@@ -89,11 +90,27 @@ public final class See {
 			return;
 		}
 		
+		String[] args = new String[3];
+
+		args[0] = ""+(inventory.getMax_volume() - inventory.getVolume());
+		args[1] = ""+inventory.getMax_volume();
+		args[2] ="";
 		
+		for (ItemContainer i : inventory.getitems()) {
+			if(i.getAmount() == 1){
+				args[2] += i.getName()+",";
+			}else{
+				args[2] += "("+i.getAmount()+" "+i.getName()+"),";
+			}
+		}
 		
+		if(args[2].length() > 1){
+			args[2] = args[2].substring(0, args[2].length()-1);
+		}
 		
+		server.sendMessage(new ReplyMessage(actor, Keywords.INVENTORY_REPLY, args));
 		
 	}
-	
+		
 	
 }
