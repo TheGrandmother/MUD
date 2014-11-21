@@ -66,8 +66,6 @@ public class GameEngine {
 				server.sendMessage(new AuthenticationReplyMessage(actor, false));
 				return;
 			}
-
-			server.sendMessage(new AuthenticationReplyMessage(actor, checkUsernamePassword(username, password)));
 		}else if(type == MessageType.REGISTRATION) {
 			String username = arguments[0];
 			String password = arguments[1];
