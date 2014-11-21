@@ -57,6 +57,7 @@ public class GameEngine {
 					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
 					server.sendMessage(new AuthenticationReplyMessage(actor, true));
+					return;
 				}else{
 					server.sendMessage(new AuthenticationReplyMessage(actor, false));
 					return;
@@ -66,6 +67,8 @@ public class GameEngine {
 				server.sendMessage(new AuthenticationReplyMessage(actor, false));
 				return;
 			}
+
+			//server.sendMessage(new AuthenticationReplyMessage(actor, checkUsernamePassword(username, password)));
 		}else if(type == MessageType.REGISTRATION) {
 			String username = arguments[0];
 			String password = arguments[1];
