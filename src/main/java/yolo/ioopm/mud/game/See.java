@@ -3,7 +3,9 @@ package yolo.ioopm.mud.game;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.generalobjects.*;
+import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 /**
@@ -72,9 +74,25 @@ public final class See {
 			server.sendMessage(new ReplyMessage(actor, "look_reply", observation));
 				
 		} catch (EntityNotPresent e) {
-			server.sendMessage(new ErrorMessage(actor, "Wtf..... you do not exist....."));
+			server.sendMessage(new SeriousErrorMessage(actor, "Wtf..... you do not exist....."));
 			return;
 		}
+	}
+	
+	public static void inventory(String actor, World world, Adapter server){
+		Inventory inventory = null;
+		
+		try {
+			inventory = world.findPc(actor).getInventory();
+		} catch (EntityNotPresent e) {
+			server.sendMessage(new SeriousErrorMessage(actor, "Wtf..... you do not exist....."));
+			return;
+		}
+		
+		
+		
+		
+		
 	}
 	
 	

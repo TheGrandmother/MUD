@@ -51,6 +51,14 @@ DROP: drop <item>
 
 =========REPLYS=======
 
+INVENTORY_REPLY: inventory_reply <free space> <maximum space> <keys> <weapons> <consumables> <documents>
+	arguemtns:
+		free space: How much free space there is in the inventory
+		maximum space: What is the maximum capacity of the inventory
+		keys: A comma separated list of the name of all of the keys in the inventory
+		weapons: A comma separated list of the names all the weapons in the  inventory
+		usables: A comma separated list of the names all the consumables in the  inventory
+		documents:  A comma separated list of the names all the documents in the  inventory
 
 ECHO_REPLY: echo_reply <string>
 	arguments: returned string

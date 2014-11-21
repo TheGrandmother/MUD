@@ -46,4 +46,7 @@ public class Pc extends Character {
 		return this.logged_in;
 	}
 	
+	
+	
+	
 }

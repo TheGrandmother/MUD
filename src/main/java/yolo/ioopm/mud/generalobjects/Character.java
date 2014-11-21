@@ -12,7 +12,7 @@ import java.util.HashSet;
 
 public abstract class Character extends Entity {
 
-	private final String         NAME;
+	private final String         name;
 	private       String         description;
 	private       Room           location;
 	private       Inventory      inventory;
@@ -26,7 +26,7 @@ public abstract class Character extends Entity {
 	 * @param starting_location The starting room for the character.
 	 */
 	public Character(String name, String description, Room starting_location) {
-		this.NAME = name;
+		this.name = name;
 		this.description = description;
 		location = starting_location;
 		inventory = new Inventory();
@@ -55,7 +55,7 @@ public abstract class Character extends Entity {
 	 * @return The name of the character.
 	 */
 	public String getName() {
-		return NAME;
+		return name;
 	}
 
 	/**

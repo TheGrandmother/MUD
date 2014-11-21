@@ -9,7 +9,7 @@ import java.util.HashSet;
  */
 public class World {
 
-
+	//TODO refactor to use hashmaps for quicker access.
 	public  HashSet<Pc>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
@@ -159,6 +159,7 @@ public class World {
 			}
 		}
 		return true;
+		
 	}
 
 	/**

@@ -54,6 +54,9 @@ public class TestSuite {
 			t.world.addCharacter(new Pc("player1", "has a hat", "123", t.world.findRoom("room1")));
 			t.world.addCharacter(new Pc("player2", "aint hasing a hat", "123", t.world.findRoom("room1")));
 			t.world.addCharacter(new Pc("player3", "aint hasing a hat", "123", t.world.findRoom("room1")));
+			t.world.findPc("player1").setLoggedIn(true);
+			t.world.findPc("player2").setLoggedIn(true);
+			t.world.findPc("player3").setLoggedIn(true);
 		} catch (EntityNotUnique e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

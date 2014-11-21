@@ -27,20 +27,16 @@ public class ClientInterface {
 
 	public void run() {
 
+		// Prepare the terminal
 		formatTerminal();
 
-		new Thread(
-			new Runnable() {
-				@Override
-				public void run() {
-					while(true) {
-						Message msg = client.pollMessage();
-						printToOut(formatMessage(msg));
-					}
-				}
-			}
-		).start();
+		client.setServerAddress(prompt("Please enter server address:"));
+		client.setUsername(prompt("Please enter username:"));
+		client.setPassword(prompt("Please enter password:"));
 
+		client.connect();
+
+		// Show the initial menu
 		MenuItem menu;
 		while(true) {
 			String input = prompt(getMenuQuestion(MenuItem.class));
@@ -61,8 +57,8 @@ public class ClientInterface {
 					connected = client.authenticate();
 				}
 				catch(IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					return;
+					logger.log(Level.FINE, e.getMessage(), e);
+					printToOut("You are not connected to any server!");
 				}
 				break;
 
@@ -71,12 +67,34 @@ public class ClientInterface {
 					connected = client.register();
 				}
 				catch(IOException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-					return;
+					logger.log(Level.FINE, e.getMessage(), e);
+					printToOut("You are not connected to any server!");
 				}
 				break;
 		}
 
+		// Start new thread that prints data from the adapter to the terminal
+		new Thread(
+			new Runnable() {
+				@Override
+				public void run() {
+					while(true) {
+						Message msg;
+						try {
+							msg = client.pollMessage();
+						}
+						catch(IOException e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							logger.severe("Terminating thread!");
+							return;
+						}
+						printToOut(formatMessage(msg));
+					}
+				}
+			}
+		).start();
+
+		// If we are connected, start showing the action menu
 		if(connected) {
 			while(true) {
 				String input = prompt(getMenuQuestion(Action.class));
@@ -92,14 +110,12 @@ public class ClientInterface {
 
 				switch(action) {
 					case MOVE:
-						break;
 					case SAY:
-						break;
 					case LOOK:
-						break;
 					case TAKE:
-						break;
 					case WHISPER:
+						String[] arguments = prompt("Please enter arguments separated with \",\"").split(",");
+						client.performAction(action.toString().toLowerCase(), arguments);
 						break;
 					case QUIT:
 						System.exit(0);
@@ -107,7 +123,7 @@ public class ClientInterface {
 			}
 		}
 		else {
-			printToOut("Failed to connect to server!");
+			printToOut("Failed to log in to server!");
 		}
 	}
 

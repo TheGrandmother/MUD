@@ -17,5 +17,7 @@ public abstract class Keywords {
 	public static final String TAKE_REPLY    = "take_reply";
 	public static final String DROP          = "drop";
 	public static final String DROP_REPLY    = "drop_reply";
+	public static final String INVENTORY_REPLY    = "inventory_reply";
+	public static final String INVENTORY    = "inventory";
 
 }
