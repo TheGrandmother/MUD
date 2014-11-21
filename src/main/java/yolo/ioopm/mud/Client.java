@@ -1,6 +1,5 @@
 package yolo.ioopm.mud;
 
-import yolo.ioopm.mud.ansi.GeneralAnsiCodes;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
@@ -19,40 +18,12 @@ import java.util.logging.Logger;
 public class Client {
 
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
-
-	private enum MenuItem {
-		LOGIN(1),
-		REGISTER(2);
-
-		private final int INDEX;
-
-		private MenuItem(int index) {
-			INDEX = index;
-		}
-
-		public int getIndex() {
-			return INDEX;
-		}
-
-		public static MenuItem getFromIndex(int index) {
-			for(MenuItem item : values()) {
-				if(item.getIndex() == index) {
-					return item;
-				}
-			}
-
-			return null;
-		}
-	}
-
-	//TODO read these values from user
-	private String host_address = null;
-	private String username     = null;
-	private String password     = null;
-
 	private final BufferedReader keyboard_reader;
 
-	private Adapter adapter = null;
+	private String  host_address = null;
+	private String  username     = null;
+	private String  password     = null;
+	private Adapter adapter      = null;
 
 	public Client() {
 		logger.fine("Initiating client!");
