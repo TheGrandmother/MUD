@@ -41,12 +41,12 @@ public class ClientInterface {
 			}
 		).start();
 
-		MenuItem choice;
+		MenuItem menu;
 		while(true) {
-			String input = prompt(getMenuQuestion());
+			String input = prompt(getMenuQuestion(MenuItem.class));
 
 			try {
-				choice = MenuItem.valueOf(input.toUpperCase());
+				menu = MenuItem.valueOf(input.toUpperCase());
 				break;
 			}
 			catch(IllegalArgumentException e) {
@@ -54,24 +54,60 @@ public class ClientInterface {
 			}
 		}
 
-		switch(choice) {
+		boolean connected = false;
+		switch(menu) {
 			case LOGIN:
 				try {
-					client.authenticate();
+					connected = client.authenticate();
 				}
 				catch(IOException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
+					return;
 				}
 				break;
 
 			case REGISTER:
 				try {
-					client.register();
+					connected = client.register();
 				}
 				catch(IOException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
+					return;
 				}
 				break;
+		}
+
+		if(connected) {
+			while(true) {
+				String input = prompt(getMenuQuestion(Action.class));
+
+				Action action;
+				try {
+					action = Action.valueOf(input.toUpperCase());
+				}
+				catch(IllegalArgumentException e) {
+					printToOut("Incorrect choice! Please try again!");
+					continue;
+				}
+
+				switch(action) {
+					case MOVE:
+						break;
+					case SAY:
+						break;
+					case LOOK:
+						break;
+					case TAKE:
+						break;
+					case WHISPER:
+						break;
+					case QUIT:
+						System.exit(0);
+				}
+			}
+		}
+		else {
+			printToOut("Failed to connect to server!");
 		}
 	}
 
@@ -87,10 +123,11 @@ public class ClientInterface {
 		}
 	}
 
-	private String getMenuQuestion() {
+	// A bit of generics haxxory to generate a string of all enum constants of any given enum
+	private <E extends Enum<E>> String getMenuQuestion(Class<E> enumClass) {
 		StringBuilder sb = new StringBuilder();
-		for(MenuItem i : MenuItem.values()) {
-			sb.append(i.name() + " ");
+		for(Enum<E> i : enumClass.getEnumConstants()) {
+			sb.append(i.toString() + " ");
 		}
 		return sb.toString();
 	}

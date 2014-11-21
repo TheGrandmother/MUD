@@ -105,7 +105,11 @@ public class Client {
 	 *
 	 * @return - First message in message-queue.
 	 */
-	public Message pollMessage() {
+	public Message pollMessage() throws IOException {
+
+		if(adapter == null) {
+			throw new IOException("No connection has been established!");
+		}
 
 		Message msg;
 		while((msg = adapter.poll()) == null) {
