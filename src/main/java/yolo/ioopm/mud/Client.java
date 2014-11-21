@@ -63,6 +63,7 @@ public class Client {
 		password = "123";
 		connect("192.168.1.102");
 
+
 		ClientInterface ui = new ClientInterface(this, System.out, keyboard_reader);
 		ui.run();
 	}
