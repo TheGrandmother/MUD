@@ -2,6 +2,8 @@ package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
 
+import yolo.ioopm.mud.generalobjects.items.Weapon;
+
 /**
  * This class specifies a Character. Will be extended by other classes for PC's and NPC's.
  * <p/>
@@ -12,12 +14,13 @@ import java.util.HashSet;
 
 public abstract class Character extends Entity {
 
-	private final String         name;
-	private       String         description;
-	private       Room           location;
-	private       Inventory      inventory;
-	private       CharacterSheet cs;
-	private       boolean        lives;
+	private final String name;
+	private  String description;
+	private  Room location;
+	private  Inventory inventory;
+	private  CharacterSheet cs;
+	private  boolean lives;
+	private  Weapon weapon = null;
 
 	/**
 	 * Constructs a character.
@@ -36,6 +39,15 @@ public abstract class Character extends Entity {
 
 	}
 
+	
+	public Weapon getWeapon(){
+		return weapon;
+	}
+	
+	public void setWeapon(Weapon weapon){
+		this.weapon = weapon;
+	}
+	
 	public String getDescription() {
 		return description;
 	}
@@ -225,9 +237,9 @@ public abstract class Character extends Entity {
 		 * @param type
 		 * @return Returns null if no silly item was found
 		 */
-		public Item findItem(String name, Item.Type type){
+		public Item findItem(String name){
 			for (ItemContainer i : items) {
-				if(type == i.getType() && i.getName().equals(name)){
+				if( i.getName().equals(name)){
 					return i.getItem();
 				}
 			}

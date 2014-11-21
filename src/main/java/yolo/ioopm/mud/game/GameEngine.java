@@ -144,12 +144,18 @@ public class GameEngine {
 					ItemInteraction.Take(actor, arguments, world, server);
 					break;
 
-				//TODO implement drop action
+				
 				case Keywords.DROP:
 					ItemInteraction.drop(actor, arguments, world, server);
 					break;
 
-				//TODO implement inspect inventory action
+				
+				case Keywords.EQUIP:
+					ItemInteraction.equip(actor, arguments, world, server);
+					break;
+					
+				//TODO implement unequip
+				//TODO implement attack
 
 				case "drop_players":
 					for (Pc p : world.getPlayers()) {
@@ -175,6 +181,10 @@ public class GameEngine {
 		}
 	}
 	
+	
+	public static int d20(){
+		return (int) (Math.random()*21);
+	}
 	
 	/**
 	 * Gets the lobby to which this player is supposed to go to.

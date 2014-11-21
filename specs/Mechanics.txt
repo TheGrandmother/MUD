@@ -1,0 +1,14 @@
+-----COMBAT------
+
+Combat is primarily based on a throw two D20.
+The target value is computed by:
+
+21 - (weapon_lvl-player_lvl)
+
+if the attacker rolls between 35 and 40 the target can't defend
+and an additional 50% damage is dealt.
+
+the atackee does a defense roll with two D20 with 
+a target value of:
+
+21 - (weapon_lvl-player_lvl)

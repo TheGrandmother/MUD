@@ -16,6 +16,7 @@ import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 import yolo.ioopm.mud.generalobjects.items.Key;
+import yolo.ioopm.mud.generalobjects.items.Weapon;
 
 public class TestSuite {
 
@@ -37,7 +38,9 @@ public class TestSuite {
 			t.world.addRoom(new Room("room1", "of doom"));
 			t.world.addRoom(new Room("room2", "super silly"));
 			t.world.addItem(new Key("room1", "room2", 0));
+			t.world.addItem(new Weapon("sword", "lool", 3, 1));
 			t.world.findRoom("room1").addItem(t.world.findItem("Key to room2"));
+			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), true);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
 		}

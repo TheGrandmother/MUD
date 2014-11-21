@@ -10,7 +10,7 @@ public abstract class Item extends Entity {
 	private Type type;
 	private final int size;
 	boolean dropable;
-	private final int level;
+	public final int level;
 
 
 	/**

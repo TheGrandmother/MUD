@@ -1,13 +1,17 @@
 package yolo.ioopm.mud.game;
 
+import java.io.ObjectInputStream.GetField;
+
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.communication.server.ServerAdapter;
+import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
 import yolo.ioopm.mud.generalobjects.*;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+import yolo.ioopm.mud.generalobjects.items.Weapon;
 
 public abstract class ItemInteraction {
 
@@ -92,9 +96,49 @@ public abstract class ItemInteraction {
 				return;
 			}
 		}
-		
 		server.sendMessage(new ErrorMessage(actor, "You dont have that item."));
+	}
+	
+	
+	//TODO this might need to be refactored
+	public static void equip(String actor, String[] arguments, World world, Adapter server){
+		if(arguments.length != 1){
+			server.sendMessage(new ErrorMessage(actor, "Malformed message. Equip takes 1 argument."));
+			return;
+		}
 		
+		String item_name = arguments[0];
+		Pc player = null;
+		
+		try {
+			player = world.findPc(actor);
+		} catch (EntityNotPresent e) {
+			server.sendMessage(new SeriousErrorMessage(e.getName(), "Player could not be found."));
+			return;
+		}
+		
+		Inventory inv = player.getInventory();
+		
+		Item i = inv.findItem(item_name);
+		if(i == null){
+			server.sendMessage(new ErrorMessage(actor, "You do not have " + item_name+"."));
+			return;
+		}
+		
+		if(!(i instanceof Weapon)){
+			server.sendMessage(new ErrorMessage(actor, item_name + " is not equippable :/"));
+			return;
+		}
+		
+		if(player.getWeapon() != null){
+			server.sendMessage(new ErrorMessage(actor, "You have already equipped" + player.getWeapon().getName()));
+			return;
+		}else{
+			inv.removeItem(item_name);
+			player.setWeapon((Weapon) i);
+			server.sendMessage(new ReplyMessage(actor, Keywords.EQUIP_REPLY, new String[]{" You have equipped " + item_name + "."}));
+			return;
+		}
 		
 	}
 	

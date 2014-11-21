@@ -49,7 +49,18 @@ DROP: drop <item>
 	description:
 		tries to drop the item in the given room.
 
+ATTACK: attack <target>
+	argument:
+		target: who is to be attacked.
+	description:
+		attacks target with mounted weapon.
+	
+
 =========REPLYS=======
+
+ATTACK_REPLY: attack_reply <message>
+	arguments:
+		messsage: message regarding how an attack went down.
 
 INVENTORY_REPLY: inventory_reply <free space> <maximum space> <items>
 	arguemtns:
