@@ -164,6 +164,18 @@ public class GameEngine {
 						System.out.println(p.getName());
 					}
 					break;
+				case "drop_players_room":
+					try {
+						Room room = world.findRoom(arguments[0]);
+						for (Pc p : room.getPlayers()) {
+							System.out.println(p.getName());
+						}
+					} catch (EntityNotPresent e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					break;
 
 				case "am_i_real":
 					System.out.println(actor);
@@ -183,9 +195,45 @@ public class GameEngine {
 		}
 	}
 	
+	/**
+	 * 
+	 * Broadcasts a ReplyMessage to all the players in the given room
+	 * 
+	 * @param adapter
+	 * @param room
+	 * @param type
+	 * @param nouns
+	 */
+	public static void broadcastToRoom(Adapter adapter, Room room, String type, String[] nouns){
+		for (Pc player : room.getPlayers()) {
+			adapter.sendMessage( new ReplyMessage(player.getName(),type , nouns));
+		}
+	}
 	
+	/**
+	 * 
+	 * Broadcasts a message to all the players in the given room EXCEPT for the sender.
+	 * 
+	 * @param adapter
+	 * @param room	
+	 * @param type	The type of the message
+	 * @param nouns
+	 * @param sender	The name of the player to which no message is to be sent!
+	 */
+	public static void broadcastToRoom(Adapter adapter, Room room, String type, String[] nouns,String sender){
+		for (Pc player : room.getPlayers()) {
+			if(!(player.getName().equals(sender))){
+				adapter.sendMessage( new ReplyMessage(player.getName(),type , nouns));
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @return A pseudo random number between 1-20
+	 */
 	public static int d20(){
-		return (int) (Math.random()*21);
+		return 1+(int)(Math.random()*20);
 	}
 	
 	/**
