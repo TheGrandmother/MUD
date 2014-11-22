@@ -59,17 +59,17 @@ public abstract class Movement {
 		}
 		
 		if(has_key){
+			
 			current_room.removePlayer(player);
 			destination_room.addPlayer(player);
 			player.setLocation(destination_room);
 			
-			GameEngine.broadcastToRoom(adapter, current_room, Keywords.MOVE_BROADCAST, 
-					new String[] {player.getName() + " has gone to " + destination_room.getName()+"."},player.getName());
+			GameEngine.broadcastToRoom(adapter, current_room, player.getName() + " has gone to " + destination_room.getName()+".",player.getName());
 			
 			adapter.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
-			GameEngine.broadcastToRoom(adapter, destination_room, Keywords.MOVE_BROADCAST, 
-					new String[] {player.getName() + " entered from " + current_room.getName()+"."},player.getName());
+			GameEngine.broadcastToRoom(adapter, destination_room, player.getName() + " entered from " + current_room.getName()+".",player.getName());
 			return;
+			
 		}else{
 			adapter.sendMessage(new ErrorMessage(actor, "You dont have the keey to " + destination_name+ "."));
 			return;

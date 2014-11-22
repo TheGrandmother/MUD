@@ -13,7 +13,6 @@ public abstract class Keywords {
 	public static final String LOOK_REPLY    = "look_reply";
 	public static final String MOVE          = "move";
 	public static final String MOVE_REPLY    = "move_reply";
-	public static final String MOVE_BROADCAST= "move_broadcast";
 	public static final String TAKE          = "take";
 	public static final String TAKE_REPLY    = "take_reply";
 	public static final String DROP          = "drop";

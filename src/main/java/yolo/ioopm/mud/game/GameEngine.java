@@ -5,6 +5,7 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
+import yolo.ioopm.mud.communication.messages.server.NotifactionMesssage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
@@ -204,9 +205,9 @@ public class GameEngine {
 	 * @param type
 	 * @param nouns
 	 */
-	public static void broadcastToRoom(Adapter adapter, Room room, String type, String[] nouns){
+	public static void broadcastToRoom(Adapter adapter, Room room, String message){
 		for (Pc player : room.getPlayers()) {
-			adapter.sendMessage( new ReplyMessage(player.getName(),type , nouns));
+			adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
 		}
 	}
 	
@@ -220,10 +221,10 @@ public class GameEngine {
 	 * @param nouns
 	 * @param sender	The name of the player to which no message is to be sent!
 	 */
-	public static void broadcastToRoom(Adapter adapter, Room room, String type, String[] nouns,String sender){
+	public static void broadcastToRoom(Adapter adapter, Room room, String message,String sender){
 		for (Pc player : room.getPlayers()) {
 			if(!(player.getName().equals(sender))){
-				adapter.sendMessage( new ReplyMessage(player.getName(),type , nouns));
+				adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
 			}
 		}
 	}
