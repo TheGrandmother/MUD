@@ -50,10 +50,22 @@ DROP: drop <item>
 		tries to drop the item in the given room.
 
 ATTACK: attack <target>
-	argument:
+	arguments:
 		target: who is to be attacked.
 	description:
 		attacks target with mounted weapon.
+		
+EQUIP: equip <item>
+	arguments:
+		item: item to be equipped
+	description:
+		equips item to the weapon slot if it is a weapon.
+		Soon i will implement support for equipping other stuff.
+
+UNEQUIP: unequip
+	Description:
+		as of now it only unequips the weapon.
+		Will implement more later.
 	
 
 =========REPLYS=======

@@ -26,11 +26,11 @@ public class GameEngine {
 
 	private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
 
-	Adapter server;
+	Adapter adapter;
 	World   world;
 
-	public GameEngine(Adapter server, World world) {
-		this.server = server;
+	public GameEngine(Adapter adapter, World world) {
+		this.adapter = adapter;
 		this.world = world;
 	}
 	
@@ -49,22 +49,22 @@ public class GameEngine {
 			try {
 				player = world.findPc(username);
 				if(player.isLogedIn()){
-					server.sendMessage(new AuthenticationReplyMessage(actor, false));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor, false));
 					return;
 				}
 				if(checkUsernamePassword(username, password)){
 					player.setLocation(get_lobby(player));
 					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
-					server.sendMessage(new AuthenticationReplyMessage(actor, true));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor, true));
 					return;
 				}else{
-					server.sendMessage(new AuthenticationReplyMessage(actor, false));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor, false));
 					return;
 				}
 				
 			} catch (EntityNotPresent e) {
-				server.sendMessage(new AuthenticationReplyMessage(actor, false));
+				adapter.sendMessage(new AuthenticationReplyMessage(actor, false));
 				return;
 			}
 
@@ -78,28 +78,28 @@ public class GameEngine {
 				world.findPc(username).getLocation().addPlayer(world.findPc(username));
 				world.findPc(username).setLoggedIn(true);
 			} catch (EntityNotUnique e) {
-				server.sendMessage(new ErrorMessage(actor, "The name " + username + " is taken" ));
-				server.sendMessage(new RegistrationReplyMessage(actor, false));
+				adapter.sendMessage(new ErrorMessage(actor, "The name " + username + " is taken" ));
+				adapter.sendMessage(new RegistrationReplyMessage(actor, false));
 				return;
 				
 			} catch (EntityNotPresent e) {
-				server.sendMessage(new SeriousErrorMessage(actor, "The lobby does not exist" ));
-				server.sendMessage(new RegistrationReplyMessage(actor, false));
+				adapter.sendMessage(new SeriousErrorMessage(actor, "The lobby does not exist" ));
+				adapter.sendMessage(new RegistrationReplyMessage(actor, false));
 				return;
 			}
 
-			server.sendMessage(new RegistrationReplyMessage(actor, true));
+			adapter.sendMessage(new RegistrationReplyMessage(actor, true));
 			return;
 			//server.sendMessage(new RegistrationReplyMessage(actor, register(username, password)));
 		}
 		else if(type == MessageType.GENERAL_ACTION) {
 			try {
 				if(!world.findPc(actor).isLogedIn()){
-					server.sendMessage(new SeriousErrorMessage(actor, "Actor is not logged in!"));
+					adapter.sendMessage(new SeriousErrorMessage(actor, "Actor is not logged in!"));
 					return;
 				}
 			} catch (EntityNotPresent e) {
-				server.sendMessage(new SeriousErrorMessage(actor, "Actor does not exist!"));
+				adapter.sendMessage(new SeriousErrorMessage(actor, "Actor does not exist!"));
 				return;
 			}
 			
@@ -110,51 +110,53 @@ public class GameEngine {
 
 				case Keywords.SAY:
 					if(arguments.length != 1){
-						server.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
+						adapter.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
 						break;
 					}
-					Talk.say(actor, arguments[0], world, server);
+					Talk.say(actor, arguments[0], world, adapter);
 					break;
 
 				case Keywords.WHISPER:
 					if(arguments.length != 2){
-						server.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
+						adapter.sendMessage( new ErrorMessage(actor, "Mallformed message :("));
 						break;
 					}
-					Talk.whisper(actor, arguments[0], arguments[1], world, server);
+					Talk.whisper(actor, arguments[0], arguments[1], world, adapter);
 					break;
 
 				case Keywords.ECHO:
-					server.sendMessage( new ReplyMessage(actor,"echo_reply", arguments));
+					adapter.sendMessage( new ReplyMessage(actor,"echo_reply", arguments));
 					break;
 
 				case Keywords.LOOK:
-					See.look(actor, world, server);
+					See.look(actor, world, adapter);
 					break;
 					
 				case Keywords.INVENTORY:
-					See.inventory(actor, world, server);
+					See.inventory(actor, world, adapter);
 					break;
 
 				case Keywords.MOVE:
-					Movement.move(actor, arguments, world, server);
+					Movement.move(actor, arguments, world, adapter);
 					break;
 
 				case Keywords.TAKE:
-					ItemInteraction.Take(actor, arguments, world, server);
+					ItemInteraction.Take(actor, arguments, world, adapter);
 					break;
 
 				
 				case Keywords.DROP:
-					ItemInteraction.drop(actor, arguments, world, server);
+					ItemInteraction.drop(actor, arguments, world, adapter);
 					break;
 
 				
 				case Keywords.EQUIP:
-					ItemInteraction.equip(actor, arguments, world, server);
+					ItemInteraction.equip(actor, arguments, world, adapter);
 					break;
 					
-				//TODO implement unequip
+				case Keywords.UNEQUIP:
+					ItemInteraction.unequip(actor, arguments, world, adapter);
+					break;
 				//TODO implement attack
 
 				case "drop_players":
@@ -176,7 +178,7 @@ public class GameEngine {
 					break;
 
 				default:
-					server.sendMessage( new ErrorMessage(actor, action + " is not a valid keyword!"));
+					adapter.sendMessage( new ErrorMessage(actor, action + " is not a valid keyword!"));
 			}
 		}
 	}
