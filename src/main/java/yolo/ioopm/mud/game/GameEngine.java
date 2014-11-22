@@ -222,15 +222,44 @@ public class GameEngine {
 	 * @param room	
 	 * @param type	The type of the message
 	 * @param nouns
-	 * @param sender	The name of the player to which no message is to be sent!
+	 * @param exludes	The name of the player to which no message is to be sent!
 	 */
-	public static void broadcastToRoom(Adapter adapter, Room room, String message,String sender){
+	public static void broadcastToRoom(Adapter adapter, Room room, String message,String exludes){
 		for (Pc player : room.getPlayers()) {
-			if(!(player.getName().equals(sender))){
+			if(!(player.getName().equals(exludes))){
 				adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
 			}
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * Broadcasts a message to all the players in the given room EXCEPT for all the entries in the exclude array .
+	 * 
+	 * @param adapter
+	 * @param room	
+	 * @param type	The type of the message
+	 * @param nouns
+	 * @param excludes	The name of all the players to which no message is to be sent!
+	 */
+	public static void broadcastToRoom(Adapter adapter, Room room, String message,String[] excludes){
+		
+		for (Pc player : room.getPlayers()) {
+			boolean skip = false;
+			for (String exclude : excludes) {
+				if(player.getName().equals(exclude)){
+					skip = true;
+					break;
+				}
+				
+			}
+			if(!skip){
+				adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
+			}			
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -268,7 +297,7 @@ public class GameEngine {
 	}
 
 	/**
-	 * Returns true if user exists and has the correct passowrd..
+	 * Returns true if user exists and has the correct password.
 	 * 
 	 * @param username
 	 * @param password

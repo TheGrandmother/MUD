@@ -23,7 +23,19 @@ WHISPER: whisper <recipient> <message>
 	returns: WHISPER_REPLY
 	description:
 		Says something to a specified player also in the room.
+		
 
+MOVE: move <destination>
+	arguments:
+		destination: the destination to where one moves.
+	returns: MOVE_REPLY
+	description:
+		The player attempts to move. If the exit is locked the player 
+		will only move trough if he has the correct key.
+	broadcasts:
+		If the move was successful all players in the current room will be notified of the actor leaving
+		and all the players in the destination room will be alerted to the other players arrival.
+	
 LOOK: look
 	arguments: NONE
 	returns: LOOK_REPLY
@@ -54,6 +66,9 @@ ATTACK: attack <target>
 		target: who is to be attacked.
 	description:
 		attacks target with mounted weapon.
+	broadcasts:
+		who attacked who or who killed who if attack was successfull.
+		If the target dies he gets respawned in the lobby and all players in the lobby gets informed of his/her entry
 		
 EQUIP: equip <item>
 	arguments:
@@ -69,10 +84,6 @@ UNEQUIP: unequip
 	
 
 =========REPLYS=======
-
-MOVE_BROADCAST: move_boradcast <message>
-	arguments:
-		message: Message to be sent to all recipients in a room regarding a players move
 
 ATTACK_REPLY: attack_reply <message>
 	arguments:

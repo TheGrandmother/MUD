@@ -35,7 +35,7 @@ public class TestSuite {
 		TestSuite t = new TestSuite();
 
 		try {
-			t.world.addRoom(new Room("room1", "of doom"));
+			t.world.addRoom(new Room("room1", "of doom",true));
 			t.world.addRoom(new Room("room2", "super silly"));
 			t.world.addRoom(new Room("room3", "super silly",true));
 			t.world.addItem(new Key("room1", "room2", 0));
