@@ -37,12 +37,16 @@ public class TestSuite {
 		try {
 			t.world.addRoom(new Room("room1", "of doom"));
 			t.world.addRoom(new Room("room2", "super silly"));
+			t.world.addRoom(new Room("room3", "super silly"));
 			t.world.addItem(new Key("room1", "room2", 0));
 			t.world.addItem(new Weapon("sword", "lool", 3, 1));
 			t.world.findRoom("room1").addItem(t.world.findItem("Key to room2"));
 			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), true);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
+			t.world.findRoom("room1").addExit(t.world.findRoom("room3"), false);
+			t.world.findRoom("room2").addExit(t.world.findRoom("room3"), false);
+			t.world.findRoom("room3").addExit(t.world.findRoom("room1"), false);
 		}
 		catch(EntityNotUnique e) {
 			// TODO Auto-generated catch block

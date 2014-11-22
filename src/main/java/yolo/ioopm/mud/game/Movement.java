@@ -16,9 +16,9 @@ public abstract class Movement {
 	
 	//TODO
 	//TEST THIS FUNCTION LIKE A BOSS
-	public static void move(String actor, String[] arguments, World world, Adapter server){
+	public static void move(String actor, String[] arguments, World world, Adapter adapter){
 		if(arguments.length != 1){
-			server.sendMessage(new ErrorMessage(actor, "Wrong nuber of arguments for move operation."));
+			adapter.sendMessage(new ErrorMessage(actor, "Wrong nuber of arguments for move operation."));
 		}
 		
 		String destination_name = arguments[0];
@@ -30,45 +30,50 @@ public abstract class Movement {
 			destination_room = world.findRoom(destination_name);
 			player = world.findPc(actor);
 		} catch (EntityNotPresent e1) {
-			server.sendMessage(new ErrorMessage(actor, e1.getName()+" does not exist"));
+			adapter.sendMessage(new ErrorMessage(actor, e1.getName()+" does not exist"));
 			return;
 		}
 		
 		Room.Door door = current_room.getExit(destination_name);
 		if(door == null){
-			server.sendMessage(new ErrorMessage(actor, current_room.getName() + " has no exit to " + destination_name+"."));
+			adapter.sendMessage(new ErrorMessage(actor, current_room.getName() + " has no exit to " + destination_name+"."));
 			return;
 		}
 		
+		//This shit is pretty fucking ugly :(
+		Boolean has_key = true;
 		if(door.isLocked()){
+			has_key = false;
 			Inventory inventory = player.getInventory();
 			for (ItemContainer i : inventory.getitems()) {
 				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRomm() ) ){
-					try {
-						if(((Key)i.getItem()).use(player, destination_room)){
-							current_room.removePlayer(player);
-							destination_room.addPlayer(player);
-							player.setLocation(destination_room);
-							
-							server.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
-							return;
-						}
-					} catch (UseFailedException e) {
-						server.sendMessage(new ErrorMessage(actor,e.getReason()));
+					if(i.getItem().getLevel() > player.getCs().getLevel()){
+						adapter.sendMessage(new ErrorMessage(actor, "Key requires level " + i.getItem().getLevel() + " but you are only level" + player.getCs().getLevel()+"."));
 						return;
+					}else{
+						has_key = true;
+						break;
 					}
 				}
 			}
-			server.sendMessage(new ErrorMessage(actor, "You dont have the keey to " + destination_name+ "."));
-			return;
 		}
 		
-		current_room.removePlayer(player);
-		destination_room.addPlayer(player);
-		player.setLocation(destination_room);
-		
-		server.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
-		return;
+		if(has_key){
+			current_room.removePlayer(player);
+			destination_room.addPlayer(player);
+			player.setLocation(destination_room);
+			
+			GameEngine.broadcastToRoom(adapter, current_room, Keywords.MOVE_BROADCAST, 
+					new String[] {player.getName() + " has gone to " + destination_room.getName()+"."},player.getName());
+			
+			adapter.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
+			GameEngine.broadcastToRoom(adapter, destination_room, Keywords.MOVE_BROADCAST, 
+					new String[] {player.getName() + " entered from " + current_room.getName()+"."},player.getName());
+			return;
+		}else{
+			adapter.sendMessage(new ErrorMessage(actor, "You dont have the keey to " + destination_name+ "."));
+			return;
+		}
 		
 	}
 	
