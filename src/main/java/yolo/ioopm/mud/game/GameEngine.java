@@ -54,7 +54,7 @@ public class GameEngine {
 					return;
 				}
 				if(checkUsernamePassword(username, password)){
-					player.setLocation(get_lobby(player));
+					player.setLocation(get_lobby(player,world));
 					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
 					adapter.sendMessage(new AuthenticationReplyMessage(actor, true));
@@ -75,7 +75,7 @@ public class GameEngine {
 			String password = arguments[1];
 			
 			try {
-				world.addCharacter(new Pc(username, "", password, get_lobby(null)));
+				world.addCharacter(new Pc(username, "", password, get_lobby(null,world)));
 				world.findPc(username).getLocation().addPlayer(world.findPc(username));
 				world.findPc(username).setLoggedIn(true);
 			} catch (EntityNotUnique e) {
@@ -158,8 +158,11 @@ public class GameEngine {
 				case Keywords.UNEQUIP:
 					ItemInteraction.unequip(actor, arguments, world, adapter);
 					break;
-				//TODO implement attack
-
+				
+				case Keywords.ATTACK:
+					Combat.attack(actor, arguments, world, adapter);
+					break;
+					
 				case "drop_players":
 					for (Pc p : world.getPlayers()) {
 						System.out.println(p.getName());
@@ -238,6 +241,14 @@ public class GameEngine {
 	}
 	
 	/**
+	 * 
+	 * @return A pseudo random number between 1-6
+	 */
+	public static int d6(){
+		return 1+(int)(Math.random()*6);
+	}
+	
+	/**
 	 * Gets the lobby to which this player is supposed to go to.
 	 * 
 	 * As of now this is ugly and it should be done in a more general way.
@@ -246,7 +257,7 @@ public class GameEngine {
 	 * @return
 	 * @throws EntityNotPresent 
 	 */
-	private Room get_lobby(Pc player) throws EntityNotPresent{
+	protected static Room get_lobby(Pc player,World world) throws EntityNotPresent{
 		if(player == null){
 			return world.findRoom("room1");
 		}else{

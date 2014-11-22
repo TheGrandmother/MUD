@@ -70,6 +70,10 @@ UNEQUIP: unequip
 
 =========REPLYS=======
 
+MOVE_BROADCAST: move_boradcast <message>
+	arguments:
+		message: Message to be sent to all recipients in a room regarding a players move
+
 ATTACK_REPLY: attack_reply <message>
 	arguments:
 		messsage: message regarding how an attack went down.

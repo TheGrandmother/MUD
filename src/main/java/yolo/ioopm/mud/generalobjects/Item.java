@@ -13,17 +13,17 @@ public abstract class Item extends Entity {
 	public final int level;
 
 
-	/**
-	 * 
-	 * Returns true if use was successful. Although successful does not necessarily mean that
-	 * the desired outcome of the use was achieved just that it was possible to use the action.
-	 * 
-	 * @param user
-	 * @param target
-	 * @return true if use was successful
-	 * @throws UseFailedException 
-	 */
-	public abstract boolean use(Character user, Entity target) throws UseFailedException;
+//	/**
+//	 * 
+//	 * Returns true if use was successful. Although successful does not necessarily mean that
+//	 * the desired outcome of the use was achieved just that it was possible to use the action.
+//	 * 
+//	 * @param user
+//	 * @param target
+//	 * @return true if use was successful
+//	 * @throws UseFailedException 
+//	 */
+//	//public abstract boolean use(Character user, Entity target) throws UseFailedException;
 
 	public Item(String name, String description, int uses, Type type, Boolean dropable, int size, int level) {
 		NAME = name;

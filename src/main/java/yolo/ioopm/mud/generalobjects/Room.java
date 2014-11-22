@@ -9,6 +9,8 @@ public class Room extends Entity {
 
 	private final String NAME;
 	private final String DESCRIPTION;
+	
+	private final boolean pvp; 
 
 	private HashSet<Door> exits   = new HashSet<Door>();
 	private HashSet<Pc>   players = new HashSet<Pc>();
@@ -24,6 +26,13 @@ public class Room extends Entity {
 	public Room(String name, String description) {
 		this.NAME = name;
 		this.DESCRIPTION = description;
+		this.pvp = false;
+	}
+	
+	public Room(String name, String description,boolean pvp) {
+		this.NAME = name;
+		this.DESCRIPTION = description;
+		this.pvp = pvp;
 	}
 
 	/**
@@ -247,5 +256,13 @@ public class Room extends Entity {
 			return otherside.getName();
 		}
 	}
+
+
+	public boolean isPVP() {
+		return pvp;
+	}
+	
+	
+	
 
 }

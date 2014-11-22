@@ -19,8 +19,8 @@ public abstract class Keywords {
 	public static final String DROP_REPLY    = "drop_reply";
 	public static final String INVENTORY_REPLY    = "inventory_reply";
 	public static final String INVENTORY    = "inventory";
-	public static final String ATACK = "atack";
-	public static final String ATACK_REPLY = "atack_reply";
+	public static final String ATTACK = "attack";
+	public static final String ATTACK_REPLY = "attack_reply";
 	public static final String EQUIP = "equip";
 	public static final String EQUIP_REPLY = "equip_reply";
 	public static final String UNEQUIP = "unequip";

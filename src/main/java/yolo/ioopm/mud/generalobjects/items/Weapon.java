@@ -13,22 +13,32 @@ public class Weapon extends Item {
 	private int damage;
 	//private int difficulty;
 	
-	public Weapon(String name, String description, int size, int level) {
+	public Weapon(String name, String description, int size, int level,int damage) {
 		super(name, description, -1,  Type.WEAPON,true, size, level);
+		this.damage = damage;
 	}
 
-	public int attack(Character user, Entity target) throws UseFailedException {
-		if(!(target instanceof Character)){
-			throw new UseFailedException("Dude.... you can only attack people");
-		}
-		Character atackee = (Character)target;
+	/**
+	 * 
+	 * This method computes how much damage was dealt to the target.
+	 * 
+	 * will trow UseFailedException if the attack was unsuccesfull.
+	 * 
+	 * @param user who is attacking
+	 * @param target who is being attacked
+	 * @return how much damage was dealt
+	 * @throws UseFailedException	
+	 */
+	public int attack(Character user, Character target) throws UseFailedException {
+
+
 		int attack_roll =(GameEngine.d20()+GameEngine.d20() - (user.getCs().getLevel()-level));
 		
 		if(attack_roll >= TARGET_NUMBER){
 			if(attack_roll >= CRITICAL_NUMBER){
 				return (damage*3)/2;
 			}else{
-				int defense_roll = (GameEngine.d20()+GameEngine.d20() - (atackee.getCs().getLevel()-level));
+				int defense_roll = (GameEngine.d20()+GameEngine.d20() - (target.getCs().getLevel()-level));
 				if(defense_roll >= TARGET_NUMBER){
 					throw new UseFailedException("Defended!");
 				}else{
@@ -40,10 +50,10 @@ public class Weapon extends Item {
 		}
 	}
 
-	@Override
-	public boolean use(Character user, Entity target) throws UseFailedException {
-		// TODO Maybe i should not do stuff likw this......
-		return false;
-	}
+//	@Override
+//	public boolean use(Character user, Entity target) throws UseFailedException {
+//		// TODO Maybe i should not do stuff likw this......
+//		return false;
+//	}
 
 }

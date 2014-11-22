@@ -16,7 +16,7 @@ public abstract class Character extends Entity {
 
 	private final String name;
 	private  String description;
-	private  Room location;
+	protected  Room location;
 	private  Inventory inventory;
 	private  CharacterSheet cs;
 	private  boolean lives;
@@ -32,6 +32,7 @@ public abstract class Character extends Entity {
 		this.name = name;
 		this.description = description;
 		location = starting_location;
+		
 		inventory = new Inventory();
 		cs = new CharacterSheet();
 		lives = true;
@@ -92,6 +93,7 @@ public abstract class Character extends Entity {
 	}
 
 
+	//TODO implement leveling!
 	/**
 	 * The CharcterSheet contains information about the characters current status.
 	 *
@@ -108,6 +110,10 @@ public abstract class Character extends Entity {
 		 * Defines the initial configuration of the Character sheet .
 		 */
 		public CharacterSheet() {
+			this.hp = 10;
+			this.level = 1;
+			this.health = 50;
+			this.max_health = 50;
 
 		}
 
@@ -126,6 +132,18 @@ public abstract class Character extends Entity {
 		public void setHp(int hp) {
 			this.hp = hp;
 		}
+		
+		/**
+		 * Adds or subtracts hp. Can't set hp to less than 0
+		 * @param hp
+		 */
+		public void addHp(int hp){
+			if(this.hp + hp < 0){
+				this.hp = 0;
+			}else{
+				this.hp += hp;
+			}
+		}
 
 		/**
 		 * @return The characters health
@@ -133,6 +151,10 @@ public abstract class Character extends Entity {
 		public int getHealth() {
 			return health;
 		}
+		
+		
+
+		
 
 
 		/**
@@ -186,7 +208,7 @@ public abstract class Character extends Entity {
 		 *
 		 * @return
 		 */
-		public int getMax_health() {
+		public int getMaxHealth() {
 			return max_health;
 		}
 

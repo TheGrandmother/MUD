@@ -21,7 +21,7 @@ public class Key extends Item{
 		return target_room;
 	}
 	
-	@Override
+	
 	public boolean use(Character user, Entity target) throws UseFailedException {
 		
 		if(!(target instanceof Room)){
