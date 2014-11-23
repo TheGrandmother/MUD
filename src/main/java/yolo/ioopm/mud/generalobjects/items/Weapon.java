@@ -50,6 +50,12 @@ public class Weapon extends Item {
 		}
 	}
 
+	@Override
+	public String inspect() {
+		// TODO Auto-generated method stub
+		return super.getDescription()+"Requires level: " + super.level + " Damage: " + damage+".";
+	}
+
 //	@Override
 //	public boolean use(Character user, Entity target) throws UseFailedException {
 //		// TODO Maybe i should not do stuff likw this......

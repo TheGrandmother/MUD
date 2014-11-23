@@ -13,6 +13,20 @@ import yolo.ioopm.mud.generalobjects.World.*;
 
 public abstract class Combat {
 	
+	
+	/**
+	 * 
+	 * This method is called when an attack action gets issued.
+	 * It tries to attack the target given by the first element in the arguments
+	 * array.
+	 * 
+	 * If an attack was successful a broadcast message goes out to the room.
+	 * 
+	 * @param actor Who is attacking
+	 * @param arguments First entry is the name of the target
+	 * @param world
+	 * @param adapter
+	 */
 	public static void attack(Pc actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Attack takes only one argument."));

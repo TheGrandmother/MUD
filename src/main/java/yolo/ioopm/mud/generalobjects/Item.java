@@ -12,7 +12,8 @@ public abstract class Item extends Entity {
 	boolean dropable;
 	public final int level;
 
-
+//	//public abstract boolean use(Character user, Entity target) throws UseFailedException;
+	
 //	/**
 //	 * 
 //	 * Returns true if use was successful. Although successful does not necessarily mean that
@@ -23,7 +24,7 @@ public abstract class Item extends Entity {
 //	 * @return true if use was successful
 //	 * @throws UseFailedException 
 //	 */
-//	//public abstract boolean use(Character user, Entity target) throws UseFailedException;
+
 
 	public Item(String name, String description, int uses, Type type, Boolean dropable, int size, int level) {
 		NAME = name;
@@ -36,6 +37,7 @@ public abstract class Item extends Entity {
 
 	}
 	
+	public abstract String inspect();
 	
 	public int getLevel() {
 		return level;

@@ -47,6 +47,12 @@ INVENTORY: inventory
 	returns: INVENTORY_REPLY
 	descriptions:
 		returns the contents of your inventory
+		
+EXAMINE: examine item
+	arguments:
+		item: the item to be examined.
+	description:
+		Returns a message of information about the details of the item.
 
 TAKE: take <item>
 	arguments: 
@@ -54,12 +60,16 @@ TAKE: take <item>
 	returns: TAKE_REPLY
 	description:
 		attempts to take an item from the current room.
+	broadcasts:
+		Notifies all the other players in the room that the actor picked up an item 
 
 DROP: drop <item>
 	arguments:
 		item: the name of the item to be dropped.
 	description:
 		tries to drop the item in the given room.
+	broadcasts:
+		Notifies all the other players in the room that the actor droped up an item 
 
 ATTACK: attack <target>
 	arguments:
@@ -84,6 +94,10 @@ UNEQUIP: unequip
 	
 
 =========REPLYS=======
+
+EQUIP_REPLY: equip_reply <message>
+	
+
 
 ATTACK_REPLY: attack_reply <message>
 	arguments:
@@ -121,6 +135,10 @@ LOOK_REPLY: look_reply <name> <description> <exits> <players> <npcs> <items>
 TAKE_REPLY: take_reply <message>
 	arguments:
 		message: A description about what happened
+		
+EXAMINE_REPLY: examine_reply <message>
+	arguments:
+		message: A text describing what the item looks like.
 
 
 	

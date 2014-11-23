@@ -134,6 +134,10 @@ public class GameEngine {
 				case Keywords.INVENTORY:
 					See.inventory(actor, world, adapter);
 					break;
+					
+				case Keywords.EXAMINE:
+					See.examine(actor, arguments, world, adapter);
+					break;
 
 				case Keywords.MOVE:
 					Movement.move(actor, arguments, world, adapter);

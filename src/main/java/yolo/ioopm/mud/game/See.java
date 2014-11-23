@@ -1,5 +1,7 @@
 package yolo.ioopm.mud.game;
 
+import java.util.Iterator;
+
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
@@ -106,12 +108,36 @@ public final class See {
 		
 	}
 	
-	public static void examine(String actor, String[] arguments, World world, Adapter adapter){
+	public static void examine(Pc actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
-			adapter.sendMessage(new ErrorMessage(actor, "Examine takes but one and only one argument."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Examine takes but one and only one argument."));
 			return;
 		}
 		
+		String item_name = arguments[0];
+		
+		//First check the room for the item.
+		for(ItemContainer ic : actor.getLocation().getItems()){
+			if(ic.getName().equals(item_name)){
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{ic.getItem().inspect()}));
+				return;
+			}
+		}
+		
+		//check the players inventory
+		for(ItemContainer ic : actor.getInventory().getitems()){
+			if(ic.getName().equals(item_name)){
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{ic.getItem().inspect()}));
+				return;
+			}
+		}
+		
+		if(actor.getWeapon().getName().equals(item_name)){
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{actor.getWeapon().inspect()}));
+			return;
+		}
+		
+		adapter.sendMessage(new ErrorMessage(actor.getName(),item_name+ " could not be found."));
 		
 		
 		
