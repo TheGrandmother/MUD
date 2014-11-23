@@ -16,27 +16,28 @@ public abstract class Movement {
 	
 	//TODO
 	//TEST THIS FUNCTION LIKE A BOSS
-	public static void move(String actor, String[] arguments, World world, Adapter adapter){
-		if(arguments.length != 1){
-			adapter.sendMessage(new ErrorMessage(actor, "Wrong nuber of arguments for move operation."));
+	public static void move(Pc actor, String[] arguments, World world, Adapter adapter){
+		if(arguments == null || arguments.length != 1){
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Wrong nuber of arguments for move operation."));
+			return;
 		}
 		
 		String destination_name = arguments[0];
 		Room destination_room = null;
-		Room current_room = null;
-		Pc player = null;
+		Room current_room = actor.getLocation();
+
 		try {
-			current_room = world.findPc(actor).getLocation();
+			
 			destination_room = world.findRoom(destination_name);
-			player = world.findPc(actor);
+
 		} catch (EntityNotPresent e1) {
-			adapter.sendMessage(new ErrorMessage(actor, e1.getName()+" does not exist"));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), destination_name + " isn't even a real room!"));
 			return;
 		}
 		
 		Room.Door door = current_room.getExit(destination_name);
 		if(door == null){
-			adapter.sendMessage(new ErrorMessage(actor, current_room.getName() + " has no exit to " + destination_name+"."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), current_room.getName() + " has no exit to " + destination_name+"."));
 			return;
 		}
 		
@@ -44,11 +45,11 @@ public abstract class Movement {
 		Boolean has_key = true;
 		if(door.isLocked()){
 			has_key = false;
-			Inventory inventory = player.getInventory();
+			Inventory inventory = actor.getInventory();
 			for (ItemContainer i : inventory.getitems()) {
 				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRomm() ) ){
-					if(i.getItem().getLevel() > player.getCs().getLevel()){
-						adapter.sendMessage(new ErrorMessage(actor, "Key requires level " + i.getItem().getLevel() + " but you are only level" + player.getCs().getLevel()+"."));
+					if(i.getItem().getLevel() > actor.getCs().getLevel()){
+						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level" + actor.getCs().getLevel()+"."));
 						return;
 					}else{
 						has_key = true;
@@ -60,18 +61,18 @@ public abstract class Movement {
 		
 		if(has_key){
 			
-			current_room.removePlayer(player);
-			destination_room.addPlayer(player);
-			player.setLocation(destination_room);
+			current_room.removePlayer(actor);
+			destination_room.addPlayer(actor);
+			actor.setLocation(destination_room);
 			
-			GameEngine.broadcastToRoom(adapter, current_room, player.getName() + " has gone to " + destination_room.getName()+".",player.getName());
+			GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " has gone to " + destination_room.getName()+".",actor.getName());
 			
-			adapter.sendMessage(new ReplyMessage(actor, Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
-			GameEngine.broadcastToRoom(adapter, destination_room, player.getName() + " entered from " + current_room.getName()+".",player.getName());
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
+			GameEngine.broadcastToRoom(adapter, destination_room, actor.getName() + " entered from " + current_room.getName()+".",actor.getName());
 			return;
 			
 		}else{
-			adapter.sendMessage(new ErrorMessage(actor, "You dont have the keey to " + destination_name+ "."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have the keey to " + destination_name+ "."));
 			return;
 		}
 		
