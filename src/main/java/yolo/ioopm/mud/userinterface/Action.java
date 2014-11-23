@@ -1,10 +1,15 @@
 package yolo.ioopm.mud.userinterface;
 
 public enum Action {
+	ATTACK,
+	DROP,
+	EQUIP,
+	INVENTORY,
+	LOOK,
 	MOVE,
 	SAY,
-	LOOK,
 	TAKE,
+	UNEQUIP,
 	WHISPER,
 	QUIT
 }

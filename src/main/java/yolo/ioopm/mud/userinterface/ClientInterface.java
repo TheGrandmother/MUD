@@ -122,8 +122,13 @@ public class ClientInterface {
 				switch(action) {
 					case MOVE:
 					case SAY:
+					case ATTACK:
+					case DROP:
+					case EQUIP:
+					case INVENTORY:
 					case LOOK:
 					case TAKE:
+					case UNEQUIP:
 					case WHISPER:
 						String[] arguments = prompt("Please enter arguments separated with \",\"").split(",");
 						client.performAction(action.toString().toLowerCase(), arguments);
@@ -133,6 +138,9 @@ public class ClientInterface {
 							out.print(GeneralAnsiCodes.RESET_SETTINGS);
 						}
 						System.exit(0);
+						break;
+					default:
+						printToOut("Unimplemented action!");
 				}
 			}
 		}
