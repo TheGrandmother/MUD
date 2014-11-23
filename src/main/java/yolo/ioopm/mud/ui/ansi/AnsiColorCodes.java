@@ -1,4 +1,4 @@
-package yolo.ioopm.mud.ansi;
+package yolo.ioopm.mud.ui.ansi;
 
 public enum AnsiColorCodes {
 

@@ -1,8 +1,8 @@
-package yolo.ioopm.mud.userinterface;
+package yolo.ioopm.mud.ui;
 
 import yolo.ioopm.mud.Client;
-import yolo.ioopm.mud.ansi.AnsiColorCodes;
-import yolo.ioopm.mud.ansi.GeneralAnsiCodes;
+import yolo.ioopm.mud.ui.ansi.AnsiColorCodes;
+import yolo.ioopm.mud.ui.ansi.AnsiCodes;
 import yolo.ioopm.mud.communication.Message;
 
 import java.io.BufferedReader;
@@ -135,7 +135,7 @@ public class ClientInterface {
 						break;
 					case QUIT:
 						synchronized(out) {
-							out.print(GeneralAnsiCodes.RESET_SETTINGS);
+							out.print(AnsiCodes.RESET_SETTINGS);
 						}
 						System.exit(0);
 						break;
@@ -151,15 +151,15 @@ public class ClientInterface {
 
 	private void formatTerminal() {
 		synchronized(out) {
-			out.print(GeneralAnsiCodes.CLEAR_SCREEN);
-			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
+			out.print(AnsiCodes.CLEAR_SCREEN);
+			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
 			out.print("Welcome to MUD!");
-			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
+			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
 			out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
 			out.print("What would you like to do?");
 			out.print(AnsiColorCodes.RESET_ATTRIBUTES);
-			out.print(GeneralAnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
-			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
+			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
+			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
 		}
 	}
 
@@ -173,33 +173,81 @@ public class ClientInterface {
 	}
 
 	private String formatMessage(Message msg) {
-		return msg.getMessage();
+
+		String action = msg.getAction();
+		String[] args = msg.getArguments();
+
+		switch(msg.getType()) {
+			case GENERAL_ERROR:
+				return "ERROR! " + args[0];
+			case GENERAL_REPLY:
+				switch(action) {
+					case "echo_reply":
+					case "take_reply":
+					case "attack_reply":
+						return args[0];
+
+					case "say_reply":
+						return args[0] + " said \"" + args[1] + "\"";
+
+					case "whisper_reply":
+						return args[0] + " whispered to you \"" + args[1] + "\"";
+
+					case "inventory_reply":
+						String answer = "Inventory: ";
+						answer += args[0] + "/" + args[1] + " space left.";
+						answer += " Items: " + args[2];
+						return answer;
+
+					case "look_reply":
+						StringBuilder s = new StringBuilder();
+
+						s.append("--- ").append(args[0]).append(" ---").append("\n");
+						s.append("Descripton: ").append(args[1]).append("\n");
+						s.append("Exits: ").append(args[2]).append("\n");
+						s.append("Players: ").append(args[3]).append("\n");
+						s.append("NPCs: ").append(args[4]).append("\n");
+						s.append("Items: ").append(args[5]).append("\n");
+
+						return s.toString();
+
+					default:
+						logger.severe("Unsupported message reply! Action: \"" + action + "\"");
+						return msg.getMessage();
+				}
+			case SERIOUS_ERROR:
+			case NOTIFICATION:
+				return msg.getMessage();
+			default:
+				logger.severe("Unsupported message type! Type: \"" + msg.getType() + "\"");
+				return msg.getMessage();
+		}
 	}
 
 	public void printToOut(String output) {
 		synchronized(out) {
-			out.print(GeneralAnsiCodes.CURSOR_STORE_POSITION);
-			out.print(GeneralAnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(1).setIntTwo(15));
+			out.print(AnsiCodes.CURSOR_STORE_POSITION);
+			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(1).setIntTwo(15));
 
 			// Scroll up the buffer 15 lines
 			for(int i = 0; i < 15; i++) {
-				out.print(GeneralAnsiCodes.BUFFER_MOVE_UP_ONE);
+				out.print(AnsiCodes.BUFFER_MOVE_UP_ONE);
 			}
 
-			out.print(output);
-			out.print(GeneralAnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
-			out.print(GeneralAnsiCodes.CURSOR_RESTORE_POSITION);
+			out.print(output + "\n");
+			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
+			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 		}
 	}
 
 	public String prompt(String question) {
 
 		synchronized(out) {
-			out.print(GeneralAnsiCodes.CURSOR_STORE_POSITION);
-			out.print(GeneralAnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
-			out.print(GeneralAnsiCodes.CLEAR_LINE);
+			out.print(AnsiCodes.CURSOR_STORE_POSITION);
+			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
+			out.print(AnsiCodes.CLEAR_LINE);
 			out.print(question);
-			out.print(GeneralAnsiCodes.CURSOR_RESTORE_POSITION);
+			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 		}
 
 		String input;
