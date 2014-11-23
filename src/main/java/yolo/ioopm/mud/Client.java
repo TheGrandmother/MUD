@@ -7,7 +7,7 @@ import yolo.ioopm.mud.communication.client.ClientAdapter;
 import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
 import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
 import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
-import yolo.ioopm.mud.userinterface.ClientInterface;
+import yolo.ioopm.mud.ui.ClientInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;

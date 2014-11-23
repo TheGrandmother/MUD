@@ -1,4 +1,4 @@
-package yolo.ioopm.mud.userinterface;
+package yolo.ioopm.mud.ui;
 
 public enum Action {
 	ATTACK,

@@ -1,6 +1,6 @@
-package yolo.ioopm.mud.ansi;
+package yolo.ioopm.mud.ui.ansi;
 
-public enum GeneralAnsiCodes {
+public enum AnsiCodes {
 
 	RESET_SETTINGS("\u001bc"),
 
@@ -21,16 +21,16 @@ public enum GeneralAnsiCodes {
 	private int intOne = 0;
 	private int intTwo = 0;
 
-	private GeneralAnsiCodes(String code) {
+	private AnsiCodes(String code) {
 		this.CODE = code;
 	}
 
-	public GeneralAnsiCodes setIntOne(int intOne) {
+	public AnsiCodes setIntOne(int intOne) {
 		this.intOne = intOne;
 		return this;
 	}
 
-	public GeneralAnsiCodes setIntTwo(int intTwo) {
+	public AnsiCodes setIntTwo(int intTwo) {
 		this.intTwo = intTwo;
 		return this;
 	}
