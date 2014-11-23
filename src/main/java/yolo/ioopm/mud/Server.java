@@ -71,9 +71,9 @@ public class Server {
 			world.findRoom("room1").addItem(world.findItem("Key to room2"));
 			world.findRoom("room1").addExit(world.findRoom("room2"), true);
 			world.findRoom("room2").addExit(world.findRoom("room1"), false);
-			world.addCharacter(new Pc("player1", "has a hat", "123", world.findRoom("room1")));
-			world.addCharacter(new Pc("player2", "aint hasing a hat", "123", world.findRoom("room1")));
-			world.addCharacter(new Pc("player3", "aint hasing a hat", "123", world.findRoom("room1")));
+			//world.addCharacter(new Pc("player1", "has a hat", "123", world.findRoom("room1")));
+			//world.addCharacter(new Pc("player2", "aint hasing a hat", "123", world.findRoom("room1")));
+			//world.addCharacter(new Pc("player3", "aint hasing a hat", "123", world.findRoom("room1")));
 		}
 		catch(World.EntityNotUnique e) {
 			// TODO Auto-generated catch block

@@ -19,76 +19,70 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 public final class See {
 
 	
-	public static void look(String actor,World world, Adapter server){
-		try {
-			Room current_room  = world.findPc(actor).getLocation();
-			String[] observation = new String[6];
-			observation[0] = "You are in room " + current_room.getName() + "."; //NAME
-			observation[1] = current_room.getDescription();						//DESCRIPTION
-			observation[2] = "";												//EXITS
-			observation[3] = "";												//PLAYERS
-			observation[4] = "";												//NPCS
-			observation[5] = "";												//ITEMS
-			
-			if(current_room.getExits().isEmpty()){
-				observation[2] = "";
-			}else{
-				for (Room.Door door : current_room.getExits()) {
-					
-					if(door.isLocked()){
-						observation[2] += door.getName() + " locked, ";
-					}else{
-						observation[2] += door.getName() + ", ";
-					}
-				}
-				observation[2] = observation[2].substring(0, observation[2].length()-2);
-			}
-			
-			if(current_room.getPlayers().isEmpty()){
-				observation[3] = "";
-			}else{
-				for (Pc pc : current_room.getPlayers()) {
-					observation[3] += pc.getName()+", ";
-				}
-				observation[3] = observation[3].substring(0, observation[3].length()-2);
-			}
-			
-			if(current_room.getNpcs().isEmpty()){
-				observation[4] = "";
-			}else{
-				for (Npc npc : current_room.getNpcs()) {
-					observation[4] += npc.getName()+", ";
-				}
-				observation[4] = observation[4].substring(0, observation[4].length()-2);
-			}
-			
-			if(current_room.getItems().isEmpty()){
-				observation[5] = "";
-			}else{
-				for (ItemContainer item : current_room.getItems()) {
-					observation[5] += "( "+ item.getAmount() + " "+item.getName()+
-							"), ";
-				}
-				observation[5] = observation[5].substring(0, observation[5].length()-2);
-			}
-			
-			server.sendMessage(new ReplyMessage(actor, Keywords.LOOK_REPLY, observation));
+	public static void look(Pc actor,World world, Adapter server){
+
+		Room current_room  = actor.getLocation();
+		String[] observation = new String[6];
+		observation[0] = "You are in room " + current_room.getName() + "."; //NAME
+		observation[1] = current_room.getDescription();						//DESCRIPTION
+		observation[2] = "";												//EXITS
+		observation[3] = "";												//PLAYERS
+		observation[4] = "";												//NPCS
+		observation[5] = "";												//ITEMS
+		
+		if(current_room.getExits().isEmpty()){
+			observation[2] = "";
+		}else{
+			for (Room.Door door : current_room.getExits()) {
 				
-		} catch (EntityNotPresent e) {
-			server.sendMessage(new SeriousErrorMessage(actor, "Wtf..... you do not exist....."));
-			return;
+				if(door.isLocked()){
+					observation[2] += door.getName() + " locked, ";
+				}else{
+					observation[2] += door.getName() + ", ";
+				}
+			}
+			observation[2] = observation[2].substring(0, observation[2].length()-2);
 		}
+		
+		if(current_room.getPlayers().isEmpty()){
+			observation[3] = "";
+		}else{
+			for (Pc pc : current_room.getPlayers()) {
+				observation[3] += pc.getName()+", ";
+			}
+			observation[3] = observation[3].substring(0, observation[3].length()-2);
+		}
+		
+		if(current_room.getNpcs().isEmpty()){
+			observation[4] = "";
+		}else{
+			for (Npc npc : current_room.getNpcs()) {
+				observation[4] += npc.getName()+", ";
+			}
+			observation[4] = observation[4].substring(0, observation[4].length()-2);
+		}
+		
+		if(current_room.getItems().isEmpty()){
+			observation[5] = "";
+		}else{
+			for (ItemContainer item : current_room.getItems()) {
+				observation[5] += "( "+ item.getAmount() + " "+item.getName()+
+						"), ";
+			}
+			observation[5] = observation[5].substring(0, observation[5].length()-2);
+		}
+		
+		server.sendMessage(new ReplyMessage(actor.getName(), Keywords.LOOK_REPLY, observation));
+				
+
 	}
 	
-	public static void inventory(String actor, World world, Adapter server){
+	public static void inventory(Pc actor, World world, Adapter server){
 		Inventory inventory = null;
 		
-		try {
-			inventory = world.findPc(actor).getInventory();
-		} catch (EntityNotPresent e) {
-			server.sendMessage(new SeriousErrorMessage(actor, "Wtf..... you do not exist....."));
-			return;
-		}
+
+		inventory = actor.getInventory();
+
 		
 		String[] args = new String[3];
 
@@ -108,9 +102,19 @@ public final class See {
 			args[2] = args[2].substring(0, args[2].length()-1);
 		}
 		
-		server.sendMessage(new ReplyMessage(actor, Keywords.INVENTORY_REPLY, args));
+		server.sendMessage(new ReplyMessage(actor.getName(), Keywords.INVENTORY_REPLY, args));
 		
 	}
+	
+	public static void examine(String actor, String[] arguments, World world, Adapter adapter){
+		if(arguments == null || arguments.length != 1){
+			adapter.sendMessage(new ErrorMessage(actor, "Examine takes but one and only one argument."));
+			return;
+		}
 		
+		
+		
+		
+	}
 	
 }
