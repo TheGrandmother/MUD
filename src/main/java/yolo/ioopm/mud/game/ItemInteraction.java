@@ -50,6 +50,7 @@ public abstract class ItemInteraction {
 		}
 		
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.TAKE_REPLY, new String[]{"You picked up a/an " + item_name +"."}));
+		GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name, actor.getName()+".");
 	}
 	
 	
@@ -71,6 +72,7 @@ public abstract class ItemInteraction {
 				current_room.addItem(i.getItem());
 				actor.getInventory().removeItem(item_name);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, new String[]{"You droped "+ item_name + "."}));
+				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" dropped " + item_name, actor.getName()+".");
 				return;
 			}
 		}
