@@ -66,7 +66,7 @@ public class Server {
 		try {
 			world.addRoom(new Room("room1", "of doom"));
 			world.addRoom(new Room("room2", "super silly"));
-			world.addItem(new Key("room1", "room2", 0));
+			world.addItem(new Key("room2", 0));
 			world.findRoom("room1").addItem(world.findItem("Key to room2"));
 			world.findRoom("room1").addExit(world.findRoom("room2"), true);
 			world.findRoom("room2").addExit(world.findRoom("room1"), false);
