@@ -1,8 +1,11 @@
 package yolo.ioopm.mud.communication;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 public abstract class Adapter {
+
+	private static final Logger logger = Logger.getLogger(Adapter.class.getName());
 
 	/*
 		This is the amount of times per second senders and listeners will iterate over the queues and send/retrieve messages
@@ -30,7 +33,13 @@ public abstract class Adapter {
 	 * @return Retrieves and removes head of inbox, null if inbox is empty.
 	 */
 	public Message poll() {
-		return inbox.poll();
+		Message msg = inbox.poll();
+
+		if(msg != null) {
+			logger.fine("Popping msg \"" + msg.getMessage() + "\".");
+		}
+
+		return msg;
 	}
 
 	//TODO
@@ -41,6 +50,8 @@ public abstract class Adapter {
 	 * @param message
 	 */
 	public void sendMessage(final Message message) {
+
+		logger.fine("Adding message \"" + message.getMessage() + "\" to inbox.");
 
 		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
 		new Thread(new Runnable() {

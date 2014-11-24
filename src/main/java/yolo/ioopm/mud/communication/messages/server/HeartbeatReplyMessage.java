@@ -5,6 +5,6 @@ import yolo.ioopm.mud.communication.MessageType;
 
 public class HeartbeatReplyMessage extends Message {
 	public HeartbeatReplyMessage(String receiver) {
-		super(receiver, "server", MessageType.HEARTBEAT_REPLY, null, null);
+		super(receiver, "server", MessageType.HEARTBEAT_REPLY, null);
 	}
 }

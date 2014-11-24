@@ -12,7 +12,7 @@ import yolo.ioopm.mud.communication.MessageType;
 public class NotifactionMesssage extends Message {
 
 	public NotifactionMesssage(String receiver, String message) {
-		super(receiver, "server", MessageType.NOTIFICATION, null, new String[]{message});
+		super(receiver, "server", MessageType.NOTIFICATION, null, message);
 		// TODO Auto-generated constructor stub
 	}
 

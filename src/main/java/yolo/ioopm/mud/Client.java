@@ -7,6 +7,7 @@ import yolo.ioopm.mud.communication.client.ClientAdapter;
 import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
 import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
 import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
+import yolo.ioopm.mud.ui.Action;
 import yolo.ioopm.mud.ui.ClientInterface;
 
 import java.io.BufferedReader;
@@ -34,8 +35,8 @@ public class Client {
 		ui.run();
 	}
 
-	public void performAction(String action, String[] arguments) {
-		adapter.sendMessage(new GeneralActionMessage(username, action, arguments));
+	public void performAction(Action action, String[] arguments) {
+		adapter.sendMessage(new GeneralActionMessage(username, action.toString().toLowerCase(), arguments));
 	}
 
 	/**
@@ -106,11 +107,9 @@ public class Client {
 			throw new IOException("No connection has been established!");
 		}
 
-//		System.out.println("Attempting to register at host_address...");
-
 		adapter.sendMessage(new RegistrationMessage(username, username, password));
 
-//		logger.fine("Waiting for host_address to reply...");
+		logger.fine("Waiting for host_address to reply...");
 
 		while(true) {
 			Message answer;
@@ -126,18 +125,16 @@ public class Client {
 			if(answer.getType() == MessageType.REGISTRATION_REPLY) {
 				switch(answer.getArguments()[0]) {
 					case "false":
-//						System.out.println("Registration failed! That username is probably already in use!");
 						return false;
 					case "true":
-//						System.out.println("Successfully registered at host_address! You can now log in!");
 						return true;
 					default:
-//						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
+						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
 						throw new IOException("Reply message was illegally formed!");
 				}
 			}
 			else {
-//				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
+				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			}
 		}
 	}

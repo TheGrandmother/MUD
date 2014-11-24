@@ -86,23 +86,25 @@ public class ClientInterface {
 
 		// Start new thread that prints data from the adapter to the terminal
 		new Thread(
-			new Runnable() {
-				@Override
-				public void run() {
-					while(true) {
-						Message msg;
-						try {
-							msg = client.pollMessage();
-						}
-						catch(IOException e) {
-							logger.log(Level.SEVERE, e.getMessage(), e);
-							logger.severe("Terminating thread!");
-							return;
-						}
-						printToOut(formatMessage(msg));
+			() -> {
+				while(true) {
+
+					Message msg;
+					try {
+						logger.fine("MessageReader waiting for message...");
+						msg = client.pollMessage();
+						logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
 					}
+					catch(IOException e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						logger.severe("Terminating thread!");
+						return;
+					}
+
+					logger.fine("MessageReader should now print...");
+					printToOut(formatMessage(msg));
 				}
-			}
+			}, "MessageReader"
 		).start();
 
 		// If we are connected, start showing the action menu
@@ -119,29 +121,59 @@ public class ClientInterface {
 					continue;
 				}
 
+				String[] args = null;
 				switch(action) {
+
 					case MOVE:
-					case SAY:
-					case ATTACK:
-					case DROP:
-					case EQUIP:
-					case INVENTORY:
-					case LOOK:
-					case TAKE:
-					case UNEQUIP:
-					case WHISPER:
-						String[] arguments = prompt("Please enter arguments separated with \",\"").split(",");
-						client.performAction(action.toString().toLowerCase(), arguments);
+						args = new String[]{prompt("What room would you like to move too?")};
 						break;
+
+					case SAY:
+						args = new String[]{prompt("What would you like to say?")};
+						break;
+
+					case ATTACK:
+						args = new String[]{prompt("Please enter player to attack:")};
+						break;
+
+					case DROP:
+						args = new String[]{prompt("What would you like to drop?")};
+						break;
+
+					case EQUIP:
+						args = new String[]{prompt("What would you like to equip?")};
+						break;
+
+					case INVENTORY:
+						break;
+
+					case LOOK:
+						break;
+
+					case TAKE:
+						args = new String[]{prompt("What do you want to take?")};
+						break;
+
+					case UNEQUIP:
+						break;
+
+					case WHISPER:
+						args = new String[]{prompt("Who do you want to whisper too?"), prompt("What do you want to whisper?")};
+						break;
+
 					case QUIT:
 						synchronized(out) {
 							out.print(AnsiCodes.RESET_SETTINGS);
 						}
 						System.exit(0);
 						break;
+
 					default:
 						printToOut("Unimplemented action!");
+						return;
 				}
+
+				client.performAction(action, args);
 			}
 		}
 		else {
@@ -167,64 +199,104 @@ public class ClientInterface {
 	private <E extends Enum<E>> String getMenuQuestion(Class<E> enumClass) {
 		StringBuilder sb = new StringBuilder();
 		for(Enum<E> i : enumClass.getEnumConstants()) {
-			sb.append(i.toString() + " ");
+			sb.append(i.toString()).append(" ");
 		}
 		return sb.toString();
 	}
 
 	private String formatMessage(Message msg) {
 
+		logger.fine("Attempting to format message \"" + msg.getMessage() + "\"");
+
 		String action = msg.getAction();
 		String[] args = msg.getArguments();
 
+		String retval;
+
+		logger.fine("Initiating main switch-statement...");
+
 		switch(msg.getType()) {
 			case GENERAL_ERROR:
-				return "ERROR! " + args[0];
+				retval = "ERROR! " + args[0];
+				break;
+
 			case GENERAL_REPLY:
+				logger.fine("Initiating General_reply switch");
+
 				switch(action) {
 					case "echo_reply":
 					case "take_reply":
 					case "attack_reply":
-						return args[0];
+						retval = args[0];
+						break;
 
 					case "say_reply":
-						return args[0] + " said \"" + args[1] + "\"";
+						retval = args[0] + " said \"" + args[1] + "\"";
+						break;
 
-					case "whisper_reply":
-						return args[0] + " whispered to you \"" + args[1] + "\"";
+					case "whisper_return = ":
+						retval = args[0] + " whispered to you \"" + args[1] + "\"";
+						break;
 
 					case "inventory_reply":
-						String answer = "Inventory: ";
-						answer += args[0] + "/" + args[1] + " space left.";
-						answer += " Items: " + args[2];
-						return answer;
+						if(args.length == 2) {
+							retval = "Inventory: " + args[0] + "/" + args[1] + " space left. No items in bag.";
+						}
+						else if(args.length == 3) {
+							retval = "Inventory: " + args[0] + "/" + args[1] + " space left. Items: " + args[2];
+						}
+						else {
+							logger.severe("Incorrect argument length in inventory_reply!");
+							retval = "Incorrect argument length in inventory_reply!";
+						}
+						break;
 
 					case "look_reply":
-						StringBuilder s = new StringBuilder();
+						retval = "--- " + args[0] + " ---" + "\n" +
+							"Description: " + args[1] + "\n" +
+							"Exits: " + args[2] + "\n" +
+							"Players: " + args[3] + "\n" +
+							"NPCs: " + args[4] + "\n" +
+							"Items: " + args[5];
+						break;
 
-						s.append("--- ").append(args[0]).append(" ---").append("\n");
-						s.append("Descripton: ").append(args[1]).append("\n");
-						s.append("Exits: ").append(args[2]).append("\n");
-						s.append("Players: ").append(args[3]).append("\n");
-						s.append("NPCs: ").append(args[4]).append("\n");
-						s.append("Items: ").append(args[5]).append("\n");
-
-						return s.toString();
+					case "move_reply":
+						retval = args[0];
+						break;
 
 					default:
 						logger.severe("Unsupported message reply! Action: \"" + action + "\"");
-						return msg.getMessage();
+						retval = msg.getMessage();
+						break;
 				}
+
+				logger.fine("General reply switch finished");
+
+				break;
+
 			case SERIOUS_ERROR:
+				retval = "SERIOUS ERROR! " + args[0];
+				break;
+
 			case NOTIFICATION:
-				return msg.getMessage();
+				retval = "Notice: " + args[0];
+				break;
+
 			default:
 				logger.severe("Unsupported message type! Type: \"" + msg.getType() + "\"");
-				return msg.getMessage();
+				retval = msg.getMessage();
+				break;
 		}
+
+		logger.fine("Returning value \"" + retval + "\"");
+
+		return retval;
 	}
 
 	public void printToOut(String output) {
+
+		logger.info("Printing \"" + output + "\" to out!");
+
 		synchronized(out) {
 			out.print(AnsiCodes.CURSOR_STORE_POSITION);
 			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(1).setIntTwo(15));
@@ -235,6 +307,7 @@ public class ClientInterface {
 			}
 
 			out.print(output + "\n");
+
 			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
 			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 		}
@@ -242,13 +315,7 @@ public class ClientInterface {
 
 	public String prompt(String question) {
 
-		synchronized(out) {
-			out.print(AnsiCodes.CURSOR_STORE_POSITION);
-			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
-			out.print(AnsiCodes.CLEAR_LINE);
-			out.print(question);
-			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
-		}
+		printToPrompt(question);
 
 		String input;
 		try {
@@ -259,6 +326,18 @@ public class ClientInterface {
 			return null;
 		}
 
+		printToPrompt("Please wait...");
+
 		return input;
+	}
+
+	private void printToPrompt(String output) {
+		synchronized(out) {
+			out.print(AnsiCodes.CURSOR_STORE_POSITION);
+			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
+			out.print(AnsiCodes.CLEAR_LINE);
+			out.print(output);
+			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
+		}
 	}
 }
