@@ -1,2 +1,4 @@
 room:lol room: lames room ever!.:true: none :ball room;false:
 room:ball room: giggle....:true: axe;150 :lol room;false:
+
+lobby:lol room;0,ball room;5

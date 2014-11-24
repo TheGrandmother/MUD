@@ -30,3 +30,6 @@ In room.txt
 room:name: description:pvp:items:exits:
 items are a list on the form name;amount,....,name;amount
 exits are on the form  name;locked,....,name;locked
+
+the room file must contain a non empty lobby list on the form:
+lobby:room;level,room;level......

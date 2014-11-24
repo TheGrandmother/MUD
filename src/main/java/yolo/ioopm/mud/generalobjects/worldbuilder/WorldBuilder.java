@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -31,28 +32,17 @@ public class WorldBuilder {
 	 * an int corresponding to the number of items in the room..
 	 */
 	private HashMap<String, String[]> item_list= new HashMap<>();
+	/**
+	 * List containing all of the lobbies in the room with entrys on the form{roomname;level}
+	 */
+	private ArrayList<String> lobby_list= new ArrayList<>();
 	
 	public WorldBuilder(String item_file_name, String room_file_name) {
 		item_file = new File(item_file_name);
 		room_file = new File(room_file_name);
 		
 	}
-	
-	public World buildWorld(){
-		world = new World();
-		try {
-			parseItems();
-			parseRoom();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SyntaxError e) {
-			System.out.println("SYNTAX ERROR: "+e.silly);
-			System.exit(0);
-		}
-		return world;
-	}
-	
-	
+		
 	public World buildWorld(World world){
 		this.world = world;
 		try {
@@ -71,6 +61,22 @@ public class WorldBuilder {
 		} catch (SyntaxError e) {
 			System.out.println("SYNTAX ERROR in room file: "+e.getReason());
 			System.exit(0);
+		}
+		
+		System.out.println("attempting to add lobbys");
+		for (String s : lobby_list) {
+			try {
+				world.addLobby(s.split(";")[0].trim(), Integer.parseInt(s.split(";")[1].trim()));
+			} catch (NumberFormatException e) {
+				System.out.println("SYNTAX ERROR when adding lobby: malformed argument " + s);
+				System.exit(0);
+			} catch (EntityNotPresent e) {
+				System.out.println("SYNTAX ERROR when adding lobby: Non exisitng room " + s);
+				System.exit(0);
+			}catch (ArrayIndexOutOfBoundsException e){
+				System.out.println("SYNTAX ERROR when adding lobby: malformed argument " + s);
+				System.exit(0);
+			}
 		}
 		
 		return world;
@@ -131,7 +137,7 @@ public class WorldBuilder {
 	}
 	
 	private void parseRoom() throws IOException, SyntaxError{
-
+		boolean has_lobby =false;
 		String current_line;
 		int line_counter = 1;
 		BufferedReader reader = new BufferedReader(new FileReader(room_file));
@@ -140,7 +146,7 @@ public class WorldBuilder {
 		while(current_line != null){
 			if(!current_line.equals("")||current_line.startsWith("/")){
 				String[] args = current_line.trim().split(":");
-				if(args[0].equals("room")){
+				if(args[0].trim().equals("room")){
 				try {
 					world.addRoom(new Room(args[1].trim(),args[2].trim(),Boolean.parseBoolean(args[3].trim())));
 					if(!args[4].trim().equals("none")){
@@ -156,6 +162,18 @@ public class WorldBuilder {
 					throw new SyntaxError("Room "+ args[1].trim() + " has allready been added :P", line_counter,current_line);
 					
 				}
+				}else if(args[0].trim().equals("lobby")){
+					if(!has_lobby){
+						for(String s : args[1].split(",")){
+							lobby_list.add(s.trim());
+						}
+						has_lobby =true;
+						
+					}else{
+						reader.close();
+						throw new SyntaxError("the room can only contain a lobby file!", line_counter, current_line);
+					}
+					
 				}else{
 					reader.close();
 					throw new SyntaxError("dude... a roomdeclaration needs to start with room.", line_counter,current_line);
@@ -164,6 +182,13 @@ public class WorldBuilder {
 			line_counter++;
 			current_line = reader.readLine();
 		}
+		
+		if(!has_lobby){
+			reader.close();
+			throw new SyntaxError("The room file must specify a lobby list!", -1);
+			
+		}
+		
 		System.out.println("World file parsed without issues");
 		reader.close();
 		System.out.println("Adding exits and items to rooms.");
@@ -171,8 +196,7 @@ public class WorldBuilder {
 		if(!item_list.isEmpty()){
 			for(Entry<String, String[]> s : item_list.entrySet()){
 				for(String item : s.getValue()){
-					
-					System.out.println("Trying to add item " + item);
+
 					String name = item.trim().split(";")[0].trim() ;
 					String amount = item.trim().split(";")[1].trim() ;
 					try {
@@ -188,7 +212,6 @@ public class WorldBuilder {
 		
 		for(Entry<String, String[]> s :exit_list.entrySet()){
 			for(String room : s.getValue()){
-				System.out.println("Trying to add exit " + room);
 				String name = room.trim().split(";")[0].trim() ;
 				String locked = room.trim().split(";")[1].trim() ;
 				try {

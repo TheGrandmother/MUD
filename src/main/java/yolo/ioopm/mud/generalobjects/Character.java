@@ -100,6 +100,9 @@ public abstract class Character extends Entity {
 	 * @author TheGrandmother
 	 */
 	public class CharacterSheet {
+		private final int BASE_HP = 10;
+		private final double HP_FACTOR = 1.3;
+		private final double HEALTH_FACTOR = 1.3;
 		private int hp;
 		private int health;
 		private int max_health;
@@ -110,18 +113,28 @@ public abstract class Character extends Entity {
 		 * Defines the initial configuration of the Character sheet .
 		 */
 		public CharacterSheet() {
-			this.hp = 10;
+			this.hp = BASE_HP;
 			this.level = 1;
 			this.health = 50;
 			this.max_health = 50;
 
 		}
-
+		
 		/**
 		 * @return The hp (university credits) of the character
 		 */
 		public int getHp() {
 			return hp;
+		}
+		
+		public boolean levelUp(){
+			if(hp >= BASE_HP*(HP_FACTOR*level)){
+				level++;
+				max_health = (int) (max_health*(HEALTH_FACTOR));
+				health = max_health;
+				return true;
+			}
+			return false;
 		}
 
 		/**
