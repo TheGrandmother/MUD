@@ -7,7 +7,9 @@ import yolo.ioopm.mud.game.GameEngine;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,8 +33,17 @@ public class Server {
 			logger.severe("Severe error! Terminating server...");
 			return;
 		}
-
-		WorldBuilder wb = new WorldBuilder("items.txt", "rooms.txt");
+		BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("enter path to world files!");
+		String path = null;
+		
+		try {
+			path = buff.readLine();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		WorldBuilder wb = new WorldBuilder(path+"items.txt", path+"rooms.txt");
 		wb.buildWorld(world);
 
 		engine = new GameEngine(adapter, world);
