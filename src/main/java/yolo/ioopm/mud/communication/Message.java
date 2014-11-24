@@ -1,6 +1,8 @@
 package yolo.ioopm.mud.communication;
 
 
+import java.util.logging.Logger;
+
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
  * translated and sent to the server.
@@ -12,6 +14,8 @@ package yolo.ioopm.mud.communication;
  */
 
 public abstract class Message {
+
+	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	private final String      RECEIVER;
 	private final String      SENDER;

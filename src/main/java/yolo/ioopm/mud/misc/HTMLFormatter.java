@@ -11,16 +11,16 @@ public class HTMLFormatter extends Formatter {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("<tr>");
-		builder.append("<td>" + record.getLevel() + "</td>");
-		builder.append("<td>" + (new Date(record.getMillis())).toString() + "</td>");
-		builder.append("<td>" + record.getLoggerName() + "</td>");
-		builder.append("<td>" + record.getSourceMethodName() + "</td>");
-		builder.append("<td>" + record.getMessage() + "</td>");
+		builder.append("<td>").append(record.getLevel()).append("</td>");
+		builder.append("<td>").append((new Date(record.getMillis())).toString()).append("</td>");
+		builder.append("<td>").append(record.getLoggerName()).append("</td>");
+		builder.append("<td>").append(record.getSourceMethodName()).append("</td>");
+		builder.append("<td>").append(record.getMessage()).append("</td>");
 
 		builder.append("<td>");
 		if(record.getThrown() != null) {
 			for(StackTraceElement trace : record.getThrown().getStackTrace()) {
-				builder.append(trace + "</br>");
+				builder.append(trace).append("</br>");
 			}
 		}
 		builder.append("</td>");
