@@ -79,12 +79,15 @@ public final class See {
 
 	}
 	
-	public static void inventory(Pc actor, World world, Adapter server){
+	public static void inventory(Pc actor, World world, Adapter adapter){
 		Inventory inventory = null;
 		
 
 		inventory = actor.getInventory();
-
+		if(inventory.getitems().isEmpty()){
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is empty! You have " + inventory.getMax_volume() + "units of space left."));
+			return;
+		}
 		
 		String[] args = new String[3];
 
@@ -104,7 +107,7 @@ public final class See {
 			args[2] = args[2].substring(0, args[2].length()-1);
 		}
 		
-		server.sendMessage(new ReplyMessage(actor.getName(), Keywords.INVENTORY_REPLY, args));
+		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.INVENTORY_REPLY, args));
 		
 	}
 	
