@@ -28,7 +28,7 @@ public final class See {
 		observation[5] = "";												//ITEMS
 		
 		if(current_room.getExits().isEmpty()){
-			observation[2] = "";
+			observation[2] = " ";
 		}else{
 			for (Room.Door door : current_room.getExits()) {
 				
@@ -42,7 +42,7 @@ public final class See {
 		}
 		
 		if(current_room.getPlayers().isEmpty()){
-			observation[3] = "";
+			observation[3] = " ";
 		}else{
 			for (Pc pc : current_room.getPlayers()) {
 				observation[3] += pc.getName()+", ";
@@ -51,7 +51,7 @@ public final class See {
 		}
 		
 		if(current_room.getNpcs().isEmpty()){
-			observation[4] = "";
+			observation[4] = " ";
 		}else{
 			for (Npc npc : current_room.getNpcs()) {
 				observation[4] += npc.getName()+", ";
@@ -60,7 +60,7 @@ public final class See {
 		}
 		
 		if(current_room.getItems().isEmpty()){
-			observation[5] = "";
+			observation[5] = " ";
 		}else{
 			for (ItemContainer item : current_room.getItems()) {
 				observation[5] += "( "+ item.getAmount() + " "+item.getName()+

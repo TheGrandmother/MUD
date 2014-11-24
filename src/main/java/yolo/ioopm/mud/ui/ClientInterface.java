@@ -230,11 +230,11 @@ public class ClientInterface {
 						retval = args[0];
 						break;
 
-					case "say_reply":
+					case "say":
 						retval = args[0] + " said \"" + args[1] + "\"";
 						break;
 
-					case "whisper_return = ":
+					case "whisper_return":
 						retval = args[0] + " whispered to you \"" + args[1] + "\"";
 						break;
 

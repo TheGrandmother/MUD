@@ -110,13 +110,8 @@ public abstract class ItemInteraction {
 		}
 	}
 	
-	public static void unequip(Pc actor,String[] arguments, World world, Adapter adapter){
-		if(arguments == null || arguments[0].length() >= 1 ){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Malformed message. Unequip takes no arguments. But you sent " + arguments.length +"."));
-			return;
-		}
-		
-		Inventory inv = actor.getInventory();
+	public static void unequip(Pc actor, World world, Adapter adapter){
+
 		if(actor.getWeapon()==null){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have anything equiped"));
 			return;

@@ -157,7 +157,7 @@ public class GameEngine {
 					break;
 					
 				case Keywords.UNEQUIP:
-					ItemInteraction.unequip(actor, arguments, world, adapter);
+					ItemInteraction.unequip(actor, world, adapter);
 					break;
 				
 				case Keywords.ATTACK:
