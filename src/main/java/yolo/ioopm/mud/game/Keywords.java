@@ -27,5 +27,8 @@ public abstract class Keywords {
 	public static final String UNEQUIP_REPLY = "unequip_reply";
 	public static final String EXAMINE = "examine";
 	public static final String EXAMINE_REPLY = "examine_reply";
+	public static final String CS = "cs";
+	public static final String CS_REPLY = "cs_reply";
+	
 
 }

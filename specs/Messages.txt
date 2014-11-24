@@ -53,6 +53,11 @@ EXAMINE: examine item
 		item: the item to be examined.
 	description:
 		Returns a message of information about the details of the item.
+		
+CS: cs
+	arguments: none
+	description:
+		Returns a description of the actors status.
 
 TAKE: take <item>
 	arguments: 
@@ -139,6 +144,9 @@ TAKE_REPLY: take_reply <message>
 EXAMINE_REPLY: examine_reply <message>
 	arguments:
 		message: A text describing what the item looks like.
+CS_REPLY: cs_reply <message>
+	arguments:
+		message: A string describing the players status.
 
 
 	

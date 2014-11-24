@@ -136,9 +136,12 @@ public final class See {
 		}
 		
 		adapter.sendMessage(new ErrorMessage(actor.getName(),item_name+ " could not be found."));
-		
-		
-		
+	}
+	
+	public static void cs(Pc actor, World world, Adapter adapter){
+		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, new String[]{"You are level " + actor.getCs().getLevel()+". You have "+
+		actor.getCs().getHealth() +" health points out of "+	actor.getCs().getMaxHealth()+". You have " + actor.getCs().getHp() + " hp and and need "+ 
+				 actor.getCs().hpToNextLevel()+ " more to level up."}));
 	}
 	
 }

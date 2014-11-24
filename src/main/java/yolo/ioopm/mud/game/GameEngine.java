@@ -137,6 +137,10 @@ public class GameEngine {
 				case Keywords.EXAMINE:
 					See.examine(actor, arguments, world, adapter);
 					break;
+					
+				case Keywords.CS:
+					See.cs(actor, world, adapter);
+					break;
 
 				case Keywords.MOVE:
 					Movement.move(actor, arguments, world, adapter);
