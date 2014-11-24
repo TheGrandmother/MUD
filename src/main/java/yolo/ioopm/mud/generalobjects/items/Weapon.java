@@ -8,7 +8,7 @@ import yolo.ioopm.mud.generalobjects.Item;
 public class Weapon extends Item {
 
 	private static final int CRITICAL_NUMBER = 35;
-	private static final int TARGET_NUMBER = 21;
+	private static final int TARGET_NUMBER = 19;
 	private int damage;
 	//private int difficulty;
 	

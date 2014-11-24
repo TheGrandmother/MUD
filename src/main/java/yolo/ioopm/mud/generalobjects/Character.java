@@ -100,8 +100,8 @@ public abstract class Character extends Entity {
 	 * @author TheGrandmother
 	 */
 	public class CharacterSheet {
-		private final int BASE_HP = 10;
-		private final double HP_FACTOR = 1.3;
+		private final int BASE_HP = 30;
+		private final double HP_FACTOR = 1.5;
 		private final double HEALTH_FACTOR = 1.3;
 		private int hp;
 		private int health;
@@ -127,8 +127,12 @@ public abstract class Character extends Entity {
 			return hp;
 		}
 		
+		public int hpToNextLevel(){
+			return (int)(BASE_HP*(HP_FACTOR)) - hp;
+		}
+		
 		public boolean levelUp(){
-			if(hp >= BASE_HP*(HP_FACTOR*level)){
+			if(hp >= BASE_HP*HP_FACTOR){
 				level++;
 				max_health = (int) (max_health*(HEALTH_FACTOR));
 				health = max_health;
