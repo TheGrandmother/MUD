@@ -4,11 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.TestServerAdapter;
 import yolo.ioopm.mud.communication.messages.server.IncommingMessage;
-import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.game.GameEngine;
 import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;

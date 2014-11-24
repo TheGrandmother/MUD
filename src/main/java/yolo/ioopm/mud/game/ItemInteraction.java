@@ -1,12 +1,8 @@
 package yolo.ioopm.mud.game;
 
-import java.io.ObjectInputStream.GetField;
-
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
-import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
-import yolo.ioopm.mud.communication.server.ServerAdapter;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
 import yolo.ioopm.mud.generalobjects.*;

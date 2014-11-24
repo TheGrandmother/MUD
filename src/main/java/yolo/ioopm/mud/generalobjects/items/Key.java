@@ -3,7 +3,6 @@ package yolo.ioopm.mud.generalobjects.items;
 import yolo.ioopm.mud.generalobjects.Character;
 import yolo.ioopm.mud.generalobjects.Entity;
 import yolo.ioopm.mud.generalobjects.Item;
-import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;
 
 public class Key extends Item{

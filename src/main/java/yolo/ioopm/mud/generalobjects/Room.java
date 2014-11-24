@@ -1,7 +1,6 @@
 package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 

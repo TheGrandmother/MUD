@@ -4,7 +4,6 @@ import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
-import yolo.ioopm.mud.generalobjects.Item.UseFailedException;
 import yolo.ioopm.mud.generalobjects.ItemContainer;
 import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;

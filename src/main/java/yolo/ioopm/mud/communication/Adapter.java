@@ -54,11 +54,6 @@ public abstract class Adapter {
 		logger.fine("Adding message \"" + message.getMessage() + "\" to inbox.");
 
 		// The adding is made in a new thread so the main thread isn't blocked if the outbox is currently locked.
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				outbox.offer(message);
-			}
-		}).start();
+		new Thread(() -> outbox.offer(message)).start();
 	}
 }

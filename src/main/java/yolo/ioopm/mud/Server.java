@@ -4,7 +4,6 @@ import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ServerAdapter;
 import yolo.ioopm.mud.game.GameEngine;
-import yolo.ioopm.mud.generalobjects.Pc;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.items.Key;

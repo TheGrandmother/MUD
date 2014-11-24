@@ -32,11 +32,11 @@ public abstract class Message {
 	 * @param action
 	 * @param nouns
 	 */
-	public Message(String receiver, String sender, MessageType type, String action, String... nouns) {
+	public Message(String receiver, String sender, MessageType type, String action, String[] nouns) {
 		this(receiver, sender, type, action, System.currentTimeMillis(), nouns);
 	}
 
-	public Message(String receiver, String sender, MessageType type, String action, long time_stamp, String... nouns) {
+	public Message(String receiver, String sender, MessageType type, String action, long time_stamp, String[] nouns) {
 		this.RECEIVER = receiver;
 		this.SENDER = sender;
 		this.TYPE = type;

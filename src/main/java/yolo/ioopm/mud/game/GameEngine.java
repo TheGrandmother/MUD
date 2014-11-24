@@ -15,7 +15,6 @@ import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**

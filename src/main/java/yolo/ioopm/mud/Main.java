@@ -34,11 +34,21 @@ public class Main {
 		switch(args[0].toLowerCase()) {
 			case "client":
 				logger.fine("Initiating client...");
-				new Client();
+				try {
+					new Client();
+				}
+				catch(Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
 				break;
 			case "server":
 				logger.fine("Initiating server...");
-				new Server();
+				try {
+					new Server();
+				}
+				catch(Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
+				}
 				break;
 		}
 	}

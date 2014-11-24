@@ -2,7 +2,6 @@ package yolo.ioopm.mud.generalobjects.items;
 
 import yolo.ioopm.mud.game.GameEngine;
 import yolo.ioopm.mud.generalobjects.Character;
-import yolo.ioopm.mud.generalobjects.Entity;
 import yolo.ioopm.mud.generalobjects.Item;
 
 
