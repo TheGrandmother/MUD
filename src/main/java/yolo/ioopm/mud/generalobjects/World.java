@@ -1,5 +1,6 @@
 package yolo.ioopm.mud.generalobjects;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -14,6 +15,8 @@ public class World {
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
+	private ArrayList<Lobby> lobby_list;
+	
 
 	boolean admin_exists;
 
@@ -25,6 +28,7 @@ public class World {
 		npcs         = new HashSet<>();
 		rooms        = new HashSet<>();
 		items        = new HashSet<>();
+		lobby_list = new ArrayList<>();
 		admin_exists = false;
 	}
 
@@ -52,6 +56,22 @@ public class World {
 			character.setLocation(room);
 		}
 
+	}
+	
+	public void addLobby(String room_name, int level) throws EntityNotPresent{
+		lobby_list.add(new Lobby(room_name, level));
+	}
+	
+	public Room getLobby(int level){
+		int current_level = 0;
+		Room current_room = null;
+		for(Lobby l : lobby_list){
+			if(level >= l.getLevel() && l.getLevel() >= current_level){
+				current_level = l.getLevel();
+				current_room = l.getRoom();
+			}
+		}
+		return current_room;
 	}
 
 	/**
@@ -214,6 +234,29 @@ public class World {
 		public String getName() {
 			return name;
 		}
+	}
+	
+	/**
+	 * skeleton class for handling lobbys
+	 * @author The Grandmother
+	 *
+	 */
+	public class Lobby{
+		private final int level;
+		private final Room room;
+		public Lobby(String room_name, int level) throws EntityNotPresent {
+			this.level = level;
+			room = findRoom(room_name);
+		}
+		
+		public int getLevel(){
+			return level;
+		}
+		
+		public Room getRoom(){
+			return room;
+		}
+		
 	}
 
 

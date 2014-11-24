@@ -69,14 +69,11 @@ public abstract class Combat {
 		
 		if(target.getCs().getHealth()==0){
 			target.getCs().setHealth((int)(target.getCs().getMaxHealth()*0.75));
-			try {
-				target.setLocation(GameEngine.get_lobby(target, world));
-				GameEngine.broadcastToRoom(adapter, target.getLocation(), target_name+" returned from the dead.", target_name);
-				
-			} catch (EntityNotPresent e) {
-				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Some how the target dos not exist any more."));
-				return;
-			}
+		
+			target.setLocation(world.getLobby(target.getCs().getLevel()));
+			GameEngine.broadcastToRoom(adapter, target.getLocation(), target_name+" returned from the dead.", target_name);
+			
+
 			
 			int hp_taken = target.getCs().getHp()*(GameEngine.d6()/10);
 			target.getCs().addHp(-1*hp_taken);
@@ -85,14 +82,18 @@ public abstract class Combat {
 			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by" + actor.getName() + " and he stole " + hp_taken + "university credists!. "
 					+ "You respawned in " + target.getLocation().getName()}));
 			
-			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor +"!",new String[]{actor.getName(),target_name});
+			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor.getName() +"!",new String[]{actor.getName(),target_name});
+			if(actor.getCs().levelUp()){
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"Yo leled up and are now lvl: " + actor.getCs().getLevel()+
+					". Your max health is now " + actor.getCs().getMaxHealth() + "!"}));
+			}
 			return;
 		}
 		
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You attacked " + target_name + " and dealt " + damage + " damage."}));
 		adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was attacked by " + actor.getName() + " and suffered " + damage + " damage."}));
 		
-		GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was attacked by "+ actor +"!",new String[]{actor.getName(),target_name});
+		GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was attacked by "+ actor.getName() +"!",new String[]{actor.getName(),target_name});
 		return;
 		
 

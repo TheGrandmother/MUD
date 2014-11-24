@@ -53,7 +53,7 @@ public class GameEngine {
 					return;
 				}
 				if(checkUsernamePassword(username, password)){
-					player.setLocation(get_lobby(player,world));
+					player.setLocation(world.getLobby(player.getCs().getLevel()));
 					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
 					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true));
@@ -74,7 +74,7 @@ public class GameEngine {
 			String password = arguments[1];
 			
 			try {
-				world.addCharacter(new Pc(username, "", password, get_lobby(null,world)));
+				world.addCharacter(new Pc(username, "", password, world.getLobby(0)));
 				world.findPc(username).getLocation().addPlayer(world.findPc(username));
 				world.findPc(username).setLoggedIn(true);
 			} catch (EntityNotUnique e) {
@@ -277,25 +277,7 @@ public class GameEngine {
 	public static int d6(){
 		return 1+(int)(Math.random()*6);
 	}
-	
-	/**
-	 * Gets the lobby to which this player is supposed to go to.
-	 * 
-	 * As of now this is ugly and it should be done in a more general way.
-	 * 
-	 * @param player
-	 * @return
-	 * @throws EntityNotPresent 
-	 */
-	protected static Room get_lobby(Pc player,World world) throws EntityNotPresent{
-		if(player == null){
-			return world.findRoom("room1");
-		}else{
-			//TODO
-			//wrtie an actual usefull thing here.
-			return world.findRoom("room1");
-		}
-	}
+
 
 	/**
 	 * Returns true if user exists and has the correct password.
