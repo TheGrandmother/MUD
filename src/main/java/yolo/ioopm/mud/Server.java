@@ -4,9 +4,8 @@ import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.server.ServerAdapter;
 import yolo.ioopm.mud.game.GameEngine;
-import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.items.Key;
+import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -33,10 +32,10 @@ public class Server {
 			return;
 		}
 
-		engine = new GameEngine(adapter, world);
+		WorldBuilder wb = new WorldBuilder("items.txt", "rooms.txt");
+		wb.buildWorld(world);
 
-		logger.fine("Adding test data to server!");
-		addTestData();
+		engine = new GameEngine(adapter, world);
 
 		logger.info("Starting main server loop.");
 		while(true) {
@@ -44,7 +43,7 @@ public class Server {
 
 			while((msg = adapter.poll()) == null) {
 				try {
-					Thread.sleep(100);
+					Thread.sleep(10);
 				}
 				catch(InterruptedException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
@@ -58,29 +57,5 @@ public class Server {
 	
 	protected Adapter getAdapter(){
 		return adapter;
-	}
-
-	// This is only a temporary method for testing during development!
-	// TODO remove this
-	private void addTestData() {
-		try {
-			world.addRoom(new Room("room1", "of doom"));
-			world.addRoom(new Room("room2", "super silly"));
-			world.addItem(new Key("room2", 0));
-			world.findRoom("room1").addItem(world.findItem("Key to room2"));
-			world.findRoom("room1").addExit(world.findRoom("room2"), true);
-			world.findRoom("room2").addExit(world.findRoom("room1"), false);
-			//world.addCharacter(new Pc("player1", "has a hat", "123", world.findRoom("room1")));
-			//world.addCharacter(new Pc("player2", "aint hasing a hat", "123", world.findRoom("room1")));
-			//world.addCharacter(new Pc("player3", "aint hasing a hat", "123", world.findRoom("room1")));
-		}
-		catch(World.EntityNotUnique e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(World.EntityNotPresent e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
