@@ -17,17 +17,19 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 import yolo.ioopm.mud.generalobjects.items.Key;
 import yolo.ioopm.mud.generalobjects.items.Weapon;
+import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 
 public class TestSuite {
 
 	World             world   = new World();
 	TestServerAdapter adapter = new TestServerAdapter();
 	GameEngine        game    = new GameEngine(adapter, world);
+	WorldBuilder wb = new WorldBuilder("world files/items.txt", "world files/rooms.txt");
 
 	public Boolean quit = false;
 
 	public TestSuite() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public static void main(String[] args) {
@@ -35,17 +37,21 @@ public class TestSuite {
 		TestSuite t = new TestSuite();
 
 		try {
+			t.wb.buildWorld(t.world);
 			t.world.addRoom(new Room("room1", "of doom",true));
 			t.world.addRoom(new Room("room2", "super silly"));
 			t.world.addRoom(new Room("room3", "super silly",true));
-			t.world.addItem(new Key("room1", "room2", 0));
+			//t.world.addItem(new Key( "room2", 0));
 			t.world.addItem(new Weapon("sword", "lool", 3, 1,5));
+		
 			t.world.findRoom("room1").addItem(t.world.findItem("Key to room2"));
+			t.world.findRoom("room1").addItem(t.world.findItem("axe"));
 			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addItem(t.world.findItem("sword"));
 			t.world.findRoom("room1").addExit(t.world.findRoom("room2"), true);
+			t.world.findRoom("room1").addExit(t.world.findRoom("lol room"), false);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room1"), false);
 			t.world.findRoom("room1").addExit(t.world.findRoom("room3"), false);
 			t.world.findRoom("room2").addExit(t.world.findRoom("room3"), false);
@@ -61,6 +67,7 @@ public class TestSuite {
 		}
 		
 		try {
+			
 			t.world.addCharacter(new Pc("player1", "has a hat", "123", t.world.findRoom("room1")));
 			t.world.addCharacter(new Pc("player2", "aint hasing a hat", "123", t.world.findRoom("room1")));
 			t.world.addCharacter(new Pc("player3", "aint hasing a hat", "123", t.world.findRoom("room1")));

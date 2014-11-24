@@ -53,7 +53,7 @@ public class Weapon extends Item {
 	@Override
 	public String inspect() {
 		// TODO Auto-generated method stub
-		return super.getDescription()+"Requires level: " + super.level + " Damage: " + damage+".";
+		return super.getDescription()+" Requires level: " + super.level + " Damage: " + damage+".";
 	}
 
 //	@Override

@@ -99,12 +99,30 @@ public class Room extends Entity {
 	 */
 	public boolean addItem(Item i) {
 		for (ItemContainer container : items) {
-			if(container.getName().equals(i.getName()) && container.getType()==i.getType()){
+			if(container.getName().equals(i.getName())){
 				container.setAmount(container.getAmount()+1);
 				return true;
 			}
 		}
 		items.add(new ItemContainer(i));
+		return true;
+	}
+	
+	public boolean addItem(Item i, int amount) {
+		for (ItemContainer container : items) {
+			if(container.getName().equals(i.getName())){
+				container.setAmount(container.getAmount()+amount);
+				return true;
+			}
+		}
+		
+		items.add(new ItemContainer(i));
+		for (ItemContainer container : items) {
+			if(container.getName().equals(i.getName())){
+				container.setAmount(amount);
+				return true;
+			}
+		}
 		return true;
 	}
 	

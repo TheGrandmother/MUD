@@ -1,0 +1,32 @@
+This file specifys the world builder synatx.
+
+All different types will be contained in sepparate files.(items.txt, rooms.txt)
+
+
+
+example:
+
+type
+	field_name1 : value1
+	field_name2 : value2
+	.
+	.
+	.
+	field_nameN : valueN
+	
+This will create a object of type type with the fields assigned to the given value. 
+
+Here follows a list of the different specs for each file.
+
+
+in Items.txt
+
+key: target : level
+
+weapon: name:description:size:level: damage
+
+
+In room.txt
+room:name: description:pvp:items:exits:
+items are a list on the form name;amount,....,name;amount
+exits are on the form  name;locked,....,name;locked
