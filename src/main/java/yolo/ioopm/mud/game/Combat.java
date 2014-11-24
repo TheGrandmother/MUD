@@ -75,16 +75,16 @@ public abstract class Combat {
 			
 
 			
-			int hp_taken = target.getCs().getHp()*(GameEngine.d6()/10);
+			int hp_taken = (int) (target.getCs().getHp()*((double)GameEngine.d6()/10));
 			target.getCs().addHp(-1*hp_taken);
 			actor.getCs().addHp(hp_taken);
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You killed " + target_name + " and stole " + hp_taken + "university credists :D"}));
-			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by" + actor.getName() + " and he stole " + hp_taken + "university credists!. "
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You killed " + target_name + " and stole " + hp_taken + " university credists :D"}));
+			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by " + actor.getName() + " and he stole " + hp_taken + " university credists!. "
 					+ "You respawned in " + target.getLocation().getName()}));
 			
 			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor.getName() +"!",new String[]{actor.getName(),target_name});
 			if(actor.getCs().levelUp()){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"Yo leled up and are now lvl: " + actor.getCs().getLevel()+
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"Yo leveld up and are now lvl: " + actor.getCs().getLevel()+
 					". Your max health is now " + actor.getCs().getMaxHealth() + "!"}));
 			}
 			return;

@@ -46,7 +46,7 @@ public abstract class ItemInteraction {
 		}
 		
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.TAKE_REPLY, new String[]{"You picked up a/an " + item_name +"."}));
-		GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name, actor.getName()+".");
+		GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name+".", actor.getName());
 	}
 	
 	
