@@ -17,7 +17,7 @@ public class Room extends Entity {
 	private HashSet<ItemContainer> items   = new HashSet<ItemContainer>();
 
 	/**
-	 * Constructs the Room-object.
+	 * Generates a new room. with pvp set to false.
 	 *
 	 * @param name        Name of this room.
 	 * @param description Description of this room.
@@ -27,13 +27,28 @@ public class Room extends Entity {
 		this.DESCRIPTION = description;
 		this.pvp = false;
 	}
-	
+	/**
+	 * 
+	 * generates a room with pvp.
+	 * 
+	 * @param name name of the room
+	 * @param description a description of the room
+	 * @param pvp weather or not pvp is enabled.
+	 */
 	public Room(String name, String description,boolean pvp) {
 		this.NAME = name;
 		this.DESCRIPTION = description;
 		this.pvp = pvp;
 	}
 
+	/**
+	 * returns weather or not the room is pvp
+	 * @return pvp
+	 */
+	public boolean isPVP() {
+		return pvp;
+	}
+	
 	/**
 	 * @return Name of room.
 	 */
@@ -177,7 +192,7 @@ public class Room extends Entity {
 	 */
 	public Exit getExit(String name){
 		for (Exit door : exits) {
-			if(door.getName().equals(name)){
+			if(door.getNameOfOtherside().equals(name)){
 				return door;
 			}
 		}
@@ -196,7 +211,7 @@ public class Room extends Entity {
 
 		int i = 0;
 		for(Exit d : exits) {
-			names[i++] = d.getName();
+			names[i++] = d.getNameOfOtherside();
 		}
 
 		return names;
@@ -217,11 +232,18 @@ public class Room extends Entity {
 	public HashSet<ItemContainer> getItems() {
 		return items;
 	}
-
+	/**
+	 * Returns the set of all the {@link Npc}s in the room.
+	 * @return
+	 */
 	public HashSet<Npc> getNpcs() {
 		return npcs;
 	}
 
+	/**
+	 * Returns the set of all of the {@link Player}s in the room.
+	 * @return the set of Players.
+	 */
 	public HashSet<Player> getPlayers() {
 		return players;
 	}
@@ -247,16 +269,22 @@ public class Room extends Entity {
 	}
 
 
-	//This needs to be accessible. From the outside.
+	/**
+	 * 
+	 * This class specifys how an exit works.
+	 * 
+	 * @author TheGrandmother
+	 *
+	 */
 	public class Exit {
 		private final Room    otherside;
 		private       boolean is_locked;
 
 		/**
-		 * Constructs the Door-object.
+		 * Constructs the exit-object.
 		 *
-		 * @param r           Room this door leads too.
-		 * @param lock_status True if door should be locked, false if unlocked.
+		 * @param r           Room this exit leads too.
+		 * @param lock_status True if exit should be locked, false if unlocked.
 		 */
 		public Exit(Room r, boolean lock_status) {
 			otherside = r;
@@ -264,7 +292,7 @@ public class Room extends Entity {
 		}
 
 		/**
-		 * Returns current lock value of this door.
+		 * Returns current lock value of this exit.
 		 *
 		 * @return true if locked, else false.
 		 */
@@ -273,21 +301,21 @@ public class Room extends Entity {
 		}
 
 		/**
-		 * Locks the door.
+		 * Locks the exit.
 		 */
 		public void setLocked() {
 			is_locked = true;
 		}
 
 		/**
-		 * Unlocks the door.
+		 * Unlocks the exit.
 		 */
 		public void setUnlocked() {
 			is_locked = false;
 		}
 
 		/**
-		 * Returns the room on the other side of this door.
+		 * Returns the room on the other side of this exit.
 		 *
 		 * @return room on other side.
 		 */
@@ -296,19 +324,17 @@ public class Room extends Entity {
 		}
 
 		/**
-		 * Retrieves the name of the room on the other side of this door.
+		 * Retrieves the name of the room on the other side of this exit.
 		 *
 		 * @return name of room this leads too.
 		 */
-		public String getName() {
+		public String getNameOfOtherside() {
 			return otherside.getName();
 		}
 	}
 
 
-	public boolean isPVP() {
-		return pvp;
-	}
+
 	
 	
 	

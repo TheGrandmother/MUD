@@ -1,5 +1,11 @@
 package yolo.ioopm.mud.game;
-
+/**
+ * This class is just a lame workaround due to troubles with Enums.<p>
+ * it contains static fields specifying the string associated with the actions.
+ * 
+ * @author TheGrandmother
+ *
+ */
 public abstract class Keywords {
 
 	public static final String MAGIC_MOVE    = "move";

@@ -11,7 +11,7 @@ import java.util.HashSet;
 public class World {
 
 	//TODO refactor to use hashmaps for quicker access.
-	public  HashSet<Pc>   players;
+	public  HashSet<Player>   players;
 	private HashSet<Npc>  npcs;
 	private HashSet<Room> rooms;
 	private HashSet<Item> items;
@@ -51,7 +51,7 @@ public class World {
 			character.setLocation(room);
 		}
 		else {
-			room.getPlayers().add((Pc) character);
+			room.getPlayers().add((Player) character);
 			character.getLocation().getPlayers().remove(character);
 			character.setLocation(room);
 		}
@@ -106,7 +106,7 @@ public class World {
 			npcs.add((Npc) character);
 		}
 		else {
-			players.add((Pc) character);
+			players.add((Player) character);
 		}
 
 
@@ -145,8 +145,8 @@ public class World {
 		throw new EntityNotPresent(name);
 	}
 
-	public Pc findPc(String name) throws EntityNotPresent {
-		for(Pc e : players) {
+	public Player findPc(String name) throws EntityNotPresent {
+		for(Player e : players) {
 			if(e.getName().equals(name)) {
 				return e;
 			}
@@ -204,7 +204,7 @@ public class World {
 		return npcs;
 	}
 
-	public HashSet<Pc> getPlayers() {
+	public HashSet<Player> getPlayers() {
 		return players;
 	}
 

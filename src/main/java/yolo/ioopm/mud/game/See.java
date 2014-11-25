@@ -15,8 +15,15 @@ import yolo.ioopm.mud.generalobjects.Character.Inventory;
  */
 public final class See {
 
-	
-	public static void look(Pc actor,World world, Adapter server){
+	/**
+	 * 
+	 * This method will look at the room. It will send the actor a {@link ReplyMessage} with the action {@literal Keywords#LOOK_REPLY}} action with a description of what is in the room.
+	 * 
+	 * @param actor
+	 * @param world The world in which everything is
+	 * @param adapter The adapter trough which the messages are sent.
+	 */
+	public static void look(Player actor,World world, Adapter server){
 
 		Room current_room  = actor.getLocation();
 		String[] observation = new String[6];
@@ -30,12 +37,12 @@ public final class See {
 		if(current_room.getExits().isEmpty()){
 			observation[2] = " ";
 		}else{
-			for (Room.Door door : current_room.getExits()) {
+			for (Room.Exit door : current_room.getExits()) {
 				
 				if(door.isLocked()){
-					observation[2] += door.getName() + " locked, ";
+					observation[2] += door.getNameOfOtherside() + " locked, ";
 				}else{
-					observation[2] += door.getName() + ", ";
+					observation[2] += door.getNameOfOtherside() + ", ";
 				}
 			}
 			observation[2] = observation[2].substring(0, observation[2].length()-2);
@@ -44,7 +51,7 @@ public final class See {
 		if(current_room.getPlayers().isEmpty()){
 			observation[3] = " ";
 		}else{
-			for (Pc pc : current_room.getPlayers()) {
+			for (Player pc : current_room.getPlayers()) {
 				observation[3] += pc.getName()+", ";
 			}
 			observation[3] = observation[3].substring(0, observation[3].length()-2);
@@ -74,7 +81,16 @@ public final class See {
 
 	}
 	
-	public static void inventory(Pc actor, World world, Adapter adapter){
+	
+	/**
+	 *
+	 * Sends back a {@link ReplyMessage} with a action type {@literal Keywords#INVENTORY_REPLY} with a message describing what is in the actors inventory.
+	 * 
+	 * @param actor The actor whose inventory is to be inspected.
+	 * @param world The world in which everything is
+	 * @param adapter The adapter trough which the messages are sent.
+	 */
+	public static void inventory(Player actor, World world, Adapter adapter){
 		Inventory inventory = null;
 		
 
@@ -106,7 +122,7 @@ public final class See {
 		
 	}
 	
-	public static void examine(Pc actor, String[] arguments, World world, Adapter adapter){
+	public static void examine(Player actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Examine takes but one and only one argument."));
 			return;
@@ -117,7 +133,7 @@ public final class See {
 		//First check the room for the item.
 		for(ItemContainer ic : actor.getLocation().getItems()){
 			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{ic.getItem().inspect()}));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
 				return;
 			}
 		}
@@ -125,20 +141,20 @@ public final class See {
 		//check the players inventory
 		for(ItemContainer ic : actor.getInventory().getitems()){
 			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{ic.getItem().inspect()}));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
 				return;
 			}
 		}
 		
 		if(actor.getWeapon().getName().equals(item_name)){
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, new String[]{actor.getWeapon().inspect()}));
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()));
 			return;
 		}
 		
 		adapter.sendMessage(new ErrorMessage(actor.getName(),item_name+ " could not be found."));
 	}
 	
-	public static void cs(Pc actor, World world, Adapter adapter){
+	public static void cs(Player actor, World world, Adapter adapter){
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, new String[]{"You are level " + actor.getCs().getLevel()+". You have "+
 		actor.getCs().getHealth() +" health points out of "+	actor.getCs().getMaxHealth()+". You have " + actor.getCs().getHp() + " hp and and need "+ 
 				 actor.getCs().hpToNextLevel()+ " more to level up."}));

@@ -6,9 +6,8 @@ import yolo.ioopm.mud.generalobjects.items.Weapon;
 
 /**
  * This class specifies a Character. Will be extended by other classes for PC's and NPC's.
- * <p/>
- * Each character must always be bound to one specific room.
- *
+ * <p>
+ * <b>NOTE:</b> Even though a player always has a location that doesn't mean that the player is in the room.
  * @author TheGrandmother
  */
 
@@ -23,7 +22,7 @@ public abstract class Character extends Entity {
 	private  Weapon weapon = null;
 
 	/**
-	 * Constructs a character.
+	 * Constructs a character. With an empty inventory and a default CharacterSheet
 	 *
 	 * @param name              The name of the character. Needs necessarily not be unique.
 	 * @param starting_location The starting room for the character.
@@ -40,19 +39,34 @@ public abstract class Character extends Entity {
 
 	}
 
-	
+	/**
+	 * Returns the players mounted weapon.
+	 * @return the players equipped weapon(may be <code>null</code>)
+	 */
 	public Weapon getWeapon(){
 		return weapon;
 	}
 	
+	/**
+	 * Equipped a weapon!
+	 * @param weapon Sets the equipped weapon. (May be <code>null</code>) 
+	 */
 	public void setWeapon(Weapon weapon){
 		this.weapon = weapon;
 	}
 	
+	/**
+	 * returns the description of the character
+	 * @return the description of the character
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Alters the description of the character
+	 * @param description
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -87,16 +101,20 @@ public abstract class Character extends Entity {
 	public Inventory getInventory() {
 		return inventory;
 	}
-
+	/**
+	 * Returns the character sheet of the player
+	 * @return
+	 */
 	public CharacterSheet getCs() {
 		return cs;
 	}
 
 
-	//TODO implement leveling!
+	
 	/**
 	 * The CharcterSheet contains information about the characters current status.
-	 *
+	 *<p>
+	 *<b>NOTE:</b> hp denotes university credits which is so dumb its insane. This is due to the original specification being in Swedish. One day.... it shall be refactored.
 	 * @author TheGrandmother
 	 */
 	public class CharacterSheet {
@@ -109,14 +127,18 @@ public abstract class Character extends Entity {
 		private int level;
 
 		/**
-		 * Does not do much interesting. The class which inherits from the Character class
-		 * Defines the initial configuration of the Character sheet .
+		 * Creates a new default character sheet with<p>
+		 * Level = 1<p>
+		 * Health = 50<p>
+		 * Max_health = 50<p>
+		 * Hp = 0<p>
 		 */
 		public CharacterSheet() {
 			this.hp = BASE_HP;
 			this.level = 1;
 			this.health = 50;
 			this.max_health = 50;
+			this.hp = 0;
 
 		}
 		
@@ -127,12 +149,26 @@ public abstract class Character extends Entity {
 			return hp;
 		}
 		
+		/**
+		 * Computes how many university credits left to the next level.<p>
+		 * <b>NOTE:</b> This needs to correspond with how {@link CharacterSheet#levelUp()} works.
+		 * @return how many hp left until the new level is reached.
+		 */
 		public int hpToNextLevel(){
-			return (int)(BASE_HP*(HP_FACTOR)) - hp;
+			return (int)(BASE_HP*(HP_FACTOR*level)) - hp;
 		}
 		
+		/**
+		 * Checks if the player can be leveled up.<p>
+		 * The mechanics of leveling will be described in the specs/Mechanics.txt file.<p>
+		 * If the level-up is successful the level will be incremented and a new max health will be set
+		 * and full health will be restored.
+		 * 
+		 * @return true if the player leveld up. False otherwise.
+		 */
+		//TODO This seriously needs to be reworked!
 		public boolean levelUp(){
-			if(hp >= BASE_HP*HP_FACTOR){
+			if(hp >= BASE_HP*(HP_FACTOR*level)){
 				level++;
 				max_health = (int) (max_health*(HEALTH_FACTOR));
 				health = max_health;
@@ -168,11 +204,6 @@ public abstract class Character extends Entity {
 		public int getHealth() {
 			return health;
 		}
-		
-		
-
-		
-
 
 		/**
 		 * Tries to set the Characters health to the number given as argument.
@@ -259,21 +290,27 @@ public abstract class Character extends Entity {
 		private int volume;
 		private int max_volume = 10;
 
+		/**
+		 * Creates a new empty inventory with max_volume set to 10.
+		 */
 		public Inventory() {
 			volume = 0;
 			items = new HashSet<ItemContainer>();
 		}
 
+		/**
+		 * returns the set of ItemContainers
+		 * @return The set of item containers.
+		 */
 		public HashSet<ItemContainer> getitems(){
 			return this.items;
 		}
 		
 		/**
-		 * Tries to retrive an item from the items set.
+		 * Tries to retrieve an item from the items set.
 		 * NOTE: this does not remove the item!
 		 * 
-		 * @param name
-		 * @param type
+		 * @param name the name of the item
 		 * @return Returns null if no silly item was found
 		 */
 		public Item findItem(String name){
@@ -287,10 +324,9 @@ public abstract class Character extends Entity {
 		}
 		
 		/**
-		 * Tries to remove the item. Either removes the item completely or just decreases the amount.
+		 * Tries to remove the item. Either removes the {@link ItemContainer} completely or just decreases the amount.
 		 * 
-		 * @param name
-		 * @param type
+		 * @param name The name of the item.
 		 * @return false if item does not exist
 		 */
 		public boolean removeItem(String name){
@@ -311,25 +347,17 @@ public abstract class Character extends Entity {
 			
 			return false;
 		}
+
 		
 		/**
-		 * 
-		 * @return the hashset of item containers
-		 */
-		public HashSet<ItemContainer> getItemSet(){
-			return items;
-		}
-		
-		/**
-		 * 
-		 * Ads an item to the inventory
+		 * Ads an item to the inventory. Creates a new {@link ItemContainer} or just dereases the amount.
 		 * 
 		 * @param item item to be added
 		 * @throws InventoryOverflow gets thrown if item does not fit.
 		 */
 		public void addItem(Item item) throws InventoryOverflow{
 			for (ItemContainer i : items) {
-				if(item.getType() == i.getType() && item.getName().equals(i.getName())){
+				if(item.getName().equals(i.getName())){
 					if(item.getSize()+volume > max_volume){
 						throw new InventoryOverflow();
 					}else{
@@ -383,6 +411,12 @@ public abstract class Character extends Entity {
 
 		
 		@SuppressWarnings("serial")
+		/**
+		 * 
+		 * This exception is to be thrown when an item does not fit into the inventory.
+		 * 
+		 * @author TheGrandmother
+		 */
 		public class InventoryOverflow extends Exception{
 			public InventoryOverflow() {
 				super();

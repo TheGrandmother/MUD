@@ -5,7 +5,7 @@ import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.ItemContainer;
-import yolo.ioopm.mud.generalobjects.Pc;
+import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
@@ -15,7 +15,7 @@ public abstract class Movement {
 	
 	//TODO
 	//TEST THIS FUNCTION LIKE A BOSS
-	public static void move(Pc actor, String[] arguments, World world, Adapter adapter){
+	public static void move(Player actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Wrong nuber of arguments for move operation."));
 			return;
@@ -34,7 +34,7 @@ public abstract class Movement {
 			return;
 		}
 		
-		Room.Door door = current_room.getExit(destination_name);
+		Room.Exit door = current_room.getExit(destination_name);
 		if(door == null){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), current_room.getName() + " has no exit to " + destination_name+"."));
 			return;

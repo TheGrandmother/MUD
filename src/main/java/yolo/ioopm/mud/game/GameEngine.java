@@ -77,6 +77,7 @@ public class GameEngine {
 					player.setLocation(world.getLobby(player.getCs().getLevel()));
 					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
+					GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " joined the fun :D!", username);
 					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true));
 					return;
 				}else{
@@ -98,6 +99,7 @@ public class GameEngine {
 				world.addCharacter(new Player(username, "", password, world.getLobby(0)));
 				world.findPc(username).setLoggedIn(true);
 				world.findPc(username).getLocation().addPlayer(world.findPc(username));
+				GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " joined the fun :D!", username);
 				
 			} catch (EntityNotUnique e) {
 				adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken" ));
@@ -109,7 +111,7 @@ public class GameEngine {
 				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false));
 				return;
 			}
-
+			
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true));
 			return;
 		}
