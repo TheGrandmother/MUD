@@ -3,6 +3,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
+import yolo.ioopm.mud.communication.messages.client.LogoutMessage;
 import yolo.ioopm.mud.communication.messages.server.HeartbeatReplyMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
@@ -110,6 +111,9 @@ public class ServerMessageListener implements Runnable {
 					if(delta > Adapter.TIMEOUT_SECONDS) {
 						logger.fine("Found dead client!");
 						dead_clients.add(entry.getKey());
+
+						logger.fine("Adding new LogoutMessage for dead client");
+						inbox.offer(new LogoutMessage(entry.getKey()));
 					}
 				}
 			}

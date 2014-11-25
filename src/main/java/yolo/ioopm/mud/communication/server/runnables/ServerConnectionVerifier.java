@@ -18,6 +18,7 @@ public class ServerConnectionVerifier implements Runnable {
 	private final Map<String, ClientConnection> connections;
 	private final Map<String, Long>             timestamps;
 	private final Queue<Message>                inbox;
+	private final Queue<Message>                outbox;
 
 	/**
 	 * Listens for data from the client and tries to interpret it.
@@ -27,13 +28,21 @@ public class ServerConnectionVerifier implements Runnable {
 	 * @param client - Client to listen on.
 	 * @param connections - Map to put the client in.
 	 * @param timestamps - as connections.
-	 * @param inbox - Where to put messages in.
+	 * @param inbox - Where to put ingoing messages.
+	 * @param outbox - Where to put outgoing messages.
 	 */
-	public ServerConnectionVerifier(ClientConnection client, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox) {
+	public ServerConnectionVerifier(
+			ClientConnection client,
+			Map<String, ClientConnection> connections,
+			Map<String, Long> timestamps,
+			Queue<Message> inbox,
+			Queue<Message> outbox
+	) {
 		this.client = client;
 		this.connections = connections;
 		this.timestamps = timestamps;
 		this.inbox = inbox;
+		this.outbox = outbox;
 		logger.fine("New ServerConnectionVerifier created!");
 	}
 
@@ -67,12 +76,17 @@ public class ServerConnectionVerifier implements Runnable {
 				continue;
 			}
 
-			logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
-			logger.info("New connection registered! IP: " + client.getIPAdress());
+			if(!connections.containsKey(msg.getSender())) {
+				logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
+				logger.info("New connection registered! IP: " + client.getIPAdress());
 
-			inbox.offer(msg);
-			connections.put(msg.getSender(), client);
-			timestamps.put(msg.getSender(), System.currentTimeMillis());
+				inbox.offer(msg);
+				connections.put(msg.getSender(), client);
+				timestamps.put(msg.getSender(), System.currentTimeMillis());
+			}
+			else {
+				logger.warning("New client tried to connect with name that is already connected!");
+			}
 
 			return; // terminate thread
 		}

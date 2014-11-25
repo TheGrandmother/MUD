@@ -19,6 +19,7 @@ public class ServerConnectionListener implements Runnable {
 	private final Map<String, ClientConnection> connections;
 	private final Map<String, Long>             timestamps;
 	private final Queue<Message>                inbox;
+	private final Queue<Message>                outbox;
 
 	/**
 	 * Listens for new connections on the given socket.
@@ -31,11 +32,12 @@ public class ServerConnectionListener implements Runnable {
 	 * @param timestamps - Map with the latest message timestamps.
 	 * @param inbox - Inbox to add new messages to.
 	 */
-	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox) {
+	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox, Queue<Message> outbox) {
 		this.server_socket = socket;
 		this.connections = connections;
 		this.timestamps = timestamps;
 		this.inbox = inbox;
+		this.outbox = outbox;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class ServerConnectionListener implements Runnable {
 				logger.fine("New connection: " + ip);
 
 				logger.fine("Creating new ServerConnectionVerifier for new connection!");
-				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps, inbox));
+				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps, inbox, outbox));
 				scv.setName("ServerConnectionVerifier - IP: " + ip);
 				scv.start();
 			}
