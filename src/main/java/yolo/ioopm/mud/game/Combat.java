@@ -92,6 +92,7 @@ public abstract class Combat {
 			target.getCs().setHealth((int)(target.getCs().getMaxHealth()*0.75));
 		
 			target.setLocation(world.getLobby(target.getCs().getLevel()));
+			target.getLocation().addPlayer(target);
 			GameEngine.broadcastToRoom(adapter, target.getLocation(), target_name+" returned from the dead.", target_name);
 			
 
@@ -102,6 +103,7 @@ public abstract class Combat {
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You killed " + target_name + " and stole " + hp_taken/2 + " university credists :D"}));
 			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by " + actor.getName() + " and he stole " + hp_taken + " university credists!. "
 					+ "You respawned in " + target.getLocation().getName()}));
+			
 			
 			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor.getName() +"!",new String[]{actor.getName(),target_name});
 			if(actor.getCs().levelUp()){
