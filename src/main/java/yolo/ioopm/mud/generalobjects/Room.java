@@ -11,7 +11,7 @@ public class Room extends Entity {
 	
 	private final boolean pvp; 
 
-	private HashSet<Door> exits   = new HashSet<Door>();
+	private HashSet<Exit> exits   = new HashSet<Exit>();
 	private HashSet<Player>   players = new HashSet<Player>();
 	private HashSet<Npc>  npcs    = new HashSet<Npc>();
 	private HashSet<ItemContainer> items   = new HashSet<ItemContainer>();
@@ -56,7 +56,7 @@ public class Room extends Entity {
 	 * @return True if the exit was successfully added.
 	 */
 	public boolean addExit(Room r, boolean locked) {
-		return exits.add(new Door(r, locked));
+		return exits.add(new Exit(r, locked));
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Room extends Entity {
 	}
 
 	/**
-	 * Adds an item to the room.
+	 * Adds an item to the room. Either increments the amount or creates a new {@link ItemContainer}
 	 *
 	 * @param i The item to add.
 	 * @return True if the item was successfully added.
@@ -123,6 +123,13 @@ public class Room extends Entity {
 		return true;
 	}
 	
+	/**
+	 * Adds several items (many of the same item). Creates a new {@link ItemContainer} if the item is not already in the room or just adds the amount.
+	 * 
+	 * @param i
+	 * @param amount
+	 * @return
+	 */
 	public boolean addItem(Item i, int amount) {
 		for (ItemContainer container : items) {
 			if(container.getName().equals(i.getName())){
@@ -143,7 +150,7 @@ public class Room extends Entity {
 	
 	
 	/**
-	 * tries to remove the specified item
+	 * tries to remove the specified item. May remove the {@link ItemContainer} or just decrease the amount.
 	 * @param name
 	 * @return returns true if the item could be removed
 	 */
@@ -168,8 +175,8 @@ public class Room extends Entity {
 	 * @return null if no exit to room exists.
 	 * @throws EntityNotPresent
 	 */
-	public Door getExit(String name){
-		for (Door door : exits) {
+	public Exit getExit(String name){
+		for (Exit door : exits) {
 			if(door.getName().equals(name)){
 				return door;
 			}
@@ -188,17 +195,25 @@ public class Room extends Entity {
 		String[] names = new String[exits.size()];
 
 		int i = 0;
-		for(Door d : exits) {
+		for(Exit d : exits) {
 			names[i++] = d.getName();
 		}
 
 		return names;
 	}
 
-	public HashSet<Door> getExits() {
+	/**
+	 * Returns the available exits.
+	 * @return the set of exits
+	 */
+	public HashSet<Exit> getExits() {
 		return exits;
 	}
-
+	
+	/**
+	 * Returns the set of {@link ItemContainer} in the room
+	 * @return
+	 */
 	public HashSet<ItemContainer> getItems() {
 		return items;
 	}
@@ -233,7 +248,7 @@ public class Room extends Entity {
 
 
 	//This needs to be accessible. From the outside.
-	public class Door {
+	public class Exit {
 		private final Room    otherside;
 		private       boolean is_locked;
 
@@ -243,7 +258,7 @@ public class Room extends Entity {
 		 * @param r           Room this door leads too.
 		 * @param lock_status True if door should be locked, false if unlocked.
 		 */
-		public Door(Room r, boolean lock_status) {
+		public Exit(Room r, boolean lock_status) {
 			otherside = r;
 			is_locked = lock_status;
 		}
