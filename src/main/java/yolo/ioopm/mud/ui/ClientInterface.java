@@ -344,7 +344,7 @@ public class ClientInterface {
 		int seconds = d.getSeconds();
 		String lol = (hours>=10) ? hours+":" : "0"+hours+":";
 		lol = (minutes>=10) ? lol+minutes+":" : lol+"0"+minutes+":";
-		lol = (seconds>10) ? seconds+"" : "0"+seconds+"";
+		lol = (seconds>10) ? lol+seconds+"" : lol+"0"+seconds+"";
 		
 		return "\u001B[1m["+lol +"]\u001B[22m ";
 	}
