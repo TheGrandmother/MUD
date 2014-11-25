@@ -8,7 +8,8 @@ import yolo.ioopm.mud.generalobjects.Item;
 public class Weapon extends Item {
 
 	private static final int CRITICAL_NUMBER = 35;
-	private static final int TARGET_NUMBER = 19;
+	private static final int TARGET_NUMBER = 15;
+	private static final int DEFENSE_TARGET_NUMBER = 24;
 	private int damage;
 	//private int difficulty;
 	
@@ -38,7 +39,7 @@ public class Weapon extends Item {
 				return (damage*3)/2;
 			}else{
 				int defense_roll = (GameEngine.d20()+GameEngine.d20() - (target.getCs().getLevel()-level));
-				if(defense_roll >= TARGET_NUMBER){
+				if(defense_roll >= DEFENSE_TARGET_NUMBER){
 					throw new UseFailedException("Defended!");
 				}else{
 					return damage;
