@@ -183,28 +183,41 @@ public class ClientInterface {
 	}
 
 	private void formatTerminal() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(AnsiCodes.CLEAR_SCREEN);
-		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
-		sb.append("Welcome to MUD!");
-		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
-		sb.append(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
-		sb.append("What would you like to do?");
-		sb.append(AnsiColorCodes.RESET_ATTRIBUTES);
-		sb.append(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
-		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
-
-		logger.info(sb.toString());
+		System.out.print(AnsiCodes.CLEAR_SCREEN);
+		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
+		System.out.print("Welcome to MUD!");
+		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
+		System.out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
+		System.out.print("What would you like to do?");
+		System.out.print(AnsiColorCodes.RESET_ATTRIBUTES);
+		System.out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
+		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
 	}
 
-	// A bit of generics haxxory to generate a string of all enum constants of any given enum
-	private <E extends Enum<E>> String getMenuQuestion(Class<E> enumClass) {
-		StringBuilder sb = new StringBuilder();
-		for(Enum<E> i : enumClass.getEnumConstants()) {
-			sb.append(i.toString()).append(" ");
+	public String prompt(String question) {
+
+		printToPrompt(question);
+
+		String input;
+		try {
+			input = in.readLine();
 		}
-		return sb.toString();
+		catch(IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			return null;
+		}
+
+		printToPrompt("Please wait...");
+
+		return input;
+	}
+
+	private void printToPrompt(String output) {
+		System.out.print(AnsiCodes.CURSOR_STORE_POSITION);
+		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
+		System.out.print(AnsiCodes.CLEAR_LINE);
+		System.out.print(output);
+		System.out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 	}
 
 	private String formatMessage(Message msg) {
@@ -303,34 +316,13 @@ public class ClientInterface {
 
 		return retval;
 	}
-	
-	public String prompt(String question) {
 
-		printToPrompt(question);
-
-		String input;
-		try {
-			input = in.readLine();
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			return null;
-		}
-
-		printToPrompt("Please wait...");
-
-		return input;
-	}
-
-	private void printToPrompt(String output) {
+	// A bit of generics haxxory to generate a string of all enum constants of any given enum
+	private <E extends Enum<E>> String getMenuQuestion(Class<E> enumClass) {
 		StringBuilder sb = new StringBuilder();
-
-		sb.append(AnsiCodes.CURSOR_STORE_POSITION);
-		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
-		sb.append(AnsiCodes.CLEAR_LINE);
-		sb.append(output);
-		sb.append(AnsiCodes.CURSOR_RESTORE_POSITION);
-
-		logger.info(sb.toString());
+		for(Enum<E> i : enumClass.getEnumConstants()) {
+			sb.append(i.toString()).append(" ");
+		}
+		return sb.toString();
 	}
 }
