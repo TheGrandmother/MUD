@@ -8,6 +8,9 @@ import yolo.ioopm.mud.communication.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -149,6 +152,8 @@ public class ClientInterface {
 
 					case LOOK:
 						break;
+					case CS:
+						break;
 
 					case TAKE:
 						args = new String[]{prompt("What do you want to take?")};
@@ -217,7 +222,7 @@ public class ClientInterface {
 
 		switch(msg.getType()) {
 			case GENERAL_ERROR:
-				retval = "ERROR! " + args[0];
+				retval = "\u001B[31m"+"ERROR! " + args[0]+"\u001B[39m";
 				break;
 
 			case GENERAL_REPLY:
@@ -231,11 +236,11 @@ public class ClientInterface {
 						break;
 
 					case "say":
-						retval = args[0] + " said \"" + args[1] + "\"";
+						retval = "\u001B[36m\u001B[1m"+args[0]+": \u001B[39m\u001B[22m" +args[1];
 						break;
 
 					case "whisper_return":
-						retval = args[0] + " whispered to you \"" + args[1] + "\"";
+						retval = "\u001B[34m\u001B[1m"+args[0]+": \u001B[39m\u001B[22m" +args[1];
 						break;
 
 					case "inventory_reply":
@@ -263,6 +268,9 @@ public class ClientInterface {
 					case "move_reply":
 						retval = args[0];
 						break;
+					case "cs_reply":
+						retval = args[0];
+						break;
 
 					default:
 						logger.severe("Unsupported message reply! Action: \"" + action + "\"");
@@ -275,11 +283,11 @@ public class ClientInterface {
 				break;
 
 			case SERIOUS_ERROR:
-				retval = "SERIOUS ERROR! " + args[0];
+				retval = "\u001B[31m\u001B[1m"+"SERIOUS ERROR! " + args[0] + "\u001B[39m\u001B[22m";
 				break;
 
 			case NOTIFICATION:
-				retval = "Notice: " + args[0];
+				retval = "\u001B[35mNotice: " + args[0]+"\u001B[39m";
 				break;
 
 			default:
@@ -290,7 +298,9 @@ public class ClientInterface {
 
 		logger.fine("Returning value \"" + retval + "\"");
 
-		return retval;
+		Date d = new Date(msg.getTimeStamp());
+
+		return getTime(msg) + retval;
 	}
 
 	public void printToOut(String output) {
@@ -306,13 +316,19 @@ public class ClientInterface {
 				out.print(AnsiCodes.BUFFER_MOVE_UP_ONE);
 			}
 
-			out.print(output + "\n");
+			out.print(output);
 
 			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
 			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 		}
 	}
-
+	
+	@SuppressWarnings("deprecation")
+	private static String getTime(Message msg){
+		Date d = new Date(msg.getTimeStamp());
+		return "\u001B[1m["+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds() +"]\u001B[22m ";
+	}
+	
 	public String prompt(String question) {
 
 		printToPrompt(question);

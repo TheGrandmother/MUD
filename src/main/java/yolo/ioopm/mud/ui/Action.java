@@ -11,5 +11,6 @@ public enum Action {
 	TAKE,
 	UNEQUIP,
 	WHISPER,
+	CS,
 	QUIT
 }
