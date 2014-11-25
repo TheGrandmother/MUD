@@ -1,4 +1,4 @@
-package yolo.ioopm.mud.misc;
+package yolo.ioopm.mud.logger;
 
 import java.util.Date;
 import java.util.logging.Formatter;

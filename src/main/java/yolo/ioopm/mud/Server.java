@@ -24,6 +24,7 @@ public class Server {
 	private GameEngine engine;
 
 	public Server(String path) {
+
 		logger.fine("Attempting to create server adapter...");
 		try {
 			adapter = new ServerAdapter(DEFAULT_PORT);
@@ -34,8 +35,6 @@ public class Server {
 			return;
 		}
 
-
-		
 		WorldBuilder wb = new WorldBuilder(path+"items.txt", path+"rooms.txt");
 		wb.buildWorld(world);
 

@@ -1,3 +1,3 @@
 #!/bin/bash
-cd target/
-java -jar MUD.jar server
+cd test/
+java -jar MUD.jar server ./

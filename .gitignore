@@ -21,3 +21,6 @@ hs_err_pid*
 # Maven stuffz
 /target
 dependency-reduced-pom.xml
+
+# Testing
+/test

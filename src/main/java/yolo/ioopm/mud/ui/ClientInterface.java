@@ -39,12 +39,12 @@ public class ClientInterface {
 			client.setUsername(prompt("Please enter username:"));
 
 			if(client.connect()) {
-				printToOut("Connected to server!");
+				logger.info("Connected to server!");
 				break;
 			}
 			else {
-				printToOut("Could not connect to specified address!");
-				printToOut("Please try again!");
+				logger.info("Could not connect to specified address!");
+				logger.info("Please try again!");
 			}
 		}
 
@@ -60,7 +60,7 @@ public class ClientInterface {
 				break;
 			}
 			catch(IllegalArgumentException e) {
-				printToOut("Incorrect choice! Please try again!");
+				logger.info("Incorrect choice! Please try again!");
 			}
 		}
 
@@ -72,7 +72,7 @@ public class ClientInterface {
 				}
 				catch(IOException e) {
 					logger.log(Level.FINE, e.getMessage(), e);
-					printToOut("You are not connected to any server!");
+					logger.info("You are not connected to any server!");
 				}
 				break;
 
@@ -82,7 +82,7 @@ public class ClientInterface {
 				}
 				catch(IOException e) {
 					logger.log(Level.FINE, e.getMessage(), e);
-					printToOut("You are not connected to any server!");
+					logger.info("You are not connected to any server!");
 				}
 				break;
 		}
@@ -105,7 +105,7 @@ public class ClientInterface {
 					}
 
 					logger.fine("MessageReader should now print...");
-					printToOut(formatMessage(msg));
+					logger.info(formatMessage(msg));
 				}
 			}, "MessageReader"
 		).start();
@@ -120,7 +120,7 @@ public class ClientInterface {
 					action = Action.valueOf(input.toUpperCase());
 				}
 				catch(IllegalArgumentException e) {
-					printToOut("Incorrect choice! Please try again!");
+					logger.info("Incorrect choice! Please try again!");
 					continue;
 				}
 
@@ -177,7 +177,7 @@ public class ClientInterface {
 						break;
 
 					default:
-						printToOut("Unimplemented action!");
+						logger.info("Unimplemented action!");
 						return;
 				}
 
@@ -185,7 +185,7 @@ public class ClientInterface {
 			}
 		}
 		else {
-			printToOut("Failed to log in to server!");
+			logger.info("Failed to log in to server!");
 		}
 	}
 
@@ -225,7 +225,7 @@ public class ClientInterface {
 
 		switch(msg.getType()) {
 			case GENERAL_ERROR:
-				retval = "\u001B[31m"+"ERROR! " + args[0]+"\u001B[39m";
+				retval = "\u001B[31m" + "ERROR! " + args[0] + "\u001B[39m";
 				break;
 
 			case GENERAL_REPLY:
@@ -239,11 +239,11 @@ public class ClientInterface {
 						break;
 
 					case "say":
-						retval = "\u001B[36m\u001B[1m"+args[0]+": \u001B[39m\u001B[22m" +args[1];
+						retval = "\u001B[36m\u001B[1m" + args[0] + ": \u001B[39m\u001B[22m" + args[1];
 						break;
 
 					case "whisper_return":
-						retval = "\u001B[34m\u001B[1m"+args[0]+": \u001B[39m\u001B[22m" +args[1];
+						retval = "\u001B[34m\u001B[1m" + args[0] + ": \u001B[39m\u001B[22m" + args[1];
 						break;
 
 					case "inventory_reply":
@@ -291,11 +291,11 @@ public class ClientInterface {
 				break;
 
 			case SERIOUS_ERROR:
-				retval = "\u001B[31m\u001B[1m"+"SERIOUS ERROR! " + args[0] + "\u001B[39m\u001B[22m";
+				retval = "\u001B[31m\u001B[1m" + "SERIOUS ERROR! " + args[0] + "\u001B[39m\u001B[22m";
 				break;
 
 			case NOTIFICATION:
-				retval = "\u001B[35mNotice: " + args[0]+"\u001B[39m";
+				retval = "\u001B[35mNotice: " + args[0] + "\u001B[39m";
 				break;
 
 			default:
@@ -309,26 +309,6 @@ public class ClientInterface {
 		Date d = new Date(msg.getTimeStamp());
 
 		return getTime(msg) + retval;
-	}
-
-	public void printToOut(String output) {
-
-		logger.info("Printing \"" + output + "\" to out!");
-
-		synchronized(out) {
-			out.print(AnsiCodes.CURSOR_STORE_POSITION);
-			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(1).setIntTwo(15));
-
-			// Scroll up the buffer 15 lines
-			for(int i = 0; i < 15; i++) {
-				out.print(AnsiCodes.BUFFER_MOVE_UP_ONE);
-			}
-
-			out.print(output);
-
-			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
-			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
-		}
 	}
 	
 	@SuppressWarnings("deprecation")

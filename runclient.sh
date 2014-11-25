@@ -1,3 +1,3 @@
 #!/bin/bash
-cd target/
+cd test/
 java -jar MUD.jar client
