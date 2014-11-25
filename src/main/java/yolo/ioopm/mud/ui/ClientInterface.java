@@ -311,10 +311,22 @@ public class ClientInterface {
 		return getTime(msg) + retval;
 	}
 	
-	@SuppressWarnings("deprecation")
+	/**
+	 * Worlds worst function
+	 * @SuppressWarnings("deprecation")
+	 * @param msg
+	 * @return
+	 */
 	private static String getTime(Message msg){
 		Date d = new Date(msg.getTimeStamp());
-		return "\u001B[1m["+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds() +"]\u001B[22m ";
+		int hours = d.getHours();
+		int minutes = d.getMinutes();
+		int seconds = d.getSeconds();
+		String lol = (hours>=10) ? hours+":" : "0"+hours+":";
+		lol = (minutes>=10) ? lol+minutes+":" : lol+"0"+minutes+":";
+		lol = (seconds>10) ? lol+seconds+"" : lol+"0"+seconds+"";
+		
+		return "\u001B[1m["+lol +"]\u001B[22m ";
 	}
 	
 	public String prompt(String question) {

@@ -100,8 +100,8 @@ public abstract class Combat {
 			int hp_taken = (int) (target.getCs().getHp()*((double)GameEngine.d6()*0.1));
 			target.getCs().addHp(-1*(hp_taken/2));
 			actor.getCs().addHp(hp_taken);
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You killed " + target_name + " and stole " + hp_taken/2 + " university credists :D"}));
-			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by " + actor.getName() + " and he stole " + hp_taken + " university credists!. "
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, new String[]{"You killed " + target_name + " and got " + hp_taken + " university credists :D"}));
+			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, new String[]{"You was killed by " + actor.getName() + " and he stole " + hp_taken/2 + " university credists!. "
 					+ "You respawned in " + target.getLocation().getName()}));
 			
 			
