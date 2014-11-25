@@ -131,14 +131,14 @@ public abstract class Character extends Entity {
 		 * Level = 1<p>
 		 * Health = 50<p>
 		 * Max_health = 50<p>
-		 * Hp = 0<p>
+		 * Hp = 30<p>
 		 */
 		public CharacterSheet() {
 			this.hp = BASE_HP;
 			this.level = 1;
 			this.health = 50;
 			this.max_health = 50;
-			this.hp = 0;
+			this.hp = 30;
 
 		}
 		
