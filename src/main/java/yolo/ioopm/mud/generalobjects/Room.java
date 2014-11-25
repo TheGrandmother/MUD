@@ -12,7 +12,7 @@ public class Room extends Entity {
 	private final boolean pvp; 
 
 	private HashSet<Door> exits   = new HashSet<Door>();
-	private HashSet<Pc>   players = new HashSet<Pc>();
+	private HashSet<Player>   players = new HashSet<Player>();
 	private HashSet<Npc>  npcs    = new HashSet<Npc>();
 	private HashSet<ItemContainer> items   = new HashSet<ItemContainer>();
 
@@ -60,14 +60,15 @@ public class Room extends Entity {
 	}
 
 	/**
-	 * Adds a player to the room.
+	 * Adds a player to the room. Also checks if the player is already in the room
+	 * and if the player is logged in.
 	 *
-	 * @param p Player to add.
-	 * @return True if player was successfully added.
+	 * @param player Player to add.
+	 * @return True if player was successfully added. It returns false if the player was already in the room or he was not logged in.
 	 */
-	public boolean addPlayer(Pc p) {
-		if(World.assertUnique(p.getName(), players)){
-			return players.add(p);
+	public boolean addPlayer(Player player) {
+		if(World.assertUnique(player.getName(), players) && player.isLogedIn()){
+			return players.add(player);
 		}else{
 			return false;
 		}
@@ -76,13 +77,28 @@ public class Room extends Entity {
 	}
 
 	/**
+	 * Checks if the player is present in the room.
+	 * @param player The player to be checked.
+	 * @return true if the player is in the room otherwise false.
+	 */
+	public boolean playerPresent(Player player){
+		for(Player p : players){
+			if(p.getName().equals(player.getName())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Adds an NPC to the room.
 	 *
 	 * @param n The NPC to add.
 	 * @return True if NPC was successfully added.
 	 */
 	public boolean addNPC(Npc n) {
-		for (Pc npc : players) {
+		for (Player npc : players) {
 			if(npc.getName().equals(n.getName())){
 				return false;
 			}
@@ -191,7 +207,7 @@ public class Room extends Entity {
 		return npcs;
 	}
 
-	public HashSet<Pc> getPlayers() {
+	public HashSet<Player> getPlayers() {
 		return players;
 	}
 
@@ -201,7 +217,7 @@ public class Room extends Entity {
 	 * @param p The player to remove.
 	 * @return True if player was successfully removed.
 	 */
-	public boolean removePlayer(Pc p) {
+	public boolean removePlayer(Player p) {
 		return players.remove(p);
 	}
 

@@ -9,7 +9,7 @@ import yolo.ioopm.mud.communication.messages.server.NotifactionMesssage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
-import yolo.ioopm.mud.generalobjects.Pc;
+import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
@@ -18,7 +18,11 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 import java.util.logging.Logger;
 
 /**
- * This class is responsible for handling the interpreting of the actions passed to the server.
+ *This is the main class for the actual game part of the mud. This class is responsible for interpreting the messages
+ *and taking appropriate action in accordance to the spec/Messages.txt file.<p>
+ *
+
+ *
  *
  * @author TheGrandmother
  */
@@ -26,15 +30,32 @@ public class GameEngine {
 
 	private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
 
-	Adapter adapter;
-	World   world;
+	private final Adapter adapter;
+	private final World   world;
 
+		/**
+		 * Returns a new Game engine
+		 * @param adapter This is the adapter trough which all of the communication is to be handled
+		 * @param world		This is the world where all of the in-game entities live.
+		 */
 	public GameEngine(Adapter adapter, World world) {
 		this.adapter = adapter;
 		this.world = world;
 	}
 	
-	//TODO Implement logging out so that players gets removed from rooms before the log out.
+	
+	
+	/**
+	 * 
+	 * This function is takes the appropriate action for the given 
+	 * <p>
+	 * <b>NOTE</b>: <p>
+	 *Since this project is still in the development phase and changes are currently being made it is very likely that there exists discrepancies
+	 *between the spec/Messages.txt files and how this function operates.
+	 *
+	 * @param message The message to be handled.
+	 */
+	//TODO Implement logging out so that players gets removed from rooms when they log out.
 	public void executeAction(Message message) {
 
 		String actor_name = message.getSender();
@@ -45,7 +66,7 @@ public class GameEngine {
 			//TODO Fix so that players gets added to the lobby when they log in!
 			String username = arguments[0];
 			String password = arguments[1];
-			Pc player = null;
+			Player player = null;
 			try {
 				player = world.findPc(username);
 				if(player.isLogedIn()){
@@ -74,7 +95,7 @@ public class GameEngine {
 			String password = arguments[1];
 			
 			try {
-				world.addCharacter(new Pc(username, "", password, world.getLobby(0)));
+				world.addCharacter(new Player(username, "", password, world.getLobby(0)));
 				world.findPc(username).getLocation().addPlayer(world.findPc(username));
 				world.findPc(username).setLoggedIn(true);
 			} catch (EntityNotUnique e) {
@@ -90,11 +111,10 @@ public class GameEngine {
 
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true));
 			return;
-			//server.sendMessage(new RegistrationReplyMessage(actor, register(username, password)));
 		}
 		else if(type == MessageType.GENERAL_ACTION) {
 
-			Pc actor = null;
+			Player actor = null;
 			try {
 				if(!world.findPc(actor_name).isLogedIn()){
 					adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor is not logged in!"));
@@ -104,6 +124,10 @@ public class GameEngine {
 				}
 			} catch (EntityNotPresent e) {
 				adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor does not exist!"));
+				return;
+			}
+			if(!actor.getLocation().playerPresent(actor)){
+				adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor is not present in his own room!"));
 				return;
 			}
 			
@@ -169,14 +193,14 @@ public class GameEngine {
 					break;
 					
 				case "drop_players":
-					for (Pc p : world.getPlayers()) {
+					for (Player p : world.getPlayers()) {
 						System.out.println(p.getName());
 					}
 					break;
 				case "drop_players_room":
 					try {
 						Room room = world.findRoom(arguments[0]);
-						for (Pc p : room.getPlayers()) {
+						for (Player p : room.getPlayers()) {
 							System.out.println(p.getName());
 						}
 					} catch (EntityNotPresent e) {
@@ -188,7 +212,7 @@ public class GameEngine {
 
 				case "am_i_real":
 					System.out.println(actor);
-					for (Pc p : world.getPlayers()) {
+					for (Player p : world.getPlayers()) {
 						if(p.getName().equals(actor)){
 
 							System.out.println("indeed i am.");
@@ -206,7 +230,7 @@ public class GameEngine {
 	
 	/**
 	 * 
-	 * Broadcasts a ReplyMessage to all the players in the given room
+	 * Broadcasts a {@link NotifactionMesssage} to all the players in the given room
 	 * 
 	 * @param adapter
 	 * @param room
@@ -214,43 +238,23 @@ public class GameEngine {
 	 * @param nouns
 	 */
 	public static void broadcastToRoom(Adapter adapter, Room room, String message){
-		for (Pc player : room.getPlayers()) {
+		for (Player player : room.getPlayers()) {
 			adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
 		}
 	}
-	
+
 	/**
 	 * 
-	 * Broadcasts a message to all the players in the given room EXCEPT for the sender.
+	 * This function broadcasts a a {@link NotifactionMesssage} too the players in the given room except for the arguments gilen to the exludes parameter.
 	 * 
-	 * @param adapter
-	 * @param room	
-	 * @param type	The type of the message
-	 * @param nouns
-	 * @param exludes	The name of the player to which no message is to be sent!
+	 * @param adapter The adapter trough wich the notification is to be sent.
+	 * @param room Room in wich the notification is to be broadcasted. 
+	 * @param message The message to be sent.
+	 * @param excludes The name of all the players to which no message is to be sent!
 	 */
-	public static void broadcastToRoom(Adapter adapter, Room room, String message,String exludes){
-		for (Pc player : room.getPlayers()) {
-			if(!(player.getName().equals(exludes))){
-				adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
-			}
-		}
-	}
-	
-	
-	/**
-	 * 
-	 * Broadcasts a message to all the players in the given room EXCEPT for all the entries in the exclude array .
-	 * 
-	 * @param adapter
-	 * @param room	
-	 * @param type	The type of the message
-	 * @param nouns
-	 * @param excludes	The name of all the players to which no message is to be sent!
-	 */
-	public static void broadcastToRoom(Adapter adapter, Room room, String message,String[] excludes){
+	public static void broadcastToRoom(Adapter adapter, Room room, String message,String... excludes){
 		
-		for (Pc player : room.getPlayers()) {
+		for (Player player : room.getPlayers()) {
 			boolean skip = false;
 			for (String exclude : excludes) {
 				if(player.getName().equals(exclude)){
@@ -267,6 +271,7 @@ public class GameEngine {
 	
 	
 	/**
+	 * A roll of a twenty sided dice.
 	 * 
 	 * @return A pseudo random number between 1-20
 	 */
@@ -275,6 +280,7 @@ public class GameEngine {
 	}
 	
 	/**
+	 * A roll of a six sided dice
 	 * 
 	 * @return A pseudo random number between 1-6
 	 */
