@@ -75,9 +75,9 @@ public class GameEngine {
 				}
 				if(checkUsernamePassword(username, password)){
 					player.setLocation(world.getLobby(player.getCs().getLevel()));
-					player.getLocation().addPlayer(player);
 					player.setLoggedIn(true);
-					GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " joined the fun :D!", username);
+					player.getLocation().addPlayer(player);
+					GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " has returned :D!", username);
 					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true));
 					return;
 				}else{
@@ -114,9 +114,19 @@ public class GameEngine {
 			
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true));
 			return;
-		}
-		else if(type == MessageType.GENERAL_ACTION) {
-
+		}else if(type == MessageType.LOGOUT){
+			try {
+				Player player = world.findPc(actor_name);
+				player.getLocation().removePlayer(player);
+				player.setLoggedIn(false);
+				GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
+			} catch (EntityNotPresent e) {
+				adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non exsisting player."));
+			}
+			
+			
+		}else if(type == MessageType.GENERAL_ACTION) {
+			
 			Player actor = null;
 			try {
 				if(!world.findPc(actor_name).isLogedIn()){
