@@ -1,4 +1,6 @@
-room:lol room: lames room ever!.:true: none :ball room;false:
-room:ball room: giggle....:true: axe;150 :lol room;false:
+/room:name: description : pvp : items: exits: 
+room:lol room: lamest room ever!.:false: none :ball room;false,the otter kingdom;false:
+room:ball room: giggle....:true: axe;150 :lol room;true:
+room:the otter kingdom:Here the all mighty otter rules over France!:true:Key to ball room;10:lol room;false
 
 lobby:lol room;0,ball room;5

@@ -1,3 +1,5 @@
+//key: target : level
+//weapon: name:description:size:level: damage
 key:room2:0
-weapon:axe:a stupid axe:10:0:20
-/i wonder if comments work :P
+key:ball room:0
+weapon:axe:a stupid axe:5:0:20
