@@ -1,8 +1,10 @@
 package yolo.ioopm.mud.logger;
 
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.ui.ansi.AnsiCodes;
 import yolo.ioopm.mud.ui.ansi.AnsiColorCodes;
 
+import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
@@ -18,6 +20,8 @@ public class ClientConsoleFormatter extends Formatter {
 		for(int i = 0; i < 15; i++) {
 			sb.append(AnsiCodes.BUFFER_MOVE_UP_ONE);
 		}
+
+		sb.append(getTime(record.getMillis()));
 
 		String name = record.getLevel().getName();
 
@@ -50,5 +54,23 @@ public class ClientConsoleFormatter extends Formatter {
 		sb.append(AnsiCodes.CURSOR_RESTORE_POSITION);
 
 		return sb.toString();
+	}
+
+	/**
+	 * Worlds worst function
+	 * @SuppressWarnings("deprecation")
+	 * @param millis
+	 * @return
+	 */
+	private static String getTime(long millis){
+		Date d = new Date(millis);
+		int hours = d.getHours();
+		int minutes = d.getMinutes();
+		int seconds = d.getSeconds();
+		String lol = (hours>=10) ? hours+":" : "0"+hours+":";
+		lol = (minutes>=10) ? lol+minutes+":" : lol+"0"+minutes+":";
+		lol = (seconds>10) ? lol+seconds+"" : lol+"0"+seconds+"";
+
+		return "\u001B[1m["+lol +"]\u001B[22m ";
 	}
 }

@@ -1,16 +1,13 @@
 package yolo.ioopm.mud.ui;
 
 import yolo.ioopm.mud.Client;
-import yolo.ioopm.mud.ui.ansi.AnsiColorCodes;
-import yolo.ioopm.mud.ui.ansi.AnsiCodes;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.ui.ansi.AnsiCodes;
+import yolo.ioopm.mud.ui.ansi.AnsiColorCodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +17,10 @@ public class ClientInterface {
 
 	private final Client client;
 
-	private final PrintStream    out;
 	private final BufferedReader in;
 
-	public ClientInterface(Client instance, PrintStream out, BufferedReader in) {
+	public ClientInterface(Client instance, BufferedReader in) {
 		this.client = instance;
-		this.out = out;
 		this.in = in;
 	}
 
@@ -170,9 +165,7 @@ public class ClientInterface {
 						break;
 
 					case QUIT:
-						synchronized(out) {
-							out.print(AnsiCodes.RESET_SETTINGS);
-						}
+						System.out.print(AnsiCodes.RESET_SETTINGS);
 						System.exit(0);
 						break;
 
@@ -190,17 +183,19 @@ public class ClientInterface {
 	}
 
 	private void formatTerminal() {
-		synchronized(out) {
-			out.print(AnsiCodes.CLEAR_SCREEN);
-			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
-			out.print("Welcome to MUD!");
-			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
-			out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
-			out.print("What would you like to do?");
-			out.print(AnsiColorCodes.RESET_ATTRIBUTES);
-			out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
-			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
-		}
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(AnsiCodes.CLEAR_SCREEN);
+		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
+		sb.append("Welcome to MUD!");
+		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
+		sb.append(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
+		sb.append("What would you like to do?");
+		sb.append(AnsiColorCodes.RESET_ATTRIBUTES);
+		sb.append(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
+		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
+
+		logger.info(sb.toString());
 	}
 
 	// A bit of generics haxxory to generate a string of all enum constants of any given enum
@@ -306,27 +301,7 @@ public class ClientInterface {
 
 		logger.fine("Returning value \"" + retval + "\"");
 
-		Date d = new Date(msg.getTimeStamp());
-
-		return getTime(msg) + retval;
-	}
-	
-	/**
-	 * Worlds worst function
-	 * @SuppressWarnings("deprecation")
-	 * @param msg
-	 * @return
-	 */
-	private static String getTime(Message msg){
-		Date d = new Date(msg.getTimeStamp());
-		int hours = d.getHours();
-		int minutes = d.getMinutes();
-		int seconds = d.getSeconds();
-		String lol = (hours>=10) ? hours+":" : "0"+hours+":";
-		lol = (minutes>=10) ? lol+minutes+":" : lol+"0"+minutes+":";
-		lol = (seconds>10) ? lol+seconds+"" : lol+"0"+seconds+"";
-		
-		return "\u001B[1m["+lol +"]\u001B[22m ";
+		return retval;
 	}
 	
 	public String prompt(String question) {
@@ -348,12 +323,14 @@ public class ClientInterface {
 	}
 
 	private void printToPrompt(String output) {
-		synchronized(out) {
-			out.print(AnsiCodes.CURSOR_STORE_POSITION);
-			out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
-			out.print(AnsiCodes.CLEAR_LINE);
-			out.print(output);
-			out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
-		}
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(AnsiCodes.CURSOR_STORE_POSITION);
+		sb.append(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
+		sb.append(AnsiCodes.CLEAR_LINE);
+		sb.append(output);
+		sb.append(AnsiCodes.CURSOR_RESTORE_POSITION);
+
+		logger.info(sb.toString());
 	}
 }

@@ -31,7 +31,7 @@ public class Client {
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		ClientInterface ui = new ClientInterface(this, System.out, keyboard_reader);
+		ClientInterface ui = new ClientInterface(this, keyboard_reader);
 		ui.run();
 	}
 
