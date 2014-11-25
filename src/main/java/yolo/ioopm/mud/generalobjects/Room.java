@@ -81,6 +81,7 @@ public class Room extends Entity {
 	 * @param player Player to add.
 	 * @return True if player was successfully added. It returns false if the player was already in the room or he was not logged in.
 	 */
+	//TODO this function is fucking suicidal. I'll need to refactor it to use exceptions instead of dumb retro booleans.
 	public boolean addPlayer(Player player) {
 		if(World.assertUnique(player.getName(), players) && player.isLogedIn()){
 			return players.add(player);
