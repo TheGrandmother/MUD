@@ -8,7 +8,7 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.TestServerAdapter;
 import yolo.ioopm.mud.communication.messages.server.IncommingMessage;
 import yolo.ioopm.mud.game.GameEngine;
-import yolo.ioopm.mud.generalobjects.Pc;
+import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
@@ -66,12 +66,15 @@ public class TestSuite {
 		
 		try {
 			
-			t.world.addCharacter(new Pc("player1", "has a hat", "123", t.world.getLobby(0)));
-			t.world.addCharacter(new Pc("player2", "aint hasing a hat", "123", t.world.getLobby(0)));
-			t.world.addCharacter(new Pc("player3", "aint hasing a hat", "123", t.world.getLobby(0)));
+			t.world.addCharacter(new Player("player1", "has a hat", "123", t.world.getLobby(0)));
+			t.world.addCharacter(new Player("player2", "aint hasing a hat", "123", t.world.getLobby(0)));
+			t.world.addCharacter(new Player("player3", "aint hasing a hat", "123", t.world.getLobby(0)));
 			t.world.findPc("player1").setLoggedIn(true);
 			t.world.findPc("player2").setLoggedIn(true);
 			t.world.findPc("player3").setLoggedIn(true);
+			t.world.findRoom(t.world.findPc("player1").getLocation().getName()).addPlayer(t.world.findPc("player1"));
+			t.world.findRoom(t.world.findPc("player2").getLocation().getName()).addPlayer(t.world.findPc("player2"));
+			t.world.findRoom(t.world.findPc("player3").getLocation().getName()).addPlayer(t.world.findPc("player3"));
 		} catch (EntityNotUnique e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
