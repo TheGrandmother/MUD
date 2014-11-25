@@ -44,7 +44,11 @@ public class Main {
 			case "server":
 				logger.fine("Initiating server...");
 				try {
-					new Server();
+					if(args.length != 2){
+						System.out.println("Nowdays you have to type the path to the world files");
+						throw new Exception();
+						}
+					new Server(args[1].trim());
 				}
 				catch(Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);

@@ -23,7 +23,7 @@ public class Server {
 	private World      world   = new World();
 	private GameEngine engine;
 
-	public Server() {
+	public Server(String path) {
 		logger.fine("Attempting to create server adapter...");
 		try {
 			adapter = new ServerAdapter(DEFAULT_PORT);
@@ -34,17 +34,6 @@ public class Server {
 			return;
 		}
 
-		//TODO Create a better system for this
-		BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
-		System.out.println("enter path to world files!");
-		String path = null;
-		
-		try {
-			path = buff.readLine();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 
 		
 		WorldBuilder wb = new WorldBuilder(path+"items.txt", path+"rooms.txt");
