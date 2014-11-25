@@ -57,7 +57,7 @@ public class Key extends Item{
 
 	@Override
 	public String inspect() {
-		return super.getDescription() + "Requires level: " + super.level;
+		return super.getDescription() + " Requires level: " + super.level;
 	}
 	
 }

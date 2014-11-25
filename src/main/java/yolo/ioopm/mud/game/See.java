@@ -156,7 +156,7 @@ public final class See {
 	
 	public static void cs(Player actor, World world, Adapter adapter){
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, new String[]{"You are level " + actor.getCs().getLevel()+". You have "+
-		actor.getCs().getHealth() +" health points out of "+	actor.getCs().getMaxHealth()+". You have " + actor.getCs().getHp() + " hp and and need "+ 
+		actor.getCs().getHealth() +" health points out of "+	actor.getCs().getMaxHealth()+".\nYou have " + actor.getCs().getHp() + " university credits and and need "+ 
 				 actor.getCs().hpToNextLevel()+ " more to level up."}));
 	}
 	
