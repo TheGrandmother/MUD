@@ -33,6 +33,8 @@ public class Server {
 			logger.severe("Severe error! Terminating server...");
 			return;
 		}
+
+		//TODO Create a better system for this
 		BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("enter path to world files!");
 		String path = null;
@@ -43,6 +45,8 @@ public class Server {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+
+		
 		WorldBuilder wb = new WorldBuilder(path+"items.txt", path+"rooms.txt");
 		wb.buildWorld(world);
 
