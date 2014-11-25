@@ -30,6 +30,22 @@ public class ServerMessageListener implements Runnable {
 	// This log keeps track of the latest timestamps
 	private final Map<String, Long> timestamps;
 
+	/**
+	 * Listens for data from clients.
+	 * If the data is correctly formatted as a message it will be added to the given inbox-queue.
+	 *
+	 * It will automatically respond to any heartbeats any client would send. It does this by
+	 * adding a HeartBeatReplyMessage to the given outbox-queue.
+	 *
+	 * It will also keep track of the last time a client sent a message.
+	 * If a client has not sent any messages (including heartbeats) within the
+	 * time range defined in the adapter it will mark that client as dead and terminate their connection.
+	 *
+	 * @param connections - Map where client usernames are mapped to their respective ClientConnection object.
+	 * @param inbox - Where to put any new messages the clients send.
+	 * @param outbox - Where to put respond messages to heartbeats.
+	 * @param timestamps - Where to keep track of the latest timestamp in messages from clients.
+	 */
 	public ServerMessageListener(Map<String, ClientConnection> connections, Queue<Message> inbox, Queue<Message> outbox, Map<String, Long> timestamps) {
 		this.connections = connections;
 		this.inbox = inbox;

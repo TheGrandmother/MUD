@@ -17,6 +17,13 @@ public class ServerMessageSender implements Runnable {
 	private final Map<String, ClientConnection> connections;
 	private final Queue<Message>                outbox;
 
+	/**
+	 * Iterates over the given outbox and sends messages to the clients in
+	 * the given connections map.
+	 *
+	 * @param connections - Verified client connections, mapped by their usernames.
+	 * @param outbox - The outbox to iterate over.
+	 */
 	public ServerMessageSender(Map<String, ClientConnection> connections, Queue<Message> outbox) {
 		this.connections = connections;
 		this.outbox = outbox;

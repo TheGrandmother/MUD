@@ -16,6 +16,12 @@ public class ClientConnection {
 	private PrintWriter    print_writer    = null;
 	private BufferedReader buffered_reader = null;
 
+	/**
+	 *
+	 *
+	 * @param socket
+	 * @throws IOException
+	 */
 	public ClientConnection(Socket socket) throws IOException {
 		this.socket = socket;
 
