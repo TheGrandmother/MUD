@@ -146,6 +146,9 @@ public class ClientInterface {
 					case EQUIP:
 						args = new String[]{prompt("What would you like to equip?")};
 						break;
+					case EXAMINE:
+						args = new String[]{prompt("What would you like to examine?")};
+						break;
 
 					case INVENTORY:
 						break;
@@ -271,7 +274,12 @@ public class ClientInterface {
 					case "cs_reply":
 						retval = args[0];
 						break;
-
+					case "equip_reply":
+						retval = args[0];
+						break;
+					case "examine_reply":
+						retval = args[0];
+						break;
 					default:
 						logger.severe("Unsupported message reply! Action: \"" + action + "\"");
 						retval = msg.getMessage();
