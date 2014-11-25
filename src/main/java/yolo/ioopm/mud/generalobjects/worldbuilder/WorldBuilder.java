@@ -144,7 +144,7 @@ public class WorldBuilder {
 		
 		current_line = reader.readLine();
 		while(current_line != null){
-			if(!current_line.equals("")||current_line.startsWith("/")){
+			if(!current_line.equals("") && !current_line.startsWith("/")){
 				String[] args = current_line.trim().split(":");
 				if(args[0].trim().equals("room")){
 				try {
