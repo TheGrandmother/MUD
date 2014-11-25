@@ -140,7 +140,7 @@ public abstract class ItemInteraction {
 		}else{
 			inv.removeItem(item_name);
 			actor.setWeapon((Weapon) i);
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EQUIP_REPLY, " You have equipped " + item_name + "."));
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EQUIP_REPLY, "You have equipped " + item_name + "."));
 			return;
 		}
 	}

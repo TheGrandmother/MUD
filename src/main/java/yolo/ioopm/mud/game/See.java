@@ -96,7 +96,7 @@ public final class See {
 
 		inventory = actor.getInventory();
 		if(inventory.getitems().isEmpty()){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is empty! You have " + inventory.getMax_volume() + "units of space left."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is empty! You have " + inventory.getMax_volume() + " units of space left."));
 			return;
 		}
 		
