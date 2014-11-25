@@ -96,8 +96,9 @@ public class GameEngine {
 			
 			try {
 				world.addCharacter(new Player(username, "", password, world.getLobby(0)));
-				world.findPc(username).getLocation().addPlayer(world.findPc(username));
 				world.findPc(username).setLoggedIn(true);
+				world.findPc(username).getLocation().addPlayer(world.findPc(username));
+				
 			} catch (EntityNotUnique e) {
 				adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken" ));
 				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false));
