@@ -54,7 +54,7 @@ public class Server {
 			}
 
 			logger.fine("Received message from client. Calling execute action.");
-			engine.executeAction(msg);
+			engine.handleMessage(msg);
 		}
 	}
 	
