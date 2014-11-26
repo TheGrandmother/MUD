@@ -67,17 +67,17 @@ public abstract class Combat {
 		try {
 			target = world.findPc(target_name);
 		} catch (EntityNotPresent e) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + "does not exist."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + " does not exist."));
 			return;
 		}
 		
 		if(!actor.getLocation().playerPresent(target)){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + "is not in the room!."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + " is not in the room!."));
 			return;
 		}
 		
 		if(actor.getWeapon() == null){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have a weapon equiped."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have a weapon equipped."));
 			return;
 		}
 		
