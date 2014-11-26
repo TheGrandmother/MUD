@@ -1,4 +1,6 @@
 HERE We write all of the bugs!
+THE FUCK LETS NOT USE THIS FILE :P
+LETS USE THE GIT ISSUE SYSTEM. WE ARE STUPID ^^
 
 ---- FIXED BUGS ----
 BUG: Examine action freezes the server some times.
@@ -13,3 +15,14 @@ BUG: You can attack players that are in other rooms.
 
 
 ---- PENDING BUGS ----
+
+
+
+---- PENDING TWEAKS ----
+
+TWEAK:	Have the authentication give back more information than just a boolean.
+		Right now a client has no idea why a login/registration was unsuccessful
+		when there are several reasons why a login/registration might fail
+	Priority: Medium
+	Date: 26/11/14 16:00
+	Opened by: The Grandmother
