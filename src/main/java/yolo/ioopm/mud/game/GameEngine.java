@@ -17,8 +17,6 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 
 import java.util.logging.Logger;
 
-import com.sun.accessibility.internal.resources.accessibility;
-
 /**
  *This is the main class for the actual game part of the mud. This class is responsible for interpreting the messages
  *and taking appropriate action in accordance to the spec/Messages.txt file.<p>
@@ -72,7 +70,13 @@ public class GameEngine {
 		}
 	}
 	
-	
+	/**
+	 * Handles a logout request.<p>
+	 * <b>NOTE:</b> This method does not necessarily send a message back to the sender.
+	 * 
+	 * 
+	 * @param message Must be of type {@literal MessageType#LOGOUT}
+	 */
 	private void handleLogoutRequest(Message message){
 		String actor_name = message.getSender();
 		//MessageType type = message.getType();
@@ -87,7 +91,12 @@ public class GameEngine {
 		}
 		
 	}
-	
+	/**
+	 * Handles a registration request.<p>
+	 * <b>NOTE:</b> This method must send a {@link RegistrationReplyMessage} to the sender.
+	 * 
+	 * @param message Must be a message of {@literal MessageType#REGISTRATION}
+	 */
 	private void handleRegistrationRequest(Message message){
 		String actor_name = message.getSender();
 		//MessageType type = message.getType();
@@ -102,6 +111,8 @@ public class GameEngine {
 			world.findPc(username).setLoggedIn(true);
 			world.findPc(username).getLocation().addPlayer(world.findPc(username));
 			GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " joined the fun :D!", username);
+			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
+			return;
 			
 		} catch (EntityNotUnique e) {
 			adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken" ));
@@ -113,14 +124,12 @@ public class GameEngine {
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
 			return;
 		}
-		
-		adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
-		return;
+
 	}
 	
 	/**
 	 * This method handles an authentication request(login).<p>
-	 * <b>NOTE:</b> this function must send {@link AuthenticationReplyMessage}. 
+	 * <b>NOTE:</b> this method must send {@link AuthenticationReplyMessage} to the sender. 
 	 * 
 	 * @param message Must be a message of {@literal MessageType#AUTHENTICATION}
 	 */
@@ -242,36 +251,6 @@ public class GameEngine {
 			case Keywords.ATTACK:
 				Combat.attack(actor, arguments, world, adapter);
 				break;
-				
-			case "drop_players":
-				for (Player p : world.getPlayers()) {
-					System.out.println(p.getName());
-				}
-				break;
-			case "drop_players_room":
-				try {
-					Room room = world.findRoom(arguments[0]);
-					for (Player p : room.getPlayers()) {
-						System.out.println(p.getName());
-					}
-				} catch (EntityNotPresent e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				break;
-
-			case "am_i_real":
-				System.out.println(actor);
-				for (Player p : world.getPlayers()) {
-					if(p.getName().equals(actor)){
-
-						System.out.println("indeed i am.");
-						break;
-					}
-				}
-				System.out.println("Nobody is in the end.....");
-				break;
 
 			default:
 				adapter.sendMessage( new ErrorMessage(actor.getName(), action + " is not a valid keyword!"));
@@ -297,8 +276,8 @@ public class GameEngine {
 	 * 
 	 * This function broadcasts a a {@link NotifactionMesssage} too the players in the given room except for the arguments gilen to the exludes parameter.
 	 * 
-	 * @param adapter The adapter trough wich the notification is to be sent.
-	 * @param room Room in wich the notification is to be broadcasted. 
+	 * @param adapter The adapter trough which the notification is to be sent.
+	 * @param room Room in which the notification is to be broadcasted. 
 	 * @param message The message to be sent.
 	 * @param excludes The name of all the players to which no message is to be sent!
 	 */
