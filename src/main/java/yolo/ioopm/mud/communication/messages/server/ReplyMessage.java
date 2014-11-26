@@ -20,6 +20,6 @@ public class ReplyMessage extends Message {
 	 * @param nouns the contents of the message
 	 */
 	public ReplyMessage(String reciever, String action, String... nouns) {
-		super(reciever, "server", MessageType.GENERAL_REPLY, action, System.currentTimeMillis(), nouns);
+		super(reciever, "server", MessageType.GENERAL_REPLY, action, nouns);
 	}
 }
