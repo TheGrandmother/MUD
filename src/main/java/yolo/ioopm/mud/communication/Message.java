@@ -25,32 +25,40 @@ public abstract class Message {
 	private final long        TIME_STAMP;
 
 	/**
-	 * This will be a constructor which creates a message to be sent to the Adapter
+	 * Creates a new message.
 	 *
 	 * @param receiver
 	 * @param sender
 	 * @param action
-	 * @param nouns
+	 * @param arguments
 	 */
-	public Message(String receiver, String sender, MessageType type, String action, String[] nouns) {
-		this(receiver, sender, type, action, System.currentTimeMillis(), nouns);
+	protected Message(String receiver, String sender, MessageType type, String action, String[] arguments) {
+		this(receiver, sender, type, action, System.currentTimeMillis(), arguments);
 	}
 
-	public Message(String receiver, String sender, MessageType type, String action, long time_stamp, String[] nouns) {
+	/**
+	 * Creates a new message.
+	 *
+	 * @param receiver
+	 * @param sender
+	 * @param action
+	 * @param arguments
+	 */
+	private Message(String receiver, String sender, MessageType type, String action, long time_stamp, String[] arguments) {
 		this.RECEIVER = receiver;
 		this.SENDER = sender;
 		this.TYPE = type;
 		this.ACTION = action;
-		this.ARGUMENTS = nouns;
+		this.ARGUMENTS = arguments;
 		this.TIME_STAMP = time_stamp;
 	}
 
 	/**
-	 * This function takes a string received by the adapter and converts it to a Message object;
+	 * This function takes a string received by the adapter and converts it to a Message object.
 	 *
-	 * @throws java.lang.IllegalArgumentException
-	 * @param transmission
-	 * @return
+	 * @param transmission - The data to convert.
+	 * @return - The new message constructed from the data.
+	 * @throws IllegalArgumentException - If the data was incorrectly formed.
 	 */
 	public static Message deconstructTransmission(String transmission) {
 
@@ -80,22 +88,49 @@ public abstract class Message {
 		};
 	}
 
+	/**
+	 * Returns the receiver of this message.
+	 *
+	 * @return
+	 */
 	public String getReceiver() {
 		return RECEIVER;
 	}
 
+	/**
+	 * Returns the sender behind this message.
+	 *
+	 * @return
+	 */
 	public String getSender() {
 		return SENDER;
 	}
 
+	/**
+	 * Returns the type of the message.
+	 *
+	 * @return
+	 */
 	public MessageType getType() {
 		return TYPE;
 	}
 
+	/**
+	 * Returns the action defined in the message.
+	 *
+	 * @return
+	 */
 	public String getAction() {
 		return ACTION;
 	}
 
+	/**
+	 * Returns the arguments for the action.
+	 * NOTE: This will return a copy of the arguments. It will not return
+	 * a reference to the actual object that contains the arguments.
+	 *
+	 * @return - A copy of the arguments.
+	 */
 	public String[] getArguments() {
 
 		if(ARGUMENTS == null) {
@@ -110,10 +145,20 @@ public abstract class Message {
 		return new_array;
 	}
 
+	/**
+	 * Returns the message's timestamp
+	 *
+	 * @return
+	 */
 	public long getTimeStamp() {
 		return TIME_STAMP;
 	}
 
+	/**
+	 * Converts the message to a string.
+	 *
+	 * @return - The message formed as a string.
+	 */
 	public String getMessage() {
 		StringBuilder sb = new StringBuilder();
 

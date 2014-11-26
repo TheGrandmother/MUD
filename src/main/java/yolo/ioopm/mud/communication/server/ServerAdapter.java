@@ -18,6 +18,14 @@ public class ServerAdapter extends Adapter {
 	private final Map<String, ClientConnection> connections = new ConcurrentHashMap<>();
 	private final Map<String, Long>             timestamps  = new ConcurrentHashMap<>();
 
+	/**
+	 * Creates a new adapter designed for the server side.
+	 *
+	 * @param port - Port to bind the server socket too.
+	 * @throws IOException - if an I/O error occurs when opening the socket.
+	 * @throws SecurityException - if a security manager exists and its checkListen method doesn't allow the operation.
+	 * @throws IllegalArgumentException - if the port parameter is outside the specified range of valid port values, which is between 0 and 65535, inclusive.
+	 */
 	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
 
 		logger.fine("Initiating ServerAdapter!");

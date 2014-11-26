@@ -30,7 +30,7 @@ public abstract class Adapter {
 	/**
 	 * Polls the oldest message from the inbox.
 	 *
-	 * @return Retrieves and removes head of inbox, null if inbox is empty.
+	 * @return - Retrieves and removes head of inbox, null if inbox is empty.
 	 */
 	public Message poll() {
 		Message msg = inbox.poll();
@@ -42,12 +42,10 @@ public abstract class Adapter {
 		return msg;
 	}
 
-	//TODO
-	//Fix so that we can adda message to say stuff like, username does not exist and things like that.
 	/**
 	 * Tries to send a message trough the adapter
 	 *
-	 * @param message
+	 * @param message - The message to send.
 	 */
 	public void sendMessage(final Message message) {
 
