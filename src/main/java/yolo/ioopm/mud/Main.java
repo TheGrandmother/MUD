@@ -2,6 +2,7 @@ package yolo.ioopm.mud;
 
 import yolo.ioopm.mud.logger.ClientConsoleFormatter;
 import yolo.ioopm.mud.logger.HTMLFormatter;
+import yolo.ioopm.mud.logger.ServerConsoleFormatter;
 
 import java.io.IOException;
 import java.util.logging.*;
@@ -36,16 +37,8 @@ public class Main {
 			case "client":
 				logger.fine("Initiating client...");
 				try {
-					Handler[] handlers = root_logger.getHandlers();
-					for(Handler h : handlers) {
-						if(h instanceof ConsoleHandler) {
-							h.setFormatter(new ClientConsoleFormatter());
-
-							//TODO remove this to stop client debugging output
-							h.setLevel(Level.ALL);
-						}
-					}
-
+					// TODO change Level.ALL to Level.INFO to disable debugging output to client
+					setConsoleFormatter(root_logger, new ClientConsoleFormatter(), Level.INFO);
 					new Client();
 				}
 				catch(Exception e) {
@@ -59,13 +52,26 @@ public class Main {
 					if(args.length != 2){
 						System.out.println("Nowdays you have to type the path to the world files");
 						throw new Exception();
-						}
+					}
+
+					//TODO change Level.ALL to Level.INFO to disable debug output to server
+					setConsoleFormatter(root_logger, new ServerConsoleFormatter(), Level.ALL);
 					new Server(args[1].trim());
 				}
 				catch(Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 				break;
+		}
+	}
+
+	private static void setConsoleFormatter(Logger logger, Formatter formatter, Level level) {
+		Handler[] handlers = logger.getHandlers();
+		for(Handler h : handlers) {
+			if(h instanceof ConsoleHandler) {
+				h.setFormatter(formatter);
+				h.setLevel(level);
+			}
 		}
 	}
 }
