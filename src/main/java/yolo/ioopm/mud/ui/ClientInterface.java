@@ -78,9 +78,11 @@ public class ClientInterface {
 					catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
 						logger.info("You are not connected to any server!");
+						break;
 					}
 					catch(ConnectionRefusalException e) {
 						logger.warning(e.getMessage());
+						break;
 					}
 					logger.info("You are now logged in to the server!");
 					break;
@@ -92,9 +94,11 @@ public class ClientInterface {
 					catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
 						logger.info("You are not connected to any server!");
+						break;
 					}
 					catch(ConnectionRefusalException e) {
 						logger.warning(e.getMessage());
+						break;
 					}
 					logger.info("You have successfully registered at the server!");
 					break;
