@@ -135,7 +135,12 @@ public class World {
 		}
 		throw new EntityNotPresent(name);
 	}
-
+	/**
+	 * Searches the world for an item
+	 * @param name the name to be searched for.
+	 * @return	The item if it exists
+	 * @throws EntityNotPresent If no such item exists.
+	 */
 	public Item findItem(String name) throws EntityNotPresent {
 		for(Item e : items) {
 			if(e.getName().equals(name)) {

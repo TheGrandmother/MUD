@@ -3,8 +3,10 @@ package yolo.ioopm.mud.game;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.generalobjects.*;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
+import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 /**
  * 
@@ -128,30 +130,54 @@ public final class See {
 			return;
 		}
 		
-		String item_name = arguments[0];
+		String querry_name = arguments[0];
 		
-		//First check the room for the item.
-		for(ItemContainer ic : actor.getLocation().getItems()){
-			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
+		if(World.assertExsistence(querry_name, world.getItems())){
+			//querry is item.
+			//First check the room for the item.
+			for(ItemContainer ic : actor.getLocation().getItems()){
+				if(ic.getName().equals(querry_name)){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
+					return;
+				}
+			}
+			
+			//check the players inventory
+			for(ItemContainer ic : actor.getInventory().getitems()){
+				if(ic.getName().equals(querry_name)){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
+					return;
+				}
+			}
+	
+			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(querry_name)){
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()));
 				return;
+			}
+			
+		}else if(World.assertExsistence(querry_name, world.getPlayers())){
+			//thing is a player
+			Player p = null;
+			try {
+				p = world.findPc(querry_name);
+			} catch (EntityNotPresent e) {
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Player could not be found after an existence chack had ben successfull."));
+				return;
+			}
+			if(actor.getLocation().playerPresent(p)){
+				if(p.getDescription().equals("")){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, p.getName() + " is level " + p.getCs().getLevel()+"."));
+					return;
+				}else{
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, p.getName() + " is level " + p.getCs().getLevel()+". Description: " + p.getDescription()));
+					return;
+				}
 			}
 		}
 		
-		//check the players inventory
-		for(ItemContainer ic : actor.getInventory().getitems()){
-			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
-				return;
-			}
-		}
-
-		if(actor.getWeapon() != null && actor.getWeapon().getName().equals(item_name)){
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()));
-			return;
-		}
+		adapter.sendMessage(new ErrorMessage(actor.getName(), querry_name + " could not be found."));
+		return;
 		
-		adapter.sendMessage(new ErrorMessage(actor.getName(),item_name+ " could not be found."));
 	}
 	
 	public static void cs(Player actor, World world, Adapter adapter){
