@@ -224,7 +224,7 @@ public class ClientInterface {
 
 		printToPrompt("Please wait...");
 
-		return input;
+		return input.trim();
 	}
 
 	private void printToPrompt(String output) {
