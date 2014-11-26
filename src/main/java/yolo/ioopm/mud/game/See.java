@@ -145,8 +145,8 @@ public final class See {
 				return;
 			}
 		}
-		
-		if(actor.getWeapon().getName().equals(item_name)){
+
+		if(actor.getWeapon() != null && actor.getWeapon().getName().equals(item_name)){
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()));
 			return;
 		}

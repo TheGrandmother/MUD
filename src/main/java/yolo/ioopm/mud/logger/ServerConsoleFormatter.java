@@ -23,6 +23,14 @@ public class ServerConsoleFormatter extends Formatter {
 		// Message
 		sb.append(' ').append(record.getMessage());
 
+		// StackTrace
+		if(record.getThrown() != null) {
+			sb.append("\nStack trace:\n");
+			for(StackTraceElement s : record.getThrown().getStackTrace()) {
+				sb.append(s).append('\n');
+			}
+		}
+
 		// New line
 		sb.append('\n');
 
