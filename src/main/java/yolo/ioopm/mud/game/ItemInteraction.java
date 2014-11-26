@@ -94,7 +94,7 @@ public abstract class ItemInteraction {
 			if(i.getName().equals(item_name)){
 				current_room.addItem(i.getItem());
 				actor.getInventory().removeItem(item_name);
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, new String[]{"You droped "+ item_name + "."}));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, "You droped "+ item_name + "."));
 				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" dropped " + item_name, actor.getName()+".");
 				return;
 			}

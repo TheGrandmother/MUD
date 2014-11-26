@@ -21,7 +21,7 @@ public class SeriousErrorMessage extends Message {
 	 * @param message the contents of the message
 	 */
 	public SeriousErrorMessage(String receiver, String message) {
-		super(receiver, "server", MessageType.SERIOUS_ERROR, null, new String[]{message});
+		super(receiver, "server", MessageType.SERIOUS_ERROR, null, message);
 
 	}
 

@@ -43,7 +43,7 @@ public abstract class Talk {
 			
 			ArrayList<ReplyMessage> return_messages = new ArrayList<ReplyMessage>();
 			for (Player recipient : actor_location.getPlayers()) {
-				return_messages.add(new ReplyMessage(recipient.getName(),Keywords.SAY_REPLY, new String[]{actor.getName(),message}));
+				return_messages.add(new ReplyMessage(recipient.getName(),Keywords.SAY_REPLY, actor.getName(),message));
 			}
 
 			for (ReplyMessage msg : return_messages) {
@@ -77,8 +77,8 @@ public abstract class Talk {
 		Room actor_location = actor.getLocation();
 		try {	
 			if(actor_location.getPlayers().contains(world.findPc(recipient))){
-				adapter.sendMessage(new ReplyMessage(recipient, Keywords.WHISPER_REPLY, new String[]{actor.getName(),message}));
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.WHISPER_REPLY, new String[]{actor.getName(),message}));
+				adapter.sendMessage(new ReplyMessage(recipient, Keywords.WHISPER_REPLY, actor.getName(),message));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.WHISPER_REPLY, actor.getName(),message));
 			}else{
 				adapter.sendMessage( new ErrorMessage(actor.getName(), recipient + " is not in the room."));
 			}

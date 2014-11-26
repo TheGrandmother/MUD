@@ -32,7 +32,7 @@ public abstract class Message {
 	 * @param action
 	 * @param arguments
 	 */
-	protected Message(String receiver, String sender, MessageType type, String action, String[] arguments) {
+	protected Message(String receiver, String sender, MessageType type, String action, String... arguments) {
 		this(receiver, sender, type, action, System.currentTimeMillis(), arguments);
 	}
 

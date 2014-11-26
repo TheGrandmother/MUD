@@ -8,6 +8,6 @@ import yolo.ioopm.mud.communication.MessageType;
  */
 public class RegistrationMessage extends Message {
 	public RegistrationMessage(String sender, String username, String password) {
-		super("server", sender, MessageType.REGISTRATION, null, new String[]{username, password});
+		super("server", sender, MessageType.REGISTRATION, null, username, password);
 	}
 }

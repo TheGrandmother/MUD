@@ -16,7 +16,7 @@ public class AuthenticationReplyMessage extends Message {
 	 * @param receiver Who requested the authentication
 	 * @param sucessfull Weather or not it was successfull.
 	 */
-	public AuthenticationReplyMessage(String receiver, boolean sucessfull) {
-		super(receiver, "server", MessageType.AUTHENTICATION_REPLY, null, new String[]{String.valueOf(sucessfull)});
+	public AuthenticationReplyMessage(String receiver, boolean sucessfull, String message) {
+		super(receiver, "server", MessageType.AUTHENTICATION_REPLY, null, String.valueOf(sucessfull), message);
 	}
 }

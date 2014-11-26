@@ -70,7 +70,7 @@ public class GameEngine {
 			try {
 				player = world.findPc(username);
 				if(player.isLogedIn()){
-					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That player is already logged in!"));
 					return;
 				}
 				if(checkUsernamePassword(username, password)){
@@ -78,15 +78,15 @@ public class GameEngine {
 					player.setLoggedIn(true);
 					player.getLocation().addPlayer(player);
 					GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " has returned :D!", username);
-					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true, null));
 					return;
 				}else{
-					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false));
+					adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "Incorrect username/password!"));
 					return;
 				}
 				
 			} catch (EntityNotPresent e) {
-				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false));
+				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That username is not registered!"));
 				return;
 			}
 
@@ -103,16 +103,16 @@ public class GameEngine {
 				
 			} catch (EntityNotUnique e) {
 				adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken" ));
-				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false));
+				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Username is already taken!"));
 				return;
 				
 			} catch (EntityNotPresent e) {
 				adapter.sendMessage(new SeriousErrorMessage(actor_name, "The lobby does not exist" ));
-				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false));
+				adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
 				return;
 			}
 			
-			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true));
+			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
 			return;
 		}else if(type == MessageType.LOGOUT){
 			try {

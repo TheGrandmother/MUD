@@ -16,7 +16,7 @@ public class RegistrationReplyMessage extends Message{
 	 * @param receiver the name of the connection who wanted to register
 	 * @param success Weather or not the registration was successful
 	 */
-	public RegistrationReplyMessage(String receiver, boolean success) {
-		super(receiver, "server", MessageType.REGISTRATION_REPLY, null, new String[]{String.valueOf(success)});
+	public RegistrationReplyMessage(String receiver, boolean success, String message) {
+		super(receiver, "server", MessageType.REGISTRATION_REPLY, null, String.valueOf(success), message);
 	}
 }

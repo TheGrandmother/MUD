@@ -2,6 +2,7 @@ package yolo.ioopm.mud.communication.server.runnables;
 
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
+import yolo.ioopm.mud.communication.messages.server.HandshakeReplyMessage;
 import yolo.ioopm.mud.communication.server.ClientConnection;
 
 import java.io.IOException;
@@ -76,16 +77,23 @@ public class ServerConnectionVerifier implements Runnable {
 				continue;
 			}
 
-			if(!connections.containsKey(msg.getSender())) {
-				logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
-				logger.info("New connection registered! IP: " + client.getIPAdress());
+			if(msg.getType() == MessageType.HANDSHAKE) {
+				if(!connections.containsKey(msg.getSender())) {
+					logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
+					logger.info("New connection registered! IP: " + client.getIPAdress());
 
-				inbox.offer(msg);
-				connections.put(msg.getSender(), client);
-				timestamps.put(msg.getSender(), System.currentTimeMillis());
+					connections.put(msg.getSender(), client);
+					timestamps.put(msg.getSender(), System.currentTimeMillis());
+
+					client.write(new HandshakeReplyMessage(true, null).getMessage());
+				}
+				else {
+					logger.warning("New client tried to connect with name that is already connected!");
+					client.write(new HandshakeReplyMessage(false, "That name is already connected").getMessage());
+				}
 			}
 			else {
-				logger.warning("New client tried to connect with name that is already connected!");
+				logger.warning("New connection sent another type of message than a handshake message!");
 			}
 
 			return; // terminate thread

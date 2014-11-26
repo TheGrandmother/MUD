@@ -66,7 +66,7 @@ public abstract class Movement {
 			
 			GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " has gone to " + destination_room.getName()+".",actor.getName());
 			
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.MOVE_REPLY, new String[] {"You are now in " + destination_room.getName() + "."}));
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.MOVE_REPLY, "You are now in " + destination_room.getName() + "."));
 			GameEngine.broadcastToRoom(adapter, destination_room, actor.getName() + " entered from " + current_room.getName()+".",actor.getName());
 			return;
 			

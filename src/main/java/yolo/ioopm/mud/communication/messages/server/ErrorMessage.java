@@ -18,6 +18,6 @@ public class ErrorMessage extends Message {
 	 * @param error_message The contents of the message
 	 */
 	public ErrorMessage(String reciever, String error_message) {
-		super(reciever, "server", MessageType.GENERAL_ERROR, null, new String[]{error_message});
+		super(reciever, "server", MessageType.GENERAL_ERROR, null, error_message);
 	}
 }

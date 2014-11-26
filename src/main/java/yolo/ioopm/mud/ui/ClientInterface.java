@@ -2,12 +2,12 @@ package yolo.ioopm.mud.ui;
 
 import yolo.ioopm.mud.Client;
 import yolo.ioopm.mud.communication.Message;
+import yolo.ioopm.mud.exceptions.ConnectionRefusalException;
 import yolo.ioopm.mud.ui.ansi.AnsiCodes;
 import yolo.ioopm.mud.ui.ansi.AnsiColorCodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,53 +33,72 @@ public class ClientInterface {
 			client.setServerAddress(prompt("Please enter server address:"));
 			client.setUsername(prompt("Please enter username:"));
 
-			if(client.connect()) {
-				logger.info("Connected to server!");
-				break;
+			try {
+				if(client.connect()) {
+					logger.info("Connected to server!");
+					break;
+				}
+				else {
+					logger.info("Could not connect to specified address!");
+					logger.info("Please try again!");
+				}
 			}
-			else {
-				logger.info("Could not connect to specified address!");
-				logger.info("Please try again!");
+			catch(IOException e) {
+				logger.warning("Failed to connect to given server address!");
+			}
+			catch(ConnectionRefusalException e) {
+				logger.warning(e.getMessage());
 			}
 		}
 
 		client.setPassword(prompt("Please enter password:"));
 
-		// Show the initial menu
-		MenuItem menu;
-		while(true) {
-			String input = prompt(getMenuQuestion(MenuItem.class));
-
-			try {
-				menu = MenuItem.valueOf(input.toUpperCase());
-				break;
-			}
-			catch(IllegalArgumentException e) {
-				logger.info("Incorrect choice! Please try again!");
-			}
-		}
-
 		boolean connected = false;
-		switch(menu) {
-			case LOGIN:
-				try {
-					connected = client.authenticate();
-				}
-				catch(IOException e) {
-					logger.log(Level.FINE, e.getMessage(), e);
-					logger.info("You are not connected to any server!");
-				}
-				break;
+		while(!connected) {
 
-			case REGISTER:
+			// Show the initial menu
+			MenuItem menu;
+			while(true) {
+				String input = prompt(getMenuQuestion(MenuItem.class));
+
 				try {
-					connected = client.register();
+					menu = MenuItem.valueOf(input.toUpperCase());
+					break;
 				}
-				catch(IOException e) {
-					logger.log(Level.FINE, e.getMessage(), e);
-					logger.info("You are not connected to any server!");
+				catch(IllegalArgumentException e) {
+					logger.info("Incorrect choice! Please try again!");
 				}
-				break;
+			}
+
+			switch(menu) {
+				case LOGIN:
+					try {
+						connected = client.authenticate();
+					}
+					catch(IOException e) {
+						logger.log(Level.FINE, e.getMessage(), e);
+						logger.info("You are not connected to any server!");
+					}
+					catch(ConnectionRefusalException e) {
+						logger.warning(e.getMessage());
+					}
+					logger.info("You are now logged in to the server!");
+					break;
+
+				case REGISTER:
+					try {
+						connected = client.register();
+					}
+					catch(IOException e) {
+						logger.log(Level.FINE, e.getMessage(), e);
+						logger.info("You are not connected to any server!");
+					}
+					catch(ConnectionRefusalException e) {
+						logger.warning(e.getMessage());
+					}
+					logger.info("You have successfully registered at the server!");
+					break;
+			}
 		}
 
 		// Start new thread that prints data from the adapter to the terminal
@@ -105,80 +124,76 @@ public class ClientInterface {
 			}, "MessageReader"
 		).start();
 
-		// If we are connected, start showing the action menu
-		if(connected) {
-			while(true) {
-				String input = prompt(getMenuQuestion(Action.class));
+		// Action menu
+		while(true) {
+			String input = prompt(getMenuQuestion(Action.class));
 
-				Action action;
-				try {
-					action = Action.valueOf(input.toUpperCase());
-				}
-				catch(IllegalArgumentException e) {
-					logger.info("Incorrect choice! Please try again!");
-					continue;
-				}
-
-				String[] args = null;
-				switch(action) {
-
-					case MOVE:
-						args = new String[]{prompt("What room would you like to move too?")};
-						break;
-
-					case SAY:
-						args = new String[]{prompt("What would you like to say?")};
-						break;
-
-					case ATTACK:
-						args = new String[]{prompt("Please enter player to attack:")};
-						break;
-
-					case DROP:
-						args = new String[]{prompt("What would you like to drop?")};
-						break;
-
-					case EQUIP:
-						args = new String[]{prompt("What would you like to equip?")};
-						break;
-					case EXAMINE:
-						args = new String[]{prompt("What would you like to examine?")};
-						break;
-
-					case INVENTORY:
-						break;
-
-					case LOOK:
-						break;
-					case CS:
-						break;
-
-					case TAKE:
-						args = new String[]{prompt("What do you want to take?")};
-						break;
-
-					case UNEQUIP:
-						break;
-
-					case WHISPER:
-						args = new String[]{prompt("Who do you want to whisper too?"), prompt("What do you want to whisper?")};
-						break;
-
-					case QUIT:
-						System.out.print(AnsiCodes.RESET_SETTINGS);
-						System.exit(0);
-						break;
-
-					default:
-						logger.info("Unimplemented action!");
-						return;
-				}
-
-				client.performAction(action, args);
+			Action action;
+			try {
+				action = Action.valueOf(input.toUpperCase());
 			}
-		}
-		else {
-			logger.info("Failed to log in to server!");
+			catch(IllegalArgumentException e) {
+				logger.info("Incorrect choice! Please try again!");
+				continue;
+			}
+
+			String[] args = null;
+			switch(action) {
+
+				case MOVE:
+					args = new String[]{prompt("What room would you like to move too?")};
+					break;
+
+				case SAY:
+					args = new String[]{prompt("What would you like to say?")};
+					break;
+
+				case ATTACK:
+					args = new String[]{prompt("Please enter player to attack:")};
+					break;
+
+				case DROP:
+					args = new String[]{prompt("What would you like to drop?")};
+					break;
+
+				case EQUIP:
+					args = new String[]{prompt("What would you like to equip?")};
+					break;
+				case EXAMINE:
+					args = new String[]{prompt("What would you like to examine?")};
+					break;
+
+				case INVENTORY:
+					break;
+
+				case LOOK:
+					break;
+				case CS:
+					break;
+
+				case TAKE:
+					args = new String[]{prompt("What do you want to take?")};
+					break;
+
+				case UNEQUIP:
+					break;
+
+				case WHISPER:
+					args = new String[]{prompt("Who do you want to whisper too?"), prompt("What do you want to whisper?")};
+					break;
+
+				case QUIT:
+					client.logout();
+					System.out.print(AnsiCodes.RESET_SETTINGS);
+					System.exit(0);
+					break;
+
+				default:
+					logger.info("Unimplemented action!");
+					return;
+			}
+
+			client.performAction(action, args);
 		}
 	}
 

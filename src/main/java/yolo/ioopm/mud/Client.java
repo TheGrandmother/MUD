@@ -5,8 +5,10 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.client.ClientAdapter;
 import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
+import yolo.ioopm.mud.communication.messages.client.HandshakeMessage;
 import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
 import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
+import yolo.ioopm.mud.exceptions.ConnectionRefusalException;
 import yolo.ioopm.mud.ui.Action;
 import yolo.ioopm.mud.ui.ClientInterface;
 
@@ -45,28 +47,48 @@ public class Client {
 	 *
 	 * @return true if connection was established
 	 */
-	public boolean connect() {
-		System.out.println("Connecting to server...");
+	public boolean connect() throws IOException, ConnectionRefusalException {
+		logger.info("Connecting to server...");
 
 		int port = Server.DEFAULT_PORT;
 
 		try {
 			adapter = new ClientAdapter(host_address, port, username);
-			return true;
-		}
-		catch(IOException e) {
-			logger.log(Level.FINER, "Failed to create ClientAdapter for host \"" + host_address + "\"!", e);
-			System.out.println("Could not connect to host_address! Please wait...");
+			adapter.sendMessage(new HandshakeMessage(username));
 
-			// Wait before printing the menu again.
-			try {
-				Thread.sleep(2500);
+			Message answer = pollMessage();
+
+			if(answer.getType() == MessageType.HANDSHAKE_REPLY) {
+				String[] args = answer.getArguments();
+
+				if(args[0].equals("true")) {
+					return true;
+				}
+				else {
+					throw new ConnectionRefusalException(args[1]);
+				}
 			}
-			catch(InterruptedException e1) {
-				logger.log(Level.SEVERE, e1.getMessage(), e1);
+			else {
+				logger.severe("Server sent a \"" + answer.getType() + "\" message instead of a handshake reply!");
 			}
 
 			return false;
+		}
+		catch(IOException e) {
+//			logger.log(Level.FINER, "Failed to create ClientAdapter for host \"" + host_address + "\"!", e);
+//			logger.info("Could not connect to host_address! Please wait...");
+//
+//			// Wait before printing the menu again.
+//			try {
+//				Thread.sleep(2500);
+//			}
+//			catch(InterruptedException e1) {
+//				logger.log(Level.SEVERE, e1.getMessage(), e1);
+//			}
+//
+//			return false;
+
+			throw e;
 		}
 	}
 
@@ -101,7 +123,7 @@ public class Client {
 	 *
 	 * @return true if the method was successful
 	 */
-	public boolean register() throws IOException {
+	public boolean register() throws IOException, ConnectionRefusalException {
 
 		if(adapter == null) {
 			throw new IOException("No connection has been established!");
@@ -123,9 +145,12 @@ public class Client {
 			}
 
 			if(answer.getType() == MessageType.REGISTRATION_REPLY) {
-				switch(answer.getArguments()[0]) {
+
+				String[] args = answer.getArguments();
+
+				switch(args[0]) {
 					case "false":
-						return false;
+						throw new ConnectionRefusalException(args[1]);
 					case "true":
 						return true;
 					default:
@@ -145,7 +170,7 @@ public class Client {
 	 *
 	 * @return true if host_address responds with successful
 	 */
-	public boolean authenticate() throws IOException {
+	public boolean authenticate() throws IOException, ConnectionRefusalException {
 
 		if(adapter == null) {
 			throw new IOException("No connection has been established!");
@@ -169,9 +194,12 @@ public class Client {
 			}
 
 			if(answer.getType() == MessageType.AUTHENTICATION_REPLY) {
-				switch(answer.getArguments()[0]) {
+
+				String[] args = answer.getArguments();
+
+				switch(args[0]) {
 					case "false":
-						return false;
+						throw new ConnectionRefusalException(args[1]);
 					case "true":
 						return true;
 					default:
@@ -182,6 +210,10 @@ public class Client {
 				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			}
 		}
+	}
+
+	public void logout() {
+
 	}
 
 	public void setUsername(String n) {
