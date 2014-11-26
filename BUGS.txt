@@ -1,5 +1,11 @@
 HERE We write all of the bugs!
 
 BUG: Examine action freezes the server some times.
-	Cause: unknown
+	Cause: The action took for given that a player had equipped a weapon.
 	Date: unknown
+	Fix: Added null check to see if the player was in fact wielding a weapon.
+
+BUG: You can attack players that are in other rooms.
+    Cause: unknown
+    Date:
+    Fix:
