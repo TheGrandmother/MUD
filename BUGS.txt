@@ -1,0 +1,5 @@
+HERE We write all of the bugs!
+
+BUG: Examine action freezes the server some times.
+	Cause: unknown
+	Date: unknown
