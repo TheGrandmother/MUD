@@ -1,10 +1,13 @@
 package yolo.ioopm.mud.game;
 
 import yolo.ioopm.mud.communication.Adapter;
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import yolo.ioopm.mud.generalobjects.*;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
+import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 /**
  * 
@@ -21,7 +24,7 @@ public final class See {
 	 * 
 	 * @param actor
 	 * @param world The world in which everything is
-	 * @param adapter The adapter trough which the messages are sent.
+	 * @param adapter The adapter trough which the {@link Message}s are sent.
 	 */
 	public static void look(Player actor,World world, Adapter server){
 
@@ -88,7 +91,7 @@ public final class See {
 	 * 
 	 * @param actor The actor whose inventory is to be inspected.
 	 * @param world The world in which everything is
-	 * @param adapter The adapter trough which the messages are sent.
+	 * @param adapter The adapter trough which the {@link Message}s are sent.
 	 */
 	public static void inventory(Player actor, World world, Adapter adapter){
 		Inventory inventory = null;
@@ -122,38 +125,84 @@ public final class See {
 		
 	}
 	
+	/**
+	 * 
+	 * This method is used to examine something in the room. As of now one can only examine {@link Item}s and {@link Player}s.
+	 * Upon a successful examination a {@link ReplyMessage} with the action {@literal Keywords#EXAMINE_REPLY} will be sent to the actor
+	 * containing a message of describing the thing examined.<p>
+	 * <p>
+	 * An {@link ErrorMessage} will be sent if the thing looked for can't be found. 
+	 * 
+	 * @param actor The player who is doing the examine
+	 * @param arguments what is to be examined (must be length 1)
+	 * @param world Where everything is
+	 * @param adapter What the {@link Message}s will be sent trough
+	 */
 	public static void examine(Player actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Examine takes but one and only one argument."));
 			return;
 		}
 		
-		String item_name = arguments[0];
+		String querry_name = arguments[0];
 		
-		//First check the room for the item.
-		for(ItemContainer ic : actor.getLocation().getItems()){
-			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
+		if(World.assertExsistence(querry_name, world.getItems())){
+			//querry is item.
+			//First check the room for the item.
+			for(ItemContainer ic : actor.getLocation().getItems()){
+				if(ic.getName().equals(querry_name)){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
+					return;
+				}
+			}
+			
+			//check the players inventory
+			for(ItemContainer ic : actor.getInventory().getitems()){
+				if(ic.getName().equals(querry_name)){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()+" You own this item."));
+					return;
+				}
+			}
+			
+			// check if its a mounted weapon.
+			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(querry_name)){
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()+" You have equipped this weapon."));
 				return;
+			}
+			
+		}else if(World.assertExsistence(querry_name, world.getPlayers())){
+			//thing is a player
+			Player p = null;
+			try {
+				p = world.findPc(querry_name);
+			} catch (EntityNotPresent e) {
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Player could not be found after an existence chack had ben successfull."));
+				return;
+			}
+			if(actor.getLocation().playerPresent(p)){
+				if(p.getDescription().equals("")){
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, p.getName() + " is level " + p.getCs().getLevel()+"."));
+					return;
+				}else{
+					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, p.getName() + " is level " + p.getCs().getLevel()+". Description: " + p.getDescription()));
+					return;
+				}
 			}
 		}
 		
-		//check the players inventory
-		for(ItemContainer ic : actor.getInventory().getitems()){
-			if(ic.getName().equals(item_name)){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
-				return;
-			}
-		}
-
-		if(actor.getWeapon() != null && actor.getWeapon().getName().equals(item_name)){
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()));
-			return;
-		}
+		adapter.sendMessage(new ErrorMessage(actor.getName(), querry_name + " could not be found."));
+		return;
 		
-		adapter.sendMessage(new ErrorMessage(actor.getName(),item_name+ " could not be found."));
 	}
 	
+	/**
+	 * 
+	 * This function returns a {@link ReplyMessage} with the action {@literal Keywords#CS_REPLY} with a description of the actors stats.
+	 * 
+	 * @param actor The players who want to see their stats.
+	 * @param world Where everything is.
+	 * @param adapter Adapter trough which all {@link Message}are to be sent.
+	 */
 	public static void cs(Player actor, World world, Adapter adapter){
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, new String[]{"You are level " + actor.getCs().getLevel()+". You have "+
 		actor.getCs().getHealth() +" health points out of "+	actor.getCs().getMaxHealth()+".You have " + actor.getCs().getHp() + " university credits and and need "+ 
