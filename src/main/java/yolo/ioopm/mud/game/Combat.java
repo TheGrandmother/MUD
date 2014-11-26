@@ -71,6 +71,11 @@ public abstract class Combat {
 			return;
 		}
 		
+		if(!actor.getLocation().playerPresent(target)){
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + "is not in the room!."));
+			return;
+		}
+		
 		if(actor.getWeapon() == null){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have a weapon equiped."));
 			return;
