@@ -3,3 +3,4 @@
 key:room2:0
 key:ball room:0
 weapon:axe:a stupid axe:5:0:20
+weapon:dildo:a magnificent piece of dildo:12:1:35
