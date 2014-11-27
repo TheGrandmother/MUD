@@ -43,7 +43,7 @@ public class World {
 	 * 
 	 * This list contains all of the {@link Lobby} in the world.<p>
 	 * <b>INVARIANT:</b><p>
-	 * No two lobbies have the same entry level.
+	 * No two lobbies have the same entry level.<p>
 	 * There exists one lobby with entry level 0.
 	 * 
 	 */
@@ -90,7 +90,12 @@ public class World {
 
 	}
 	
-	public void addLobby(String room_name, int level) throws EntityNotPresent{
+	public void addLobby(String room_name, int level) throws EntityNotPresent, EntityNotUnique{
+		for(Lobby l : lobby_list){
+			if(l.getLevel() == level){
+				throw new EntityNotUnique(" There already exists a level " + level + "lobby!");
+			}
+		}
 		lobby_list.add(new Lobby(room_name, level));
 	}
 	
@@ -254,6 +259,10 @@ public class World {
 		public EntityNotUnique() {
 			super();
 		}
+
+		public EntityNotUnique(String message) {
+			super(message);
+		}
 	}
 
 	@SuppressWarnings("serial")
@@ -274,22 +283,46 @@ public class World {
 	}
 	
 	/**
-	 * skeleton class for handling lobbys
+	 * A lobby is a room into which players spawn when they login or die.<p>
+	 * A player will always be respawned in the lobby with the highest level 
+	 * which is lower than or equal to his own level.
+	 * 
 	 * @author The Grandmother
 	 *
 	 */
 	public class Lobby{
+		/**
+		 * The required level needed to respawn in this lobby.
+		 */
 		private final int level;
+		/**
+		 * Which room is this lobby.
+		 */
 		private final Room room;
+		
+		/**
+		 * Creates a new lobby.
+		 * @param room_name the name of the room
+		 * @param level The required level to respawn in this lobby.
+		 * @throws EntityNotPresent If there is no such room.
+		 */
 		public Lobby(String room_name, int level) throws EntityNotPresent {
 			this.level = level;
 			room = findRoom(room_name);
 		}
 		
+		/**
+		 * returns the level of the lobby
+		 * @return level The required level of the lobby
+		 */
 		public int getLevel(){
 			return level;
 		}
 		
+		/**
+		 * The room to wich this lobby points.
+		 * @return the room to which this lobby points.
+		 */
 		public Room getRoom(){
 			return room;
 		}

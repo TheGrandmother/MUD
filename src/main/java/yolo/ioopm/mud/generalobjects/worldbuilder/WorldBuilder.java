@@ -76,6 +76,9 @@ public class WorldBuilder {
 			}catch (ArrayIndexOutOfBoundsException e){
 				System.out.println("SYNTAX ERROR when adding lobby: malformed argument " + s);
 				System.exit(0);
+			} catch (EntityNotUnique e) {
+				System.out.println(e.getMessage());
+				System.exit(0);
 			}
 		}
 		
