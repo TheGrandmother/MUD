@@ -10,8 +10,6 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 import java.util.ArrayList;
 
-import sun.java2d.loops.GeneralRenderer;
-
 
 /**
  * As the name suggest this class contains methods to handle the talking/chating
@@ -26,7 +24,7 @@ public abstract class Talk {
 	 * If the number of arguments are correct the a {@link ReplyMessage} with action {@literal Keywords#SAY_REPLY} gets sent to all the players in the room.
 	 * 
 	 * @param actor		Who says what
-	 * @param message	What does he say
+	 * @param arguments What does he say
 	 * @param world		Where does he say it
 	 * @param adapter	Whit what does he say it.
 	 */
@@ -62,7 +60,7 @@ public abstract class Talk {
 	 * @param actor who whispers
 	 * @param arguments list of arguments. needs to be of length 2
 	 * @param world where does the whispering occur
-	 * @param adapter whit what is it wispered
+	 * @param adapter To send messages trough.
 	 */
 	public static void whisper(Player actor, String[] arguments, World world, Adapter adapter){
 		
