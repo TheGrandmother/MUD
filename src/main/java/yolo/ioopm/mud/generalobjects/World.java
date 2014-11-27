@@ -89,7 +89,15 @@ public class World {
 		}
 
 	}
-	
+	/**
+	 * 
+	 * attempts to add a lobby to the world.
+	 * 
+	 * @param room_name The name of the room to be associated with this lobby.
+	 * @param level The required level for this lobby.
+	 * @throws EntityNotPresent If the room could not be found.
+	 * @throws EntityNotUnique If there already exists a lobby with the same level
+	 */
 	public void addLobby(String room_name, int level) throws EntityNotPresent, EntityNotUnique{
 		for(Lobby l : lobby_list){
 			if(l.getLevel() == level){
