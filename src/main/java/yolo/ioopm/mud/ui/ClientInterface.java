@@ -204,7 +204,7 @@ public class ClientInterface {
 	private void formatTerminal() {
 		System.out.print(AnsiCodes.CLEAR_SCREEN);
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
-		System.out.print("Welcome to MUD!");
+		System.out.print("Welcome to SOUFAD! (the Scary University Of Fear And Doom) \n WARNING: All paswords are stored,logged and sent in PLAIN TEXT!");
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
 		System.out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
 		System.out.print("What would you like to do?");
