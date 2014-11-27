@@ -77,7 +77,7 @@ public class ClientInterface {
 					}
 					catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
-						logger.info("You are not connected to any server!");
+						logger.warning("You are not connected to any server!");
 						break;
 					}
 					catch(ConnectionRefusalException e) {
@@ -93,7 +93,7 @@ public class ClientInterface {
 					}
 					catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
-						logger.info("You are not connected to any server!");
+						logger.warning("You are not connected to any server!");
 						break;
 					}
 					catch(ConnectionRefusalException e) {
