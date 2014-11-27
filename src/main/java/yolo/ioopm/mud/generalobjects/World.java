@@ -10,11 +10,43 @@ import java.util.HashSet;
  */
 public class World {
 
-	//TODO refactor to use hashmaps for quicker access.
+	/**
+	 * This set contains all of the {@link Player}} in the game.<p>
+	 * <b>INVARIANTS:</b><p>
+	 * All players have unique names.<p>
+	 * No player has less than 0 health<p>
+	 * If a player is logged that player is present in  {@link Character#location}<p>
+	 * A Player is only present in one {@link Room}. 
+	 */
 	public  HashSet<Player>   players;
+	/**
+	 *  Not yet implemented. Has no invariant at this point.
+	 */
 	private HashSet<Npc>  npcs;
+	/**
+	 * This set contains all of the {@link Room} in the game.<p>
+	 * <b>INVARIANTS:</b><p>
+	 * All rooms have unique names.<p>
+	 * All rooms have at least one {@link Room.Exit}<p>
+	 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
+	 * All {@link Player}s in the room are logged in.
+	 * 
+	 */
 	private HashSet<Room> rooms;
+	/**
+	 * This set contains all of the {@link Item} in the world.<p>
+	 * <b>INVARIANTS:</b><p>
+	 * All items have unique names.
+	 */
 	private HashSet<Item> items;
+	/**
+	 * 
+	 * This list contains all of the {@link Lobby} in the world.<p>
+	 * <b>INVARIANT:</b><p>
+	 * No two lobbies have the same entry level.
+	 * There exists one lobby with entry level 0.
+	 * 
+	 */
 	private ArrayList<Lobby> lobby_list;
 	
 
