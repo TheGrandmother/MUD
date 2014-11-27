@@ -6,8 +6,7 @@ import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 public class Room extends Entity {
 
-	private final String NAME;
-	private final String DESCRIPTION;
+	private final String description;
 	
 	private final boolean pvp; 
 
@@ -23,8 +22,8 @@ public class Room extends Entity {
 	 * @param description Description of this room.
 	 */
 	public Room(String name, String description) {
-		this.NAME = name;
-		this.DESCRIPTION = description;
+		super(name);
+		this.description = description;
 		this.pvp = false;
 	}
 	/**
@@ -36,8 +35,9 @@ public class Room extends Entity {
 	 * @param pvp weather or not pvp is enabled.
 	 */
 	public Room(String name, String description,boolean pvp) {
-		this.NAME = name;
-		this.DESCRIPTION = description;
+		super(name);
+		
+		this.description = description;
 		this.pvp = pvp;
 	}
 
@@ -53,14 +53,14 @@ public class Room extends Entity {
 	 * @return Name of room.
 	 */
 	public String getName() {
-		return NAME;
+		return name;
 	}
 
 	/**
 	 * @return Description of room.
 	 */
 	public String getDescription() {
-		return DESCRIPTION;
+		return description;
 	}
 
 	/**

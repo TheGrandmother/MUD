@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 /**
  * This is the "main" class of the database.
+ * 
+ * As of now the namespace for the entities is global. I.e no two entities can have the same name regardless of type.
  *
  * @author TheGrandmother
  */

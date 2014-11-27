@@ -2,9 +2,13 @@ package yolo.ioopm.mud.generalobjects;
 
 public abstract class Entity {
 
-	//protected String name ;
-	abstract String getName();
-	//@Override
+	protected final String name;
+	public Entity(String name) {
+		this.name = name;
+	}
+	public String getName(){
+		return name;
+	}
 	
 
 

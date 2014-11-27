@@ -13,7 +13,7 @@ import yolo.ioopm.mud.generalobjects.items.Weapon;
 
 public abstract class Character extends Entity {
 
-	private final String name;
+	
 	private  String description;
 	protected  Room location;
 	private  Inventory inventory;
@@ -28,7 +28,7 @@ public abstract class Character extends Entity {
 	 * @param starting_location The starting room for the character.
 	 */
 	public Character(String name, String description, Room starting_location) {
-		this.name = name;
+		super(name);
 		this.description = description;
 		location = starting_location;
 		

@@ -6,7 +6,7 @@ package yolo.ioopm.mud.generalobjects;
  *
  */
 public abstract class Item extends Entity {
-	private final String name;
+
 	private final String description;
 	/**
 	 * -1 uses correspond to unlimited uses.
@@ -30,7 +30,7 @@ public abstract class Item extends Entity {
 	 * @param level	The minimum level required to use the item.
 	 */
 	public Item(String name, String description, int uses, Type type, Boolean dropable, int size, int level) {
-		this.name = name;
+		super(name);
 		this.description = description;
 		this.uses = uses;
 		this.type = type;
