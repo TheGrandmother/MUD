@@ -43,15 +43,15 @@ public class WorldBuilder {
 		
 	}
 		
-	public World buildWorld(World world){
+	public World buildWorld(World world) throws BuilderException{
 		this.world = world;
 		try {
 			parseItems();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SyntaxError e) {
-			System.out.println("SYNTAX ERROR in item file: "+e.getReason());
-			System.exit(0);
+			throw new BuilderException("SYNTAX ERROR in item file: "+e.getReason());
+			//System.exit(0);
 		}
 		
 		try {
@@ -59,26 +59,26 @@ public class WorldBuilder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SyntaxError e) {
-			System.out.println("SYNTAX ERROR in room file: "+e.getReason());
-			System.exit(0);
+			throw new BuilderException("SYNTAX ERROR in room file: "+e.getReason());
+
 		}
 		
-		System.out.println("attempting to add lobbys");
+		//System.out.println("attempting to add lobbys");
 		for (String s : lobby_list) {
 			try {
 				world.addLobby(s.split(";")[0].trim(), Integer.parseInt(s.split(";")[1].trim()));
 			} catch (NumberFormatException e) {
-				System.out.println("SYNTAX ERROR when adding lobby: malformed argument " + s);
-				System.exit(0);
+				throw new BuilderException("SYNTAX ERROR when adding lobby: malformed argument " + s);
+
 			} catch (EntityNotPresent e) {
-				System.out.println("SYNTAX ERROR when adding lobby: Non exisitng room " + s);
-				System.exit(0);
+				throw new BuilderException("SYNTAX ERROR when adding lobby: Non exisitng room " + s);
+		
 			}catch (ArrayIndexOutOfBoundsException e){
-				System.out.println("SYNTAX ERROR when adding lobby: malformed argument " + s);
-				System.exit(0);
+				throw new BuilderException("SYNTAX ERROR when adding lobby: malformed argument " + s);
+				
 			} catch (EntityNotUnique e) {
-				System.out.println(e.getMessage());
-				System.exit(0);
+				throw new BuilderException(e.getMessage());
+				
 			}
 		}
 		
@@ -135,7 +135,7 @@ public class WorldBuilder {
 			
 			current_line = reader.readLine();
 		}
-		System.out.println("item file parsed without issues");
+		//System.out.println("item file parsed without issues");
 		reader.close();
 	}
 	
@@ -192,9 +192,9 @@ public class WorldBuilder {
 			
 		}
 		
-		System.out.println("World file parsed without issues");
+		//System.out.println("World file parsed without issues");
 		reader.close();
-		System.out.println("Adding exits and items to rooms.");
+		//System.out.println("Adding exits and items to rooms.");
 		
 		if(!item_list.isEmpty()){
 			for(Entry<String, String[]> s : item_list.entrySet()){
@@ -232,7 +232,12 @@ public class WorldBuilder {
 	}
 	
 	
-	
+	@SuppressWarnings("serial")
+	public class BuilderException extends Exception{
+		public BuilderException(String message) {
+			super(message);
+		}
+	}
 	
 	@SuppressWarnings("serial")
 	class SyntaxError extends Exception{

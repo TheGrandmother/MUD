@@ -6,6 +6,7 @@ import yolo.ioopm.mud.communication.server.ServerAdapter;
 import yolo.ioopm.mud.game.GameEngine;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
+import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +37,11 @@ public class Server {
 		}
 
 		WorldBuilder wb = new WorldBuilder(path+"items.txt", path+"rooms.txt");
-		wb.buildWorld(world);
+		try {
+			wb.buildWorld(world);
+		} catch (BuilderException e1) {
+			e1.printStackTrace();
+		}
 
 		engine = new GameEngine(adapter, world);
 
