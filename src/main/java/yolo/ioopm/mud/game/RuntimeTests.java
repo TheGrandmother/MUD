@@ -16,22 +16,27 @@ public class RuntimeTests {
 	World world;
 	Adapter adapter;
 	
-	
-	
-	
-	
-	
+	public RuntimeTests(World world, Adapter adapter) {
+		this.world = world;
+		this.adapter = adapter;
+	}
+
 	
 	public Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvairantViolation{
 		if(set.isEmpty()){return true;}
 		
 		HashSet<Entity> buffer = new HashSet<Entity>(set);
+		boolean name_found = false;
 		
 		for (Entity e1 : buffer) {
-			buffer.remove(e1);
+			name_found = false;
 			for (Entity e2 : buffer) {
 				if(e1.getName().equals(e2.getName())){
-					throw new UnrecoverableInvairantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e1.getClass().getSimpleName()+":"+e1.getName());
+					if(name_found){
+						throw new UnrecoverableInvairantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e1.getClass().getSimpleName()+":"+e1.getName());
+					}else{
+						name_found = true;
+					}
 				}
 			}
 		}
