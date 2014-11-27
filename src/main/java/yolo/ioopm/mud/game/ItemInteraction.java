@@ -46,12 +46,12 @@ public abstract class ItemInteraction {
 			item = world.findItem(item_name);
 		} catch (EntityNotPresent e) {
 			//Players should not care if it's a real item or not
-			adapter.sendMessage(new ErrorMessage(actor.getName(), item_name + " is not in the room.")); 
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "There is no " + item_name + " here.")); 
 			return;
 		}
 		
 		if(!current_room.removeItem(item)){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), item_name + "is not in the room."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(),"There is no " + item_name + " here."));
 			return;
 		}
 		
@@ -104,6 +104,13 @@ public abstract class ItemInteraction {
 	
 	/**
 	 * 
+	 * With this method the actor tries to equip a intem. An {@link ReplyMessage} will be sent if the desired item was not equipped.
+	 * As of now only equipping weapons is supported.<p>
+	 * An {@link ErrorMessage} will be sent if:
+	 * The arguments are malformed
+	 * The item is not equippable.
+	 * The actor does not have the item.
+	 * The actor has no free equipping slots.
 	 * 
 	 * 
 	 * @param actor The player who wants to equip something
@@ -145,6 +152,15 @@ public abstract class ItemInteraction {
 		}
 	}
 	
+	/**
+	 * 
+	 * Attempts to unequip an item. Will return a {@link ReplyMessage} with action {@literal Keywords#UNEQUIP_REPLY} if the unequip was unsuccessful.<p>
+	 * Will send an {@link ErrorMessage} if the item is not equipped or there is not enough room for the item in the inventory.
+	 * 
+	 * @param actor The player that tries to equip stuff.
+	 * @param world Where everything is
+	 * @param adapter Through which the the messages are to be sent. 
+	 */
 	public static void unequip(Player actor, World world, Adapter adapter){
 
 		if(actor.getWeapon()==null){
@@ -157,7 +173,7 @@ public abstract class ItemInteraction {
 				actor.getInventory().addItem(w);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.UNEQUIP_REPLY, "You have unequiped your weapon."));
 			} catch (InventoryOverflow e) {
-				adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have enough space in your inventory." + w.getName() + " takes up " + w.getSize() + 
+				adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have enough space in your inventory. " + w.getName() + " takes up " + w.getSize() + 
 						" units of space but you only have " + (actor.getInventory().getMax_volume()-actor.getInventory().getVolume()) + " free."));
 				return;
 			}

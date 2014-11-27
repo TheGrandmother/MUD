@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
  * translated and sent to the server.
- * <p/>
+ * <p>
  * Each message is on the form<br>
- * \<sender\>;\<recievcer\>;\<action\>;\<time_stamp\>;\<argument1\>;\<argument2\>;.....;\<argumentN\>
+ * <code>\<sender\>;\<recievcer\>;\<action\>;\<time_stamp\>;\<argument1\>;\<argument2\>;.....;\<argumentN\></code>
  *
  * @author TheGrandmother
  */
@@ -91,7 +91,7 @@ public abstract class Message {
 	/**
 	 * Returns the receiver of this message.
 	 *
-	 * @return
+	 * @return the reciver of the message
 	 */
 	public String getReceiver() {
 		return RECEIVER;
@@ -100,7 +100,7 @@ public abstract class Message {
 	/**
 	 * Returns the sender behind this message.
 	 *
-	 * @return
+	 * @return The sender of the message
 	 */
 	public String getSender() {
 		return SENDER;
@@ -109,7 +109,7 @@ public abstract class Message {
 	/**
 	 * Returns the type of the message.
 	 *
-	 * @return
+	 * @return The sender of the message
 	 */
 	public MessageType getType() {
 		return TYPE;
@@ -118,7 +118,7 @@ public abstract class Message {
 	/**
 	 * Returns the action defined in the message.
 	 *
-	 * @return
+	 * @return The sender of the message
 	 */
 	public String getAction() {
 		return ACTION;
@@ -148,7 +148,7 @@ public abstract class Message {
 	/**
 	 * Returns the message's timestamp
 	 *
-	 * @return
+	 * @return The timestamp of the message
 	 */
 	public long getTimeStamp() {
 		return TIME_STAMP;
