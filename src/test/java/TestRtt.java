@@ -22,9 +22,9 @@ import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
 public class TestRtt {
 
-	World world;
-	RuntimeTests rt;
-	String player_test_name = "p1";
+	private World world;
+	private RuntimeTests rt;
+	private final static String test_player_name = "p1";
 	@Before
 	public void setUp() throws Exception {
 		world = new World();
@@ -74,24 +74,58 @@ public class TestRtt {
 		
 	}
 	
+	
+	@Test
+	public void testLobbySystem() throws BuilderException, EntityNotPresent, UnrecoverableInvariantViolation, InvariantViolation{
+		//Will make use of testResolvingPlayerIssue
+		makeMeAWorld();
+		world.getPlayers().add(new Player(test_player_name, "", "", world.getLobby(0)));
+		world.findPlayer(test_player_name).setLoggedIn(true);
+		world.getLobby(0).addPlayer(world.findPlayer(test_player_name));
+		assertEquals("lol room", world.findPlayer(test_player_name).getLocation().getName());
+		world.findPlayer(test_player_name).getCs().setLevel(7);
+		world.findPlayer(test_player_name).getLocation().removePlayer(world.findPlayer(test_player_name));
+		testResolvingPlayerIssue();
+		assertEquals("ball room", world.findPlayer(test_player_name).getLocation().getName());
+		
+		
+	}
+	
+	
 	@Test
 	public void testPlayerInvariantCheck() throws BuilderException, UnrecoverableInvariantViolation, InvariantViolation, EntityNotPresent{
 		makeMeAWorld();
 		assertTrue("Invariant viaolations in a world with no players",rt.checkPlayersInvariant(world, true).length==0);
-		world.getPlayers().add(new Player("p1", "", "", world.getLobby(0)));
-		world.findPlayer("p1").setLoggedIn(true);
-		world.getLobby(0).addPlayer(world.findPlayer("p1"));
+		world.getPlayers().add(new Player(test_player_name, "", "", world.getLobby(0)));
+		world.findPlayer(test_player_name).setLoggedIn(true);
+		world.getLobby(0).addPlayer(world.findPlayer(test_player_name));
 		assertTrue("Invariant vialations after propperly adding a player",rt.checkPlayersInvariant(world, true).length==0);
 		
 		//Test for precence in multiple rooms
-		world.findRoom("ball room").addPlayer(world.findPlayer("p1"));
+		world.findRoom("ball room").addPlayer(world.findPlayer(test_player_name));
 		testResolvingPlayerIssue();
 		
 		
 		//Test for player not being in any room but logged in (implicitly tests that player is present in his own room)
-		world.findPlayer("p1").getLocation().removePlayer(world.findPlayer("p1"));
+		world.findPlayer(test_player_name).getLocation().removePlayer(world.findPlayer(test_player_name));
 		testResolvingPlayerIssue();
 		
+		//Test for player being present in room but logged out.
+		world.findPlayer(test_player_name).setLoggedIn(false);
+		testResolvingPlayerIssue();
+		
+		//Test for player being logged out but not in any room.
+		world.findPlayer(test_player_name).setLoggedIn(true);
+		testResolvingPlayerIssue();
+		
+		//Test for player not logged in and present in multiple rooms
+		world.findRoom("ball room").addPlayer(world.findPlayer(test_player_name));
+		world.findPlayer(test_player_name).setLoggedIn(false);
+		testResolvingPlayerIssue();
+		
+		//Test health less than -1
+		world.findPlayer(test_player_name).getCs().setHealth(-100);
+		testResolvingPlayerIssue();
 		
 		
 	}
@@ -103,7 +137,7 @@ public class TestRtt {
 		} catch (UnrecoverableInvariantViolation e) {
 			fail("Unrecoverable violation found");
 		} catch (InvariantViolation e){
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
 		}
 		
 		String[] report = null;
@@ -116,7 +150,7 @@ public class TestRtt {
 		}
 		assertFalse("Empty report",report.length ==0);
 		for (String string : report) {
-			System.out.println(string);
+			//System.out.println(string);
 		}
 		assertTrue("Invariant could not be resolved",rt.checkPlayersInvariant(world, true).length==0);
 	}

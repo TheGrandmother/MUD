@@ -34,12 +34,12 @@ public class RuntimeTests {
 		for (Player p : world.getPlayers()){
 			occupied_rooms = new ArrayList<Room>();
 			
-			//Cehck health invariant
+			//Check health invariant
 			if(p.getCs().getHealth() <=0){
 				if(strict){
-					throw new InvariantViolation("Player " + p.getName() + "has health " + p.getCs().getHealth());
+					throw new InvariantViolation("Player " + p.getName() + " has health " + p.getCs().getHealth());
 				}else{
-					report.add(" Player " + p.getName() + " had less than 0 health. Resolved by setting health to 1");
+					report.add("Player " + p.getName() + " had less than 0 health. Resolved by setting health to 1");
 					p.getCs().setHealth(1);
 				}
 			}
@@ -71,7 +71,7 @@ public class RuntimeTests {
 				if(p.isLoggedIn()){
 					p.setLocation(world.getLobby(p.getCs().getLevel()));
 					world.getLobby(p.getCs().getLevel()).addPlayer(p);
-					report.add("Player "+p.getName()+" was found in multiple rooms and is logged in. Resolved by sending the player to lobby and removing the player from the rooms.");
+					report.add("Player "+p.getName()+" was found in multiple rooms and is logged in. Resolved by sending the player to lobby("+p.getLocation()+") and removing the player from the rooms.");
 				}else{
 					report.add("Player "+p.getName()+" was found in multiple rooms and is loged out. Resolved by removing the player from the rooms");
 	
@@ -81,9 +81,9 @@ public class RuntimeTests {
 				if(strict){
 					throw new InvariantViolation("Player "+p.getName()+" is loggen in but not in any room");
 				}else{
-					report.add("Player "+p.getName()+" is loged in but not in any room. Resolved by moving player to the lobby.");
 					p.setLocation(world.getLobby(p.getCs().getLevel()));
 					p.getLocation().addPlayer(p);
+					report.add("Player "+p.getName()+" is loged in but not in any room. Resolved by moving player to the lobby("+p.getLocation()+").");
 				}
 			//player in room but not logged in
 			}else if(occupied_rooms.size() == 1 && !p.isLoggedIn()){
