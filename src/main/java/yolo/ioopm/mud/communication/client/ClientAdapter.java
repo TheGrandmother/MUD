@@ -67,6 +67,7 @@ public class ClientAdapter extends Adapter {
 	public void forceSendMessage(Message msg) {
 		synchronized(print_writer) {
 			print_writer.write(msg.getMessage());
+			print_writer.flush();
 		}
 	}
 }
