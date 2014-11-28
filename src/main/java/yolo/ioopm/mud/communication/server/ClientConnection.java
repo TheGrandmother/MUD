@@ -79,7 +79,7 @@ public class ClientConnection {
 	 *
 	 * @return - The IP-address represented as a string.
 	 */
-	public synchronized String getIPAdress() {
+	public synchronized String getIPAddress() {
 		return socket.getRemoteSocketAddress().toString();
 	}
 }

@@ -80,7 +80,7 @@ public class ServerConnectionVerifier implements Runnable {
 			if(msg.getType() == MessageType.HANDSHAKE) {
 				if(!connections.containsKey(msg.getSender())) {
 					logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");
-					logger.info("New connection registered! IP: " + client.getIPAdress());
+					logger.info("New connection registered! IP: " + client.getIPAddress());
 
 					connections.put(msg.getSender(), client);
 					timestamps.put(msg.getSender(), System.currentTimeMillis());

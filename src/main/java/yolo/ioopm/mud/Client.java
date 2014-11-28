@@ -1,13 +1,9 @@
 package yolo.ioopm.mud;
 
-import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.client.ClientAdapter;
-import yolo.ioopm.mud.communication.messages.client.AuthenticationMessage;
-import yolo.ioopm.mud.communication.messages.client.HandshakeMessage;
-import yolo.ioopm.mud.communication.messages.client.GeneralActionMessage;
-import yolo.ioopm.mud.communication.messages.client.RegistrationMessage;
+import yolo.ioopm.mud.communication.messages.client.*;
 import yolo.ioopm.mud.exceptions.ConnectionRefusalException;
 import yolo.ioopm.mud.ui.Action;
 import yolo.ioopm.mud.ui.ClientInterface;
@@ -23,11 +19,14 @@ public class Client {
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
 	private final BufferedReader keyboard_reader;
 
-	private String  host_address = null;
-	private String  username     = null;
-	private String  password     = null;
-	private Adapter adapter      = null;
+	private String        host_address = null;
+	private String        username     = null;
+	private String        password     = null;
+	private ClientAdapter adapter      = null;
 
+	/**
+	 * Constructs a new client with an interface.
+	 */
 	public Client() {
 		logger.fine("Initiating client!");
 
@@ -37,6 +36,13 @@ public class Client {
 		ui.run();
 	}
 
+	/**
+	 * Constructs a message with the given action and arguments and hands it to the adapter
+	 * to send to the server.
+	 *
+	 * @param action    - Action to perform.
+	 * @param arguments - Arguments if any to go with the action.
+	 */
 	public void performAction(Action action, String[] arguments) {
 		adapter.sendMessage(new GeneralActionMessage(username, action.toString().toLowerCase(), arguments));
 	}
@@ -46,57 +52,42 @@ public class Client {
 	 * Uses the default port defined in Server.DEFAULT_PORT
 	 *
 	 * @return true if connection was established
+	 * @throws IOException                - If an I/O error occurred.
+	 * @throws ConnectionRefusalException - If the host refused the connection.
 	 */
 	public boolean connect() throws IOException, ConnectionRefusalException {
 		logger.info("Connecting to server...");
 
 		int port = Server.DEFAULT_PORT;
 
-		try {
-			adapter = new ClientAdapter(host_address, port, username);
-			adapter.sendMessage(new HandshakeMessage(username));
+		adapter = new ClientAdapter(host_address, port, username);
+		adapter.sendMessage(new HandshakeMessage(username));
 
-			Message answer = pollMessage();
+		Message answer = pollMessage();
 
-			if(answer.getType() == MessageType.HANDSHAKE_REPLY) {
-				String[] args = answer.getArguments();
+		if(answer.getType() == MessageType.HANDSHAKE_REPLY) {
+			String[] args = answer.getArguments();
 
-				if(args[0].equals("true")) {
-					return true;
-				}
-				else {
-					throw new ConnectionRefusalException(args[1]);
-				}
+			if(args[0].equals("true")) {
+				return true;
 			}
 			else {
-				logger.severe("Server sent a \"" + answer.getType() + "\" message instead of a handshake reply!");
+				throw new ConnectionRefusalException(args[1]);
 			}
-
-			return false;
 		}
-		catch(IOException e) {
-//			logger.log(Level.FINER, "Failed to create ClientAdapter for host \"" + host_address + "\"!", e);
-//			logger.info("Could not connect to host_address! Please wait...");
-//
-//			// Wait before printing the menu again.
-//			try {
-//				Thread.sleep(2500);
-//			}
-//			catch(InterruptedException e1) {
-//				logger.log(Level.SEVERE, e1.getMessage(), e1);
-//			}
-//
-//			return false;
-
-			throw e;
+		else {
+			logger.severe("Server sent a \"" + answer.getType() + "\" message instead of a handshake reply!");
 		}
+
+		return false;
 	}
 
 	/**
-	 * Polls the adapter until a message has been received.
+	 * Polls the adapter every 50 milliseconds until a message has been received.
 	 * Warning! This is a blocking method!
 	 *
 	 * @return - First message in message-queue.
+	 * @throws IOException - If an I/O error occurred.
 	 */
 	public Message pollMessage() throws IOException {
 
@@ -122,6 +113,8 @@ public class Client {
 	 * NOTE, a connection has be have been established prior to the call to this method!
 	 *
 	 * @return true if the method was successful
+	 * @throws IOException                - If an I/O error occurred.
+	 * @throws ConnectionRefusalException - If the host refused the connection.
 	 */
 	public boolean register() throws IOException, ConnectionRefusalException {
 
@@ -212,18 +205,36 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Force sends a logout message to the server.
+	 */
 	public void logout() {
-
+		adapter.forceSendMessage(new LogoutMessage(username));
 	}
 
-	public void setUsername(String n) {
-		username = n;
+	/**
+	 * Sets the username for the client.
+	 *
+	 * @param name - The name to use.
+	 */
+	public void setUsername(String name) {
+		username = name;
 	}
 
-	public void setPassword(String p) {
-		password = p;
+	/**
+	 * Sets the password for the client.
+	 *
+	 * @param password - The password to use.
+	 */
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
+	/**
+	 * Sets the address to the server which this client should connect to.
+	 *
+	 * @param host - Host address to server.
+	 */
 	public void setServerAddress(String host) {
 		host_address = host;
 	}

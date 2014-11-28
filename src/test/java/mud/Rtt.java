@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import yolo.ioopm.mud.game.RuntimeTests;
-import yolo.ioopm.mud.game.RuntimeTests.UnrecoverableInvairantViolation;
+import yolo.ioopm.mud.game.RuntimeTests.UnrecoverableInvariantViolation;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
@@ -34,7 +34,7 @@ public class Rtt {
 	public void testNameCollisonDetection() {
 		try {
 			rt.checkNameCollisions(world.getRooms());
-		} catch (UnrecoverableInvairantViolation e) {
+		} catch (UnrecoverableInvariantViolation e) {
 			fail("Name collison: " + e.getMessage());
 		}
 		
@@ -43,7 +43,7 @@ public class Rtt {
 		world.getRooms().add(new Room("lol", "lol"));
 		try {
 			rt.checkNameCollisions(world.getRooms());
-		} catch (UnrecoverableInvairantViolation e) {
+		} catch (UnrecoverableInvariantViolation e) {
 			fail_msg= e.getMessage();
 		}
 		System.out.println(fail_msg);

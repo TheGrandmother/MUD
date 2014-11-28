@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 /**
- * As the name suggest this class contains methods to handle the talking/chating
+ * As the name suggest this class contains methods to handle the talking/chatting
  * @author TheGrandmother
  *
  */
@@ -31,7 +31,7 @@ public abstract class Talk {
 	public static void say(Player actor, String[] arguments, World world, Adapter adapter){
 		
 			if(arguments == null ||arguments.length != 1){
-				adapter.sendMessage( new ErrorMessage(actor.getName(), "Say takes one arguement :("));
+				adapter.sendMessage( new ErrorMessage(actor.getName(), "Say takes one argument :("));
 				return;
 			}
 			

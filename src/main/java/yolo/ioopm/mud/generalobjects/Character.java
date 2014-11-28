@@ -112,7 +112,7 @@ public abstract class Character extends Entity {
 
 	
 	/**
-	 * The CharcterSheet contains information about the characters current status.
+	 * The CharacterSheet contains information about the characters current status.
 	 *<p>
 	 *<b>NOTE:</b> hp denotes university credits which is so dumb its insane. This is due to the original specification being in Swedish. One day.... it shall be refactored.
 	 * @author TheGrandmother
@@ -164,7 +164,7 @@ public abstract class Character extends Entity {
 		 * If the level-up is successful the level will be incremented and a new max health will be set
 		 * and full health will be restored.
 		 * 
-		 * @return true if the player leveld up. False otherwise.
+		 * @return true if the player leveled up. False otherwise.
 		 */
 		//TODO This seriously needs to be reworked!
 		public boolean levelUp(){

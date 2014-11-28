@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * translated and sent to the server.
  * <p>
  * Each message is on the form<br>
- * <code>\<sender\>;\<recievcer\>;\<action\>;\<time_stamp\>;\<argument1\>;\<argument2\>;.....;\<argumentN\></code>
+ * <code>\<sender\>;\<receiver\>;\<action\>;\<time_stamp\>;\<argument1\>;\<argument2\>;.....;\<argumentN\></code>
  *
  * @author TheGrandmother
  */
@@ -91,7 +91,7 @@ public abstract class Message {
 	/**
 	 * Returns the receiver of this message.
 	 *
-	 * @return the reciver of the message
+	 * @return the receiver of the message
 	 */
 	public String getReceiver() {
 		return RECEIVER;

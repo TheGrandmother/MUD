@@ -22,7 +22,7 @@ public class Weapon extends Item {
 	 * 
 	 * This method computes how much damage was dealt to the target.
 	 * 
-	 * will trow UseFailedException if the attack was unsuccesfull.
+	 * will trow UseFailedException if the attack was unsuccessful.
 	 * 
 	 * @param user who is attacking
 	 * @param target who is being attacked

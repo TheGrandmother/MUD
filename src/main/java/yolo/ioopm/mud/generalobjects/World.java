@@ -239,7 +239,7 @@ public class World {
 	 * @param set
 	 * @return Returns true if name exists.
 	 */
-	public static boolean assertExsistence(String name, HashSet<? extends Entity> set) {
+	public static boolean assertExistence(String name, HashSet<? extends Entity> set) {
 		for(Entity e : set) {
 			if(e.getName().equals(name)) {
 				return true;
@@ -330,7 +330,7 @@ public class World {
 		}
 		
 		/**
-		 * The room to wich this lobby points.
+		 * The room to which this lobby points.
 		 * @return the room to which this lobby points.
 		 */
 		public Room getRoom(){

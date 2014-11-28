@@ -2,7 +2,6 @@ package yolo.ioopm.mud.game;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
-import yolo.ioopm.mud.communication.messages.server.NotifactionMesssage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
@@ -15,7 +14,7 @@ public abstract class ItemInteraction {
 	/**
 	 * 
 	 * This functions tries to take the item given as an argument from the room. If the actor succeeds in taking the object a {@link ReplyMessage} with action
-	 * {@literal Keywords#TAKE_REPLY} informing him of the successful take. All other players in the room will receive a  {@link NotifactionMesssage} notifying them that the
+	 * {@literal Keywords#TAKE_REPLY} informing him of the successful take. All other players in the room will receive a  {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} notifying them that the
 	 * item was picked up by the actor.
 	 * <p>
 	 * A {@link ErrorMessage} will be sent to the actor if:<p>
@@ -68,7 +67,7 @@ public abstract class ItemInteraction {
 	
 	/**
 	 * In this function the actor tries to drop an item . If the drop is successful the player will receive a {@link ReplyMessage} with action
-	 * {@literal Keywords#DROP_REPLY} and all other players in the room will receive a {@link NotifactionMesssage} notifying them of the dropped item.
+	 * {@literal Keywords#DROP_REPLY} and all other players in the room will receive a {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} notifying them of the dropped item.
 	 * <p>
 	 * An {@link ErrorMessage} will be sent if the player does not have the item.
 	 * 
@@ -94,17 +93,17 @@ public abstract class ItemInteraction {
 			if(i.getName().equals(item_name)){
 				current_room.addItem(i.getItem());
 				actor.getInventory().removeItem(item_name);
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, "You droped "+ item_name + "."));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, "You dropped "+ item_name + "."));
 				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" dropped " + item_name, actor.getName()+".");
 				return;
 			}
 		}
-		adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have that item."));
+		adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have that item."));
 	}
 	
 	/**
 	 * 
-	 * With this method the actor tries to equip a intem. An {@link ReplyMessage} will be sent if the desired item was not equipped.
+	 * With this method the actor tries to equip a item. An {@link ReplyMessage} will be sent if the desired item was not equipped.
 	 * As of now only equipping weapons is supported.<p>
 	 * An {@link ErrorMessage} will be sent if:
 	 * The arguments are malformed
@@ -164,16 +163,16 @@ public abstract class ItemInteraction {
 	public static void unequip(Player actor, World world, Adapter adapter){
 
 		if(actor.getWeapon()==null){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have anything equiped"));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have anything equipped"));
 			return;
 		}else{
 			Weapon w = actor.getWeapon();
 			actor.setWeapon(null);
 			try {
 				actor.getInventory().addItem(w);
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.UNEQUIP_REPLY, "You have unequiped your weapon."));
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.UNEQUIP_REPLY, "You have unequipped your weapon."));
 			} catch (InventoryOverflow e) {
-				adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have enough space in your inventory. " + w.getName() + " takes up " + w.getSize() + 
+				adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have enough space in your inventory. " + w.getName() + " takes up " + w.getSize() +
 						" units of space but you only have " + (actor.getInventory().getMax_volume()-actor.getInventory().getVolume()) + " free."));
 				return;
 			}

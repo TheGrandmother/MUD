@@ -22,7 +22,7 @@ public class RuntimeTests {
 	}
 
 	
-	public Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvairantViolation{
+	public Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvariantViolation {
 		if(set.isEmpty()){return true;}
 		
 		HashSet<Entity> buffer = new HashSet<Entity>(set);
@@ -33,7 +33,7 @@ public class RuntimeTests {
 			for (Entity e2 : buffer) {
 				if(e1.getName().equals(e2.getName())){
 					if(name_found){
-						throw new UnrecoverableInvairantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e1.getClass().getSimpleName()+":"+e1.getName());
+						throw new UnrecoverableInvariantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e1.getClass().getSimpleName()+":"+e1.getName());
 					}else{
 						name_found = true;
 					}
@@ -52,8 +52,8 @@ public class RuntimeTests {
 	 * @author TheGrandmother
 	 */
 	@SuppressWarnings("serial")
-	public class UnrecoverableInvairantViolation extends Exception{
-		public UnrecoverableInvairantViolation(String message) {
+	public class UnrecoverableInvariantViolation extends Exception{
+		public UnrecoverableInvariantViolation(String message) {
 			super(message);
 		}
 		
@@ -66,8 +66,8 @@ public class RuntimeTests {
 	 * @author TheGrandmother
 	 */
 	@SuppressWarnings("serial")
-	public class InvairantViolation extends Exception{
-		public InvairantViolation(String message) {
+	public class InvariantViolation extends Exception{
+		public InvariantViolation(String message) {
 			super(message);
 		}
 	}

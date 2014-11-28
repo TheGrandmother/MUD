@@ -144,13 +144,13 @@ public final class See {
 			return;
 		}
 		
-		String querry_name = arguments[0];
+		String query_name = arguments[0];
 		
-		if(World.assertExsistence(querry_name, world.getItems())){
-			//querry is item.
+		if(World.assertExistence(query_name, world.getItems())){
+			//query is item.
 			//First check the room for the item.
 			for(ItemContainer ic : actor.getLocation().getItems()){
-				if(ic.getName().equals(querry_name)){
+				if(ic.getName().equals(query_name)){
 					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
 					return;
 				}
@@ -158,25 +158,25 @@ public final class See {
 			
 			//check the players inventory
 			for(ItemContainer ic : actor.getInventory().getitems()){
-				if(ic.getName().equals(querry_name)){
+				if(ic.getName().equals(query_name)){
 					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()+" You own this item."));
 					return;
 				}
 			}
 			
 			// check if its a mounted weapon.
-			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(querry_name)){
+			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(query_name)){
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY,actor.getWeapon().inspect()+" You have equipped this weapon."));
 				return;
 			}
 			
-		}else if(World.assertExsistence(querry_name, world.getPlayers())){
+		}else if(World.assertExistence(query_name, world.getPlayers())){
 			//thing is a player
 			Player p = null;
 			try {
-				p = world.findPc(querry_name);
+				p = world.findPc(query_name);
 			} catch (EntityNotPresent e) {
-				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Player could not be found after an existence chack had ben successfull."));
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Player could not be found after an existence check had ben successful."));
 				return;
 			}
 			if(actor.getLocation().playerPresent(p)){
@@ -190,7 +190,7 @@ public final class See {
 			}
 		}
 		
-		adapter.sendMessage(new ErrorMessage(actor.getName(), querry_name + " could not be found."));
+		adapter.sendMessage(new ErrorMessage(actor.getName(), query_name + " could not be found."));
 		return;
 		
 	}

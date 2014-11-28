@@ -26,7 +26,7 @@ public class Key extends Item{
 	 * Returns the target_room.
 	 * @return the target_room
 	 */
-	public String getTargetRomm(){
+	public String getTargetRoom(){
 		return target_room;
 	}
 	
@@ -38,7 +38,7 @@ public class Key extends Item{
 	 * @param target What it is being tried to use with
 	 * @return True if the use was successful
 	 * @throws UseFailedException Thrown if the use failed.
-	 * @deprecated This function is silly and from an older implementation of the {@see Item} class and is likley to be removed or changed.
+	 * @deprecated This function is silly and from an older implementation of the {@see Item} class and is likely to be removed or changed.
 	 */
 	public boolean use(Character user, Entity target) throws UseFailedException {
 		

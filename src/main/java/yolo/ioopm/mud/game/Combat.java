@@ -23,11 +23,11 @@ public abstract class Combat {
 	 * It tries to attack the target given by the first element in the arguments
 	 * array.
 	 * <p>
-	 * If the attack was completed a {@link NotifactionMesssage} gets broadcasted to all of the other players in the room except for the attacker and the target.
+	 * If the attack was completed a {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} gets broadcast to all of the other players in the room except for the attacker and the target.
 	 * <p>
 	 * If the attack where to be unsuccessful only the attacker and target will receive a {@link ReplyMessage}.
 	 * <p>
-	 * If the target dies a {@link NotifactionMesssage} will be broadcasted to all the other players in the room notifying the of the players departure from the human condition.
+	 * If the target dies a {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} will be broadcast to all the other players in the room notifying the of the players departure from the human condition.
 	 * The attacker will also receive a portion of the targets university credits and another part  of "new" university credits.<p>
 	 * Upon death the the target will be respawned in the appropriate lobby(see {@link World#getLobby(int)}) with some health restored. 
 	 * All the players in the lobby will be notified about the targets arrival.
@@ -105,14 +105,14 @@ public abstract class Combat {
 			int hp_taken = (int) (target.getCs().getHp()*((double)GameEngine.d6()*0.1));
 			target.getCs().addHp(-1*(hp_taken/2));
 			actor.getCs().addHp(hp_taken);
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "You killed " + target_name + " and got " + hp_taken + " university credists :D"));
-			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, "You was killed by " + actor.getName() + " and he stole " + hp_taken/2 + " university credists!. "
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "You killed " + target_name + " and got " + hp_taken + " university credits :D"));
+			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, "You was killed by " + actor.getName() + " and he stole " + hp_taken/2 + " university credits!. "
 					+ "You respawned in " + target.getLocation().getName()));
 			
 			
 			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor.getName() +"!", actor.getName(),target_name);
 			if(actor.getCs().levelUp()){
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "Yo leveld up and are now lvl: " + actor.getCs().getLevel()+
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "Yo leveled up and are now lvl: " + actor.getCs().getLevel()+
 					". Your max health is now " + actor.getCs().getMaxHealth() + "!"));
 			}
 			return;

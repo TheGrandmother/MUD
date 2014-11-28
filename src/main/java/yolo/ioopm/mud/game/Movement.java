@@ -17,7 +17,7 @@ public abstract class Movement {
 	//TEST THIS FUNCTION LIKE A BOSS
 	public static void move(Player actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Wrong nuber of arguments for move operation."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "Wrong number of arguments for move operation."));
 			return;
 		}
 		
@@ -46,7 +46,7 @@ public abstract class Movement {
 			has_key = false;
 			Inventory inventory = actor.getInventory();
 			for (ItemContainer i : inventory.getitems()) {
-				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRomm() ) ){
+				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRoom() ) ){
 					if(i.getItem().getLevel() > actor.getCs().getLevel()){
 						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level" + actor.getCs().getLevel()+"."));
 						return;
@@ -71,7 +71,7 @@ public abstract class Movement {
 			return;
 			
 		}else{
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "You dont have the keey to " + destination_name+ "."));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have the key to " + destination_name+ "."));
 			return;
 		}
 		

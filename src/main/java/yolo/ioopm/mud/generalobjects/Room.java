@@ -83,7 +83,7 @@ public class Room extends Entity {
 	 */
 	//TODO this function is fucking suicidal. I'll need to refactor it to use exceptions instead of dumb retro booleans.
 	public boolean addPlayer(Player player) {
-		if(World.assertUnique(player.getName(), players) && player.isLogedIn()){
+		if(World.assertUnique(player.getName(), players) && player.isLoggedIn()){
 			return players.add(player);
 		}else{
 			return false;
@@ -272,7 +272,7 @@ public class Room extends Entity {
 
 	/**
 	 * 
-	 * This class specifys how an exit works.
+	 * This class specifies how an exit works.
 	 * 
 	 * @author TheGrandmother
 	 *

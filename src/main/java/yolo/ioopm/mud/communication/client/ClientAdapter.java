@@ -1,6 +1,7 @@
 package yolo.ioopm.mud.communication.client;
 
 import yolo.ioopm.mud.communication.Adapter;
+import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.client.runnables.ClientHeartbeatSender;
 import yolo.ioopm.mud.communication.client.runnables.ClientMessageListener;
 import yolo.ioopm.mud.communication.client.runnables.ClientMessageSender;
@@ -16,6 +17,8 @@ import java.util.logging.Logger;
 public class ClientAdapter extends Adapter {
 
 	private static final Logger logger = Logger.getLogger(ClientAdapter.class.getName());
+
+	private final PrintWriter print_writer;
 
 	/**
 	 * Attempts to connect to the server on the given host-address and port.
@@ -37,12 +40,12 @@ public class ClientAdapter extends Adapter {
 		Socket socket = new Socket(host, port);
 
 		// Access to these two objects need to be synchronized
-		PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
+		print_writer = new PrintWriter(socket.getOutputStream(), true);
 		BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		logger.fine("Socket and in/out-streams bound successfully!");
 
 		logger.fine("Initiating threads!");
-		Thread cms = new Thread(new ClientMessageSender(pw, outbox));
+		Thread cms = new Thread(new ClientMessageSender(print_writer, outbox));
 		cms.setName("ClientMessageSender");
 		cms.start();
 
@@ -55,5 +58,15 @@ public class ClientAdapter extends Adapter {
 		chs.start();
 
 		logger.fine("Startup sequence finished!");
+	}
+
+	/**
+	 * Ignores the message queue and immediately attempts to send the message to the server.
+	 * @param msg - The message to send.
+	 */
+	public void forceSendMessage(Message msg) {
+		synchronized(print_writer) {
+			print_writer.write(msg.getMessage());
+		}
 	}
 }

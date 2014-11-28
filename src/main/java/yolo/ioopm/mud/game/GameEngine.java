@@ -5,7 +5,7 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.MessageType;
 import yolo.ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
-import yolo.ioopm.mud.communication.messages.server.NotifactionMesssage;
+import yolo.ioopm.mud.communication.messages.server.NotificationMessage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
@@ -87,7 +87,7 @@ public class GameEngine {
 			player.setLoggedIn(false);
 			GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
 		} catch (EntityNotPresent e) {
-			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non exsisting player."));
+			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non existing player."));
 		}
 		
 	}
@@ -142,7 +142,7 @@ public class GameEngine {
 		Player player = null;
 		try {
 			player = world.findPc(username);
-			if(player.isLogedIn()){
+			if(player.isLoggedIn()){
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That player is already logged in!"));
 				return;
 			}
@@ -179,7 +179,7 @@ public class GameEngine {
 		
 		Player actor = null;
 		try {
-			if(!world.findPc(actor_name).isLogedIn()){
+			if(!world.findPc(actor_name).isLoggedIn()){
 				adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor is not logged in!"));
 				return;
 			}else{
@@ -259,7 +259,7 @@ public class GameEngine {
 	
 	/**
 	 * 
-	 * Broadcasts a {@link NotifactionMesssage} to all the players in the given room
+	 * Broadcasts a {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} to all the players in the given room
 	 * 
 	 * @param adapter
 	 * @param room
@@ -268,16 +268,16 @@ public class GameEngine {
 	 */
 	public static void broadcastToRoom(Adapter adapter, Room room, String message){
 		for (Player player : room.getPlayers()) {
-			adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
+			adapter.sendMessage( new NotificationMessage(player.getName() , message));
 		}
 	}
 
 	/**
 	 * 
-	 * This function broadcasts a a {@link NotifactionMesssage} too the players in the given room except for the arguments gilen to the exludes parameter.
+	 * This function broadcasts a a {@link yolo.ioopm.mud.communication.messages.server.NotificationMessage} too the players in the given room except for the arguments given to the excludes parameter.
 	 * 
 	 * @param adapter The adapter trough which the notification is to be sent.
-	 * @param room Room in which the notification is to be broadcasted. 
+	 * @param room Room in which the notification is to be broadcast.
 	 * @param message The message to be sent.
 	 * @param excludes The name of all the players to which no message is to be sent!
 	 */
@@ -293,7 +293,7 @@ public class GameEngine {
 				
 			}
 			if(!skip){
-				adapter.sendMessage( new NotifactionMesssage(player.getName() , message));
+				adapter.sendMessage( new NotificationMessage(player.getName() , message));
 			}			
 		}
 	}

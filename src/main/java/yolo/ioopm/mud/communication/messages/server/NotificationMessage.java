@@ -9,7 +9,7 @@ import yolo.ioopm.mud.communication.MessageType;
  * @author TheGrandmother
  *
  */
-public class NotifactionMesssage extends Message {
+public class NotificationMessage extends Message {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class NotifactionMesssage extends Message {
 	 * @param receiver who the message is no be sent to
 	 * @param message the content of the message
 	 */
-	public NotifactionMesssage(String receiver, String message) {
+	public NotificationMessage(String receiver, String message) {
 		super(receiver, "server", MessageType.NOTIFICATION, null, message);
 		// TODO Auto-generated constructor stub
 	}

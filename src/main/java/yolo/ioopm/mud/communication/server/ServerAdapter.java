@@ -36,7 +36,7 @@ public class ServerAdapter extends Adapter {
 		scl.start();
 
 		// Async thread - Listens for new messages from the clients.
-		// Needs outbox to be able to reply to hearbeats.
+		// Needs outbox to be able to reply to heartbeats.
 		Thread sml = new Thread(new ServerMessageListener(connections, inbox, outbox, timestamps));
 		sml.setName("ServerMessageListener");
 		sml.start();

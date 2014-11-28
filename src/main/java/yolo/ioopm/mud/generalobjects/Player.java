@@ -66,7 +66,7 @@ public class Player extends Character {
 	 * Checks if the player is logged in.
 	 * @return true if the player is logged in otherwise false.
 	 */
-	public boolean isLogedIn(){
+	public boolean isLoggedIn(){
 		return this.logged_in;
 	}
 	

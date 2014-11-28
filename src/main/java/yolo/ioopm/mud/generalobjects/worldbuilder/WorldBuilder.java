@@ -33,7 +33,7 @@ public class WorldBuilder {
 	 */
 	private HashMap<String, String[]> item_list= new HashMap<>();
 	/**
-	 * List containing all of the lobbies in the room with entrys on the form{roomname;level}
+	 * List containing all of the lobbies in the room with entries on the form{roomname;level}
 	 */
 	private ArrayList<String> lobby_list= new ArrayList<>();
 	
@@ -71,7 +71,7 @@ public class WorldBuilder {
 				throw new BuilderException("SYNTAX ERROR when adding lobby: malformed argument " + s);
 
 			} catch (EntityNotPresent e) {
-				throw new BuilderException("SYNTAX ERROR when adding lobby: Non exisitng room " + s);
+				throw new BuilderException("SYNTAX ERROR when adding lobby: Non existing room " + s);
 		
 			}catch (ArrayIndexOutOfBoundsException e){
 				throw new BuilderException("SYNTAX ERROR when adding lobby: malformed argument " + s);
@@ -162,7 +162,7 @@ public class WorldBuilder {
 					}
 				} catch (EntityNotUnique e) {
 					reader.close();
-					throw new SyntaxError("Room "+ args[1].trim() + " has allready been added :P", line_counter,current_line);
+					throw new SyntaxError("Room "+ args[1].trim() + " has already been added :P", line_counter,current_line);
 					
 				}
 				}else if(args[0].trim().equals("lobby")){
@@ -179,7 +179,7 @@ public class WorldBuilder {
 					
 				}else{
 					reader.close();
-					throw new SyntaxError("dude... a roomdeclaration needs to start with room.", line_counter,current_line);
+					throw new SyntaxError("dude... a room declaration needs to start with room.", line_counter,current_line);
 				}
 			}
 			line_counter++;
@@ -207,7 +207,7 @@ public class WorldBuilder {
 					} catch (NumberFormatException e) {
 						throw new SyntaxError("Got odd number when adding item: " + name + " , " + amount+".", -1);
 					} catch (EntityNotPresent e) {
-						throw new SyntaxError("Tried to add none exsisting item: " + name+".",-1);
+						throw new SyntaxError("Tried to add none existing item: " + name+".",-1);
 					}
 				}
 			}
@@ -222,7 +222,7 @@ public class WorldBuilder {
 				} catch (NumberFormatException e) {
 					throw new SyntaxError("Got odd boolean when adding exit: " + name + " , " + locked+".", -1);
 				} catch (EntityNotPresent e) {
-					throw new SyntaxError("Tried to add none exsisting exit: " + name+".",-1);
+					throw new SyntaxError("Tried to add none existing exit: " + name+".",-1);
 				}
 			}
 		}
