@@ -1,5 +1,3 @@
-package mud;
-
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -12,7 +10,7 @@ import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 
-public class Rtt {
+public class TestRtt {
 
 	World world;
 	RuntimeTests rt;
@@ -22,8 +20,6 @@ public class Rtt {
 		WorldBuilder wb = new WorldBuilder("world files/items.txt", "world files/rooms.txt");
 		wb.buildWorld(world);
 		rt = new RuntimeTests(world, null);
-		
-		
 	}
 
 	@After
@@ -46,9 +42,8 @@ public class Rtt {
 		} catch (UnrecoverableInvariantViolation e) {
 			fail_msg= e.getMessage();
 		}
-		System.out.println(fail_msg);
+//		System.out.println(fail_msg);
 		assertFalse(fail_msg, fail_msg.equals(""));
 		
 	}
-
 }
