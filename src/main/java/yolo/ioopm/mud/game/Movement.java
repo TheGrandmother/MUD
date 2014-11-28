@@ -35,6 +35,12 @@ public abstract class Movement {
 			return;
 		}
 		
+		if(actor.getLocation() == destination_room){
+			adapter.sendMessage(new ErrorMessage(actor.getName(),"Dude you are already in that room"));
+			return;
+			
+		}
+		
 		Room.Exit door = current_room.getExit(destination_name);
 		if(door == null){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), current_room.getName() + " has no exit to " + destination_name+"."));
@@ -65,6 +71,7 @@ public abstract class Movement {
 				current_room.removePlayer(actor);
 			} catch (EntityNotPresent e) {
 				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "You are not in the room you qre trying to leave!"));
+				return;
 			}
 			destination_room.addPlayer(actor);
 			actor.setLocation(destination_room);
