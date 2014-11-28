@@ -9,11 +9,11 @@ import yolo.ioopm.mud.communication.messages.server.NotificationMessage;
 import yolo.ioopm.mud.communication.messages.server.RegistrationReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
+import yolo.ioopm.mud.exceptions.EntityNotUnique;
 import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
-import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 
 import java.util.logging.Logger;
 

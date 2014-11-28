@@ -3,6 +3,9 @@ package yolo.ioopm.mud.generalobjects;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
+import yolo.ioopm.mud.exceptions.EntityNotUnique;
+
 /**
  * This is the "main" class of the database.
  * 
@@ -16,11 +19,11 @@ public class World {
 	 * This set contains all of the {@link Player}} in the game.<p>
 	 * <b>INVARIANTS:</b><p>
 	 * All players have unique names.<p>
-	 * No player has less than 0 health<p>
+	 * No player has less than 1 health<p>
 	 * If a player is logged that player is present in  {@link Character#location}<p>
 	 * A Player is only present in one {@link Room}. 
 	 */
-	public  HashSet<Player>   players;
+	private  HashSet<Player>   players;
 	/**
 	 *  Not yet implemented. Has no invariant at this point.
 	 */
@@ -264,34 +267,7 @@ public class World {
 		return rooms;
 	}
 
-	@SuppressWarnings("serial")
-	public class EntityNotUnique extends Exception {
-		public EntityNotUnique() {
-			super();
-		}
 
-		public EntityNotUnique(String message) {
-			super(message);
-		}
-	}
-
-	@SuppressWarnings("serial")
-
-	public class EntityNotPresent extends Exception {
-		String name;
-		public EntityNotPresent() {
-			super();
-		}
-		public EntityNotPresent(String name) {
-			super();
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
-	}
-	
 	/**
 	 * A lobby is a room into which players spawn when they login or die.<p>
 	 * A player will always be respawned in the lobby with the highest level 

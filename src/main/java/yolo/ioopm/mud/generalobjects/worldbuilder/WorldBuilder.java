@@ -1,9 +1,9 @@
 package yolo.ioopm.mud.generalobjects.worldbuilder;
 
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
+import yolo.ioopm.mud.exceptions.EntityNotUnique;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
-import yolo.ioopm.mud.generalobjects.World.EntityNotUnique;
 import yolo.ioopm.mud.generalobjects.items.Key;
 import yolo.ioopm.mud.generalobjects.items.Weapon;
 
@@ -43,7 +43,14 @@ public class WorldBuilder {
 		
 	}
 		
-	public World buildWorld(World world) throws BuilderException{
+	
+	public World buildWorld() throws BuilderException{
+		World world = new World();
+		buildWorld(world);
+		return world;
+	}
+	
+	public void buildWorld(World world) throws BuilderException{
 		this.world = world;
 		try {
 			parseItems();
@@ -81,8 +88,7 @@ public class WorldBuilder {
 				
 			}
 		}
-		
-		return world;
+
 	}
 	
 	
