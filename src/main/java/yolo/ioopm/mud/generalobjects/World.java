@@ -21,7 +21,8 @@ public class World {
 	 * All players have unique names.<p>
 	 * No player has less than 1 health<p>
 	 * If a player is logged that player is present in  {@link Character#location}<p>
-	 * A Player is only present in one {@link Room}. 
+	 * A Player is only present in one {@link Room}. <p>
+	 * No player gets removed after being added to this set.
 	 */
 	private  HashSet<Player>   players;
 	/**
@@ -200,7 +201,7 @@ public class World {
 		throw new EntityNotPresent(name);
 	}
 
-	public Player findPc(String name) throws EntityNotPresent {
+	public Player findPlayer(String name) throws EntityNotPresent {
 		for(Player e : players) {
 			if(e.getName().equals(name)) {
 				return e;

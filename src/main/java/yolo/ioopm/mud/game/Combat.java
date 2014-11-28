@@ -66,7 +66,7 @@ public abstract class Combat {
 		}
 		
 		try {
-			target = world.findPc(target_name);
+			target = world.findPlayer(target_name);
 		} catch (EntityNotPresent e) {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Target " + target_name + " does not exist."));
 			return;

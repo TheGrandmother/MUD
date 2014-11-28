@@ -82,7 +82,7 @@ public class GameEngine {
 		//MessageType type = message.getType();
 		String[] arguments = message.getArguments();
 		try {
-			Player player = world.findPc(actor_name);
+			Player player = world.findPlayer(actor_name);
 			player.getLocation().removePlayer(player);
 			player.setLoggedIn(false);
 			GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
@@ -108,9 +108,9 @@ public class GameEngine {
 		try {
 			world.addCharacter(new Player(username, "", password, world.getLobby(0)));
 			//The below methods must be celled in this order... which is horrible
-			world.findPc(username).setLoggedIn(true);
-			world.findPc(username).getLocation().addPlayer(world.findPc(username));
-			GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " joined the fun :D!", username);
+			world.findPlayer(username).setLoggedIn(true);
+			world.findPlayer(username).getLocation().addPlayer(world.findPlayer(username));
+			GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " joined the fun :D!", username);
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
 			return;
 			
@@ -141,7 +141,7 @@ public class GameEngine {
 		String password = arguments[1];
 		Player player = null;
 		try {
-			player = world.findPc(username);
+			player = world.findPlayer(username);
 			if(player.isLoggedIn()){
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That player is already logged in!"));
 				return;
@@ -151,7 +151,7 @@ public class GameEngine {
 				//The below methods must be celled in this order... which is horrible
 				player.setLoggedIn(true);
 				player.getLocation().addPlayer(player);
-				GameEngine.broadcastToRoom(adapter, world.findPc(username).getLocation(), username + " has returned :D!", username);
+				GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " has returned :D!", username);
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true, null));
 				return;
 			}else{
@@ -179,11 +179,11 @@ public class GameEngine {
 		
 		Player actor = null;
 		try {
-			if(!world.findPc(actor_name).isLoggedIn()){
+			if(!world.findPlayer(actor_name).isLoggedIn()){
 				adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor is not logged in!"));
 				return;
 			}else{
-				actor =world.findPc(actor_name);
+				actor =world.findPlayer(actor_name);
 			}
 		} catch (EntityNotPresent e) {
 			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Actor does not exist!"));
@@ -327,7 +327,7 @@ public class GameEngine {
 	 */
 	public boolean checkUsernamePassword(String username, String password) {
 		try {
-			return (world.findPc(username).checkPassword(password));
+			return (world.findPlayer(username).checkPassword(password));
 		} catch (EntityNotPresent e) {
 			//Player not present
 			return false;

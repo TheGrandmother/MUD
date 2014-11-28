@@ -74,7 +74,7 @@ public abstract class Talk {
 		
 		Room actor_location = actor.getLocation();
 		try {	
-			if(actor_location.getPlayers().contains(world.findPc(recipient))){
+			if(actor_location.getPlayers().contains(world.findPlayer(recipient))){
 				adapter.sendMessage(new ReplyMessage(recipient, Keywords.WHISPER_REPLY, actor.getName(),message));
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.WHISPER_REPLY, actor.getName(),message));
 			}else{

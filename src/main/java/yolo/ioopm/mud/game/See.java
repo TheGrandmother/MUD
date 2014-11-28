@@ -175,7 +175,7 @@ public final class See {
 			//thing is a player
 			Player p = null;
 			try {
-				p = world.findPc(query_name);
+				p = world.findPlayer(query_name);
 			} catch (EntityNotPresent e) {
 				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "Player could not be found after an existence check had ben successful."));
 				return;
