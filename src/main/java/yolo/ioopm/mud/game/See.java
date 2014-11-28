@@ -5,9 +5,10 @@ import yolo.ioopm.mud.communication.Message;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
 import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.*;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+
 
 /**
  * 

@@ -2,7 +2,7 @@ package yolo.ioopm.mud.generalobjects;
 
 import java.util.HashSet;
 
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 
 public class Room extends Entity {
 
@@ -254,9 +254,14 @@ public class Room extends Entity {
 	 *
 	 * @param p The player to remove.
 	 * @return True if player was successfully removed.
+	 * @throws EntityNotPresent if the player is not in the room
 	 */
-	public boolean removePlayer(Player p) {
-		return players.remove(p);
+	public boolean removePlayer(Player p) throws EntityNotPresent {
+		if(players.remove(p)){
+			return true;
+		}else{
+			throw new EntityNotPresent("Tried to remove player " + p.getName()+ " but no such player in the room");
+		}
 	}
 
 	/**

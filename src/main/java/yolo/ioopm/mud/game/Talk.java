@@ -3,10 +3,10 @@ package yolo.ioopm.mud.game;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 
 import java.util.ArrayList;
 

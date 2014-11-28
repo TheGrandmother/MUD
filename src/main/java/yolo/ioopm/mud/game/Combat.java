@@ -2,6 +2,7 @@ package yolo.ioopm.mud.game;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.*;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.Character;
 import yolo.ioopm.mud.generalobjects.Item.UseFailedException;
 import yolo.ioopm.mud.generalobjects.Player;

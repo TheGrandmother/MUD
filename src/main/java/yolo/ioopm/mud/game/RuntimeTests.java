@@ -1,9 +1,13 @@
 package yolo.ioopm.mud.game;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import yolo.ioopm.mud.communication.Adapter;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.Entity;
+import yolo.ioopm.mud.generalobjects.Player;
+import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 
 
@@ -13,27 +17,114 @@ import yolo.ioopm.mud.generalobjects.World;
  * @author TheGrandmother
  */
 public class RuntimeTests {
-	World world;
-	Adapter adapter;
-	
-	public RuntimeTests(World world, Adapter adapter) {
-		this.world = world;
-		this.adapter = adapter;
-	}
 
+	public RuntimeTests() {
 	
-	public Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvariantViolation {
-		if(set.isEmpty()){return true;}
+	}
+	
+	
+	public String[] checkPlayersInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		
-		HashSet<Entity> buffer = new HashSet<Entity>(set);
-		boolean name_found = false;
+		ArrayList<String> report = new ArrayList<>();
 		
-		for (Entity e1 : buffer) {
+		checkNameCollisions(world.getPlayers());
+		
+		boolean loggedin;
+		ArrayList<Room> occupied_rooms;
+		for (Player p : world.getPlayers()){
+			occupied_rooms = new ArrayList<Room>();
+			
+			if(p.getCs().getHealth() <=0){
+				if(strict){
+					throw new InvariantViolation("Player " + p.getName() + "has health " + p.getCs().getHealth());
+				}else{
+					report.add(" Player " + p.getName() + " had less than 0 health. Resolved by setting health to 1");
+					p.getCs().setHealth(1);
+				}
+			}
+			
+			for (Room r : world.getRooms()) {
+				for(Player p1 : r.getPlayers()){
+					if(p1.getName().equals(p.getName())){
+						occupied_rooms.add(r);
+						if(p.isLoggedIn() && occupied_rooms.size() >1){
+							if(strict){
+								throw new InvariantViolation("Player "+p.getName()+ " was found in more than one room.");
+							}
+						}else{
+							if(strict){
+								throw new InvariantViolation("Player "+p.getName()+" is logged out but present in a room");
+							}
+						}
+					}
+				}
+			}
+			for (Room r : occupied_rooms) {
+				try {
+					r.removePlayer(p);
+				} catch (EntityNotPresent e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			
+		}
+		
+		return report.toArray(new String[0]);
+	}
+	
+	
+	
+	/**
+	 * 
+	 * Checks that there are no name collisions in the entire world.
+	 * 
+	 * @return True if no names collide 
+	 * @throws UnrecoverableInvariantViolation If a name collision exists
+	 */
+	public  Boolean checkGlobalNameSpace(World world) throws UnrecoverableInvariantViolation{
+		HashSet<Entity> monster_set = new HashSet<>();
+		monster_set.addAll(world.getItems());
+		monster_set.addAll(world.getPlayers());
+		monster_set.addAll(world.getNpcs());
+		monster_set.addAll(world.getRooms());
+		Boolean name_found = false;
+		for (Entity e1 : monster_set) {
 			name_found = false;
-			for (Entity e2 : buffer) {
+			for (Entity e2 : monster_set) {
 				if(e1.getName().equals(e2.getName())){
 					if(name_found){
-						throw new UnrecoverableInvariantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e1.getClass().getSimpleName()+":"+e1.getName());
+						throw new UnrecoverableInvariantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e2.getClass().getSimpleName()+":"+e2.getName());
+					}else{
+						name_found = true;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * Checks that there are no name collisions in the set.
+	 * 
+	 * @param set The set whose namespace is to be tested
+	 * @return True if no names collide 
+	 * @throws UnrecoverableInvariantViolation If a name collision exists
+	 */
+	public  Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvariantViolation {
+		if(set.isEmpty()){return true;}
+		
+		boolean name_found = false;
+		
+		for (Entity e1 : set) {
+			name_found = false;
+			for (Entity e2 : set) {
+				if(e1.getName().equals(e2.getName())){
+					if(name_found){
+						throw new UnrecoverableInvariantViolation(e1.getClass().getSimpleName()+":"+e1.getName() + " has the same name as " + e2.getClass().getSimpleName()+":"+e2.getName());
 					}else{
 						name_found = true;
 					}

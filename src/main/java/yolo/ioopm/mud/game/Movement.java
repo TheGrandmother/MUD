@@ -3,12 +3,13 @@ package yolo.ioopm.mud.game;
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.communication.messages.server.ErrorMessage;
 import yolo.ioopm.mud.communication.messages.server.ReplyMessage;
+import yolo.ioopm.mud.communication.messages.server.SeriousErrorMessage;
+import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.Character.Inventory;
 import yolo.ioopm.mud.generalobjects.ItemContainer;
 import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.World.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.items.Key;
 
 public abstract class Movement {
@@ -60,7 +61,11 @@ public abstract class Movement {
 		
 		if(has_key){
 			
-			current_room.removePlayer(actor);
+			try {
+				current_room.removePlayer(actor);
+			} catch (EntityNotPresent e) {
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "You are not in the room you qre trying to leave!"));
+			}
 			destination_room.addPlayer(actor);
 			actor.setLocation(destination_room);
 			
