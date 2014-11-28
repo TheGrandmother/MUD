@@ -13,7 +13,7 @@ public abstract class Adapter {
 		2 => 2 times/s
 		.. etc
 	 */
-	public final static int TICKRATE = 2;
+	public final static int TICKRATE = 5;
 
 	// This is the actual value the listeners/senders read.
 	public final static int TICKRATEMILLIS = 1000 / TICKRATE;
