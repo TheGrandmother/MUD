@@ -34,6 +34,7 @@ public class RuntimeTests {
 		for (Player p : world.getPlayers()){
 			occupied_rooms = new ArrayList<Room>();
 			
+			//Cehck health invariant
 			if(p.getCs().getHealth() <=0){
 				if(strict){
 					throw new InvariantViolation("Player " + p.getName() + "has health " + p.getCs().getHealth());
@@ -43,30 +44,70 @@ public class RuntimeTests {
 				}
 			}
 			
+			//Look for presence in multiple rooms.
 			for (Room r : world.getRooms()) {
 				for(Player p1 : r.getPlayers()){
 					if(p1.getName().equals(p.getName())){
 						occupied_rooms.add(r);
-						if(p.isLoggedIn() && occupied_rooms.size() >1){
+						if(occupied_rooms.size() >1){
 							if(strict){
 								throw new InvariantViolation("Player "+p.getName()+ " was found in more than one room.");
-							}
-						}else{
-							if(strict){
-								throw new InvariantViolation("Player "+p.getName()+" is logged out but present in a room");
 							}
 						}
 					}
 				}
 			}
-			for (Room r : occupied_rooms) {
-				try {
-					r.removePlayer(p);
-				} catch (EntityNotPresent e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			
+			//Player in more than one room
+			if(occupied_rooms.size() > 1){
+				//No need to do a strict check here.
+				for (Room r : occupied_rooms) {
+					try {
+						r.removePlayer(p);
+					} catch (EntityNotPresent e) {
+						throw new InvariantViolation("Tried to remove player from a room in wich he is not.");
+					}
 				}
+				if(p.isLoggedIn()){
+					p.setLocation(world.getLobby(p.getCs().getLevel()));
+					world.getLobby(p.getCs().getLevel()).addPlayer(p);
+					report.add("Player "+p.getName()+" was found in multiple rooms and is logged in. Resolved by sending the player to lobby and removing the player from the rooms.");
+				}else{
+					report.add("Player "+p.getName()+" was found in multiple rooms and is loged out. Resolved by removing the player from the rooms");
+	
+				}
+			//Player in no room but logged in (implicitly tests that player is present in his own room)
+			}else if(occupied_rooms.size() == 0 && p.isLoggedIn()){
+				if(strict){
+					throw new InvariantViolation("Player "+p.getName()+" is loggen in but not in any room");
+				}else{
+					report.add("Player "+p.getName()+" is loged in but not in any room. Resolved by moving player to the lobby.");
+					p.setLocation(world.getLobby(p.getCs().getLevel()));
+					p.getLocation().addPlayer(p);
+				}
+			//player in room but not logged in
+			}else if(occupied_rooms.size() == 1 && !p.isLoggedIn()){
+				if(strict){
+					throw new InvariantViolation("Player "+p.getName()+" is present in a room");
+				}else{
+					report.add("Player "+p.getName()+" is loged out but present in a room. Resolved by removing the player from the room.");
+					try {
+						p.getLocation().removePlayer(p);
+					} catch (EntityNotPresent e) {
+						throw new UnrecoverableInvariantViolation("Tried to remove a player from a room in wich he is not.");
+					}
+				}
+			//Player logged in but not present in his own room.
 			}
+//			else if(!p.getLocation().getPlayers().contains(p) && p.isLoggedIn()){
+//				if(strict){
+//					throw new InvariantViolation("Player "+p.getName()+" is not present in his own room.");
+//				}else{
+//					p.getLocation().addPlayer(p);
+//					report.add("Player "+p.getName()+" was not present in his own room. Fixed by adding him to the room.");
+//				}
+//			}
+			
 			
 			
 		}
