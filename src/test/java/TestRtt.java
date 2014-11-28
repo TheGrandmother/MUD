@@ -7,10 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import yolo.ioopm.mud.exceptions.EntityNotPresent;
+import yolo.ioopm.mud.exceptions.EntityNotUnique;
 import yolo.ioopm.mud.game.RuntimeTests;
 import yolo.ioopm.mud.game.RuntimeTests.InvariantViolation;
 import yolo.ioopm.mud.game.RuntimeTests.UnrecoverableInvariantViolation;
 import yolo.ioopm.mud.generalobjects.Entity;
+import yolo.ioopm.mud.generalobjects.ItemContainer;
 import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
@@ -91,6 +93,61 @@ public class TestRtt {
 		
 	}
 	
+	@Test 
+	public void testRoomInvariantCheck() throws BuilderException, UnrecoverableInvariantViolation, InvariantViolation, EntityNotUnique, EntityNotPresent{
+		makeMeAWorld();
+		assertTrue("Generated world does not pass invariant check",rt.checkRoomInvariant(world, true).length == 0);
+		//Test for a room with no exits
+		makeMeAWorld();
+		world.getRooms().add(new Room("lol", ""));
+		try{
+			assertFalse("World with violations passed invariant chek.",rt.checkRoomInvariant(world, true).length == 0);
+			fail("no exception thrown");
+		}catch(InvariantViolation e){
+			fail("wrong exception type");
+		}catch(UnrecoverableInvariantViolation e){
+			System.out.println(e.getMessage());
+		}
+
+		//Test for duplicate names
+		makeMeAWorld();
+		world.getRooms().add(new Room("lol room",""));
+		try{
+			assertFalse("World with violations passed invariant chek.",rt.checkRoomInvariant(world, true).length == 0);
+			fail("no exception thrown");
+		}catch(InvariantViolation e){
+			fail("wrong exception type");
+		}catch(UnrecoverableInvariantViolation e){
+			System.out.println(e.getMessage());
+		}
+		
+		//Test for double containers
+		makeMeAWorld();
+		world.findRoom("lol room").getItems().add(new ItemContainer(world.findItem("tp")));
+		world.findRoom("lol room").getItems().add(new ItemContainer(world.findItem("tp")));
+		testResolvingRoomIssue();
+		
+		//Test for less than zero amount
+		makeMeAWorld();
+		ItemContainer silly =new ItemContainer(world.findItem("tp"));
+		silly.setAmount(-10);
+		world.findRoom("lol room").getItems().add(silly);
+		testResolvingRoomIssue();
+		
+		//Test for non exsisting item
+		makeMeAWorld();
+		world.findRoom("lol room").getItems().add(new ItemContainer(new Weapon("lol", "", 0, 0, 0)));
+		testResolvingRoomIssue();
+		
+		//Test logged out player.
+		world.findRoom("lol room").getPlayers().add(new Player(test_player_name, "", "", world.findRoom("lol room")));
+		testResolvingRoomIssue();
+		
+		
+		
+		
+		
+	}
 	
 	@Test
 	public void testPlayerInvariantCheck() throws BuilderException, UnrecoverableInvariantViolation, InvariantViolation, EntityNotPresent{
@@ -130,6 +187,33 @@ public class TestRtt {
 		
 	}
 	
+	
+	public void testResolvingRoomIssue() throws UnrecoverableInvariantViolation, InvariantViolation{
+		try {
+			rt.checkRoomInvariant(world, true);
+			fail("No exception was thrown");
+		} catch (UnrecoverableInvariantViolation e) {
+			fail("Unrecoverable violation thrown");
+		} catch (InvariantViolation e){
+			//System.out.println(e.getMessage());
+		}
+		
+		String[] report = null;
+		try {
+			report = rt.checkRoomInvariant(world, false);
+		} catch (UnrecoverableInvariantViolation e) {
+			fail("Unrecoverable violation found");
+		} catch (InvariantViolation e){
+			fail("Recoverable violation found");
+		}
+		assertFalse("Empty report",report.length ==0);
+		for (String string : report) {
+			System.out.println(string);
+		}
+		assertTrue("Invariant could not be resolved",rt.checkRoomInvariant(world, true).length==0);
+	}
+	
+	
 	public void testResolvingPlayerIssue() throws UnrecoverableInvariantViolation, InvariantViolation{
 		try {
 			rt.checkPlayersInvariant(world, true);
@@ -150,7 +234,7 @@ public class TestRtt {
 		}
 		assertFalse("Empty report",report.length ==0);
 		for (String string : report) {
-			//System.out.println(string);
+			System.out.println(string);
 		}
 		assertTrue("Invariant could not be resolved",rt.checkPlayersInvariant(world, true).length==0);
 	}

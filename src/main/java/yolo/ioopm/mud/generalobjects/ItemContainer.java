@@ -28,8 +28,12 @@ public class ItemContainer{
 		return amount; 
 	}
 	
-	void setAmount(int amount){
+	public void setAmount(int amount){
 		this.amount = amount;
+	}
+	
+	public void addAmount(int add){
+		if(add > 0){this.amount += add;}
 	}
 	
 }

@@ -1,11 +1,15 @@
 package yolo.ioopm.mud.game;
 
+import java.awt.ItemSelectable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.exceptions.EntityNotPresent;
 import yolo.ioopm.mud.generalobjects.Entity;
+import yolo.ioopm.mud.generalobjects.ItemContainer;
 import yolo.ioopm.mud.generalobjects.Player;
 import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
@@ -22,6 +26,102 @@ public class RuntimeTests {
 	
 	}
 	
+	
+	public String[] checkRoomInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
+		ArrayList<String> report = new ArrayList<>();
+		
+		checkNameCollisions(world.getRooms());
+		/*
+		 * All rooms have unique names.<p>
+		 * All rooms have at least one {@link Room.Exit}<p>
+		 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
+		 * All {@link Player}s in the room are logged in.
+		*/
+		ArrayList<ItemContainer> delete_us = new ArrayList<ItemContainer>(); 
+		boolean name_found;
+		for (Room r : world.getRooms()) {
+			if(r.getExits().isEmpty()){
+				throw new UnrecoverableInvariantViolation("Room "+r.getName()+" has no exits. The room is pointless.");
+			}
+//			for (ItemContainer ic : r.getItems()) {
+//				if(!World.assertExistence(ic.getName(), world.getItems())){
+//					if(strict){
+//						throw new InvariantViolation("Item "+ic.getName()+" does not exist as a propper item");
+//					}else{
+//						ic.setAmount(0);
+//						report.add("Item "+ic.getName()+" does not exist as a propper item. Resolving by deleteing");
+//					}
+//				}
+//				if(ic.getAmount() <= 0){
+//					if(strict){
+//						throw new InvariantViolation("Item "+ic.getName()+" has an amount of zero or less.");
+//					}
+//				}
+//				name_found = false;
+//				for (ItemContainer ic2 : r.getItems()) {
+//					if(ic.getName().equals(ic2.getName())){
+//						if(name_found){
+//							if(strict){
+//								throw new InvariantViolation(ic.getName()+" is in more than one item container!");
+//							}else{
+//								ic.addAmount(ic2.getAmount());
+//								ic2.setAmount(0);
+//								report.add(ic.getName()+" i spresent in more than two item containers. Resolving by merging");
+//							}
+//						}else{
+//							name_found = true;
+//						}
+//					}
+//				}
+//				
+//			}
+			HashMap<String, ItemContainer> clean_set = new HashMap<String, ItemContainer>();
+			for (ItemContainer ic : r.getItems()) {
+				if(clean_set.containsKey(ic.getName())){
+					if(strict){
+						throw new InvariantViolation(ic.getName()+" was found in two containers.");
+					}else{
+						report.add(ic.getName()+" was found in more than one container. Resolving by merging.");
+						clean_set.get(ic.getName()).addAmount(ic.getAmount());
+					}
+				}else if(ic.getAmount() < 0){
+					if(strict){
+						throw new InvariantViolation(ic.getName()+" has an amount of zero or less.");
+					}else{
+						report.add( ic.getName()+" has an amount of zero or less. Resolving by deleting.");
+					}
+				}else if(!World.assertExistence(ic.getName(), world.getItems())){
+					if(strict){
+						throw new InvariantViolation(ic.getName()+" isn't really in the world.");
+					}else{
+						report.add(ic.getName()+" isn't really in the world. Resolving by deleting");
+					}
+				}else{
+					clean_set.put(ic.getName(), ic);
+				}
+			}
+			r.getItems().removeAll(r.getItems());
+			r.getItems().addAll(clean_set.values());
+			
+			for(Player p : r.getPlayers()){
+				if(!p.isLoggedIn()){
+					if(strict){
+						throw new InvariantViolation("Player "+p.getName()+" is not loged in.");
+					}else{
+						try {
+							r.removePlayer(p);
+						} catch (EntityNotPresent e) {
+							throw new UnrecoverableInvariantViolation("Tried to remove noxesting player.");
+						}
+						report.add("Player "+p.getName()+" is not loged in. Resolved by removing player.");
+					}
+				}
+			}
+		}
+		
+		return report.toArray(new String[0]);
+		
+	}
 	
 	public String[] checkPlayersInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		
@@ -71,7 +171,7 @@ public class RuntimeTests {
 				if(p.isLoggedIn()){
 					p.setLocation(world.getLobby(p.getCs().getLevel()));
 					world.getLobby(p.getCs().getLevel()).addPlayer(p);
-					report.add("Player "+p.getName()+" was found in multiple rooms and is logged in. Resolved by sending the player to lobby("+p.getLocation()+") and removing the player from the rooms.");
+					report.add("Player "+p.getName()+" was found in multiple rooms and is logged in. Resolved by sending the player to lobby("+p.getLocation().getName()+") and removing the player from the rooms.");
 				}else{
 					report.add("Player "+p.getName()+" was found in multiple rooms and is loged out. Resolved by removing the player from the rooms");
 	
@@ -83,7 +183,7 @@ public class RuntimeTests {
 				}else{
 					p.setLocation(world.getLobby(p.getCs().getLevel()));
 					p.getLocation().addPlayer(p);
-					report.add("Player "+p.getName()+" is loged in but not in any room. Resolved by moving player to the lobby("+p.getLocation()+").");
+					report.add("Player "+p.getName()+" is loged in but not in any room. Resolved by moving player to the lobby("+p.getLocation().getName()+").");
 				}
 			//player in room but not logged in
 			}else if(occupied_rooms.size() == 1 && !p.isLoggedIn()){
@@ -155,6 +255,7 @@ public class RuntimeTests {
 	 * @return True if no names collide 
 	 * @throws UnrecoverableInvariantViolation If a name collision exists
 	 */
+	//TODO this can be done in linear time trough building up a HashSet and checking for existence.
 	public  Boolean checkNameCollisions(HashSet<? extends Entity> set) throws UnrecoverableInvariantViolation {
 		if(set.isEmpty()){return true;}
 		

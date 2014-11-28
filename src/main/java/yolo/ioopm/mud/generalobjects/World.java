@@ -35,14 +35,19 @@ public class World {
 	 * All rooms have unique names.<p>
 	 * All rooms have at least one {@link Room.Exit}<p>
 	 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
-	 * All {@link Player}s in the room are logged in.
+	 * All {@link Player}s in the room are logged in.<p>
+	 * No room gets created or removed at runtime.<p>
+	 * All items in the {@link ItemContainer}s are present in the {@link Items} set.
 	 * 
 	 */
 	private HashSet<Room> rooms;
 	/**
 	 * This set contains all of the {@link Item} in the world.<p>
 	 * <b>INVARIANTS:</b><p>
-	 * All items have unique names.
+	 * All items have unique names.<p>
+	 * No item has negative size.<p>
+	 * Weapons have positive damage.<p>
+	 * Keys have valid rooms.<p>
 	 */
 	private HashSet<Item> items;
 	/**
