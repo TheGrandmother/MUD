@@ -79,7 +79,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>yolo.ioopm.mud.Main</mainClass>
+                            <mainClass>ioopm.mud.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

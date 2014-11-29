@@ -3,9 +3,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
-import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
+import ioopm.mud.generalobjects.World;
+import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
+import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
 
 public class TestWorldBuilder {
