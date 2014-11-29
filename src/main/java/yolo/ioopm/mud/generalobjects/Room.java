@@ -81,7 +81,7 @@ public class Room extends Entity {
 	 * @param player Player to add.
 	 * @return True if player was successfully added. It returns false if the player was already in the room or he was not logged in.
 	 */
-	//TODO this function is fucking suicidal. I'll need to refactor it to use exceptions instead of dumb retro booleans.
+	//TODO this method is fucking suicidal. I'll need to refactor it to use exceptions instead of dumb retro booleans.
 	public boolean addPlayer(Player player) {
 		if(World.assertUnique(player.getName(), players) && player.isLoggedIn()){
 			return players.add(player);
@@ -184,6 +184,21 @@ public class Room extends Entity {
 		return false;
 	}
 
+	/**
+	 * Tries to remove the entire itemcontainer.
+	 * 
+	 * @param i The item to be removed
+	 * @throws EntityNotPresent If the item is not in the room
+	 */
+	public void removeItemCompletley(Item i) throws EntityNotPresent{
+		for(ItemContainer ic : items){
+			if(ic.getName().equals(i.getName())){
+				items.remove(ic);
+				return;
+			}
+		}
+		throw new EntityNotPresent("Tried to remove nonexisting item");
+	}
 	
 	/**
 	 * Gets exit to specific room

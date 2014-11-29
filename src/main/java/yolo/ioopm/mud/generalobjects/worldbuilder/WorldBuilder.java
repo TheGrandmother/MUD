@@ -15,10 +15,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+/**
+ * 
+ * This class is used to generate a world from two files.
+ * @author TheGrandmother
+ *
+ */
 public class WorldBuilder {
 
-	
+	/**
+	 * File specifying the items
+	 */
 	private final File item_file;
+	/**
+	 * File specifying the rooms
+	 */
 	private final File room_file;
 	//the world to be built!
 	private World world;
@@ -37,6 +48,11 @@ public class WorldBuilder {
 	 */
 	private ArrayList<String> lobby_list= new ArrayList<>();
 	
+	/**
+	 * Creates a WorldBuilder object.
+	 * @param item_file_name Path to the file specifying the items
+	 * @param room_file_name Path to the file specifying the rooms
+	 */
 	public WorldBuilder(String item_file_name, String room_file_name) {
 		item_file = new File(item_file_name);
 		room_file = new File(room_file_name);
@@ -44,12 +60,21 @@ public class WorldBuilder {
 	}
 		
 	
+	/**
+	 * Creates a brand new world
+	 * @return A new world built from the specifications in {@link WorldBuilder#item_file} and {@link WorldBuilder#item_file}
+	 * @throws BuilderException If a world could not be constructed.
+	 */
 	public World buildWorld() throws BuilderException{
 		World world = new World();
 		buildWorld(world);
 		return world;
 	}
-	
+	/**
+	 * Augments a world with the information in {@link WorldBuilder#item_file} and {@link WorldBuilder#item_file}
+	 * @param world World to be altered
+	 * @throws BuilderException If the world could not be augmented
+	 */
 	public void buildWorld(World world) throws BuilderException{
 		this.world = world;
 		try {
@@ -93,7 +118,13 @@ public class WorldBuilder {
 	
 	
 	
-	
+	/**
+	 * 
+	 * Parses the {@link WorldBuilder#item_file} and creates items accordingly.
+	 * 
+	 * @throws IOException If the file could not be read
+	 * @throws SyntaxError If the file is mallformed.
+	 */
 	private void parseItems() throws IOException, SyntaxError{
 
 		String current_line;
@@ -145,6 +176,13 @@ public class WorldBuilder {
 		reader.close();
 	}
 	
+	/**
+	 * 
+	 * Parses the {@link WorldBuilder#room_file} and builds the rooms accordingly.
+	 * 
+	 * @throws IOException If the file could not be read.
+	 * @throws SyntaxError If the file is malformed.
+	 */
 	private void parseRoom() throws IOException, SyntaxError{
 		boolean has_lobby =false;
 		String current_line;

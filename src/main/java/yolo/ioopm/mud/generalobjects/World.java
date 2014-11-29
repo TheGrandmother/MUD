@@ -25,10 +25,12 @@ public class World {
 	 * No player gets removed after being added to this set.
 	 */
 	private  HashSet<Player>   players;
+	
 	/**
 	 *  Not yet implemented. Has no invariant at this point.
 	 */
 	private HashSet<Npc>  npcs;
+	
 	/**
 	 * This set contains all of the {@link Room} in the game.<p>
 	 * <b>INVARIANTS:</b><p>
@@ -37,10 +39,12 @@ public class World {
 	 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
 	 * All {@link Player}s in the room are logged in.<p>
 	 * No room gets created or removed at runtime.<p>
-	 * All items in the {@link ItemContainer}s are present in the {@link Items} set.
+	 * All items in the {@link ItemContainer}s are present in the {@link Items} set.<p>
+	 * All exits leads to valid rooms
 	 * 
 	 */
 	private HashSet<Room> rooms;
+	
 	/**
 	 * This set contains all of the {@link Item} in the world.<p>
 	 * <b>INVARIANTS:</b><p>
@@ -50,6 +54,7 @@ public class World {
 	 * Keys have valid rooms.<p>
 	 */
 	private HashSet<Item> items;
+	
 	/**
 	 * 
 	 * This list contains all of the {@link Lobby} in the world.<p>

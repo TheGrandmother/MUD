@@ -17,6 +17,10 @@ public class Weapon extends Item {
 		super(name, description, -1,  Type.WEAPON,true, size, level);
 		this.damage = damage;
 	}
+	
+	public int getDamage() {
+		return damage;
+	}
 
 	/**
 	 * 

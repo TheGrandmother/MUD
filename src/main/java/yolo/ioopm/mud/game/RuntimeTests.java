@@ -1,18 +1,15 @@
 package yolo.ioopm.mud.game;
 
-import java.awt.ItemSelectable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import yolo.ioopm.mud.communication.Adapter;
 import yolo.ioopm.mud.exceptions.EntityNotPresent;
-import yolo.ioopm.mud.generalobjects.Entity;
-import yolo.ioopm.mud.generalobjects.ItemContainer;
-import yolo.ioopm.mud.generalobjects.Player;
-import yolo.ioopm.mud.generalobjects.Room;
-import yolo.ioopm.mud.generalobjects.World;
+import yolo.ioopm.mud.generalobjects.*;
+import yolo.ioopm.mud.generalobjects.Room.Exit;
+import yolo.ioopm.mud.generalobjects.items.Key;
+import yolo.ioopm.mud.generalobjects.items.Weapon;
+
 
 
 /**
@@ -27,54 +24,64 @@ public class RuntimeTests {
 	}
 	
 	
+	public String[] checkItemInvariant(World world,Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
+		ArrayList<String> report = new ArrayList<>();
+		checkNameCollisions(world.getItems());
+		
+		for(Item i : world.getItems()){
+			if(i.getSize() < 0){
+				if(strict){
+					throw new InvariantViolation("Item "+i.getName()+" has negative size.");
+				}else{
+					removeItemFromAllRooms(i, world);
+					report.add("Item "+i.getName()+" has negative size. Resolved by removing");
+				}
+			}else if(i instanceof Weapon){
+				Weapon w = (Weapon)i;
+				if(w.getDamage() <= 0){
+					if(strict){
+						throw new InvariantViolation("The weapon "+i.getName()+" has damage of 0 or less.");
+					}else{
+						removeItemFromAllRooms(i, world);
+						report.add("The weapon "+i.getName()+" has damage of 0 or less. Resolved by removing");
+					}
+				}
+			}else if(i instanceof Key){
+				
+			}
+		}
+		
+		
+		return report.toArray(new String[0]);
+	}
+	
+	private void removeItemFromAllRooms(Item i, World world){
+		for(Room r : world.getRooms()){
+			try {
+				r.removeItemCompletley(i);
+			} catch (EntityNotPresent e) {
+			}
+		}
+	}
+	
 	public String[] checkRoomInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		ArrayList<String> report = new ArrayList<>();
 		
 		checkNameCollisions(world.getRooms());
-		/*
-		 * All rooms have unique names.<p>
-		 * All rooms have at least one {@link Room.Exit}<p>
-		 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
-		 * All {@link Player}s in the room are logged in.
-		*/
-		ArrayList<ItemContainer> delete_us = new ArrayList<ItemContainer>(); 
-		boolean name_found;
+
+		
 		for (Room r : world.getRooms()) {
+			//Check for empty or bad exits
 			if(r.getExits().isEmpty()){
 				throw new UnrecoverableInvariantViolation("Room "+r.getName()+" has no exits. The room is pointless.");
+			}else{
+				for(Exit e : r.getExits()){
+					if(!World.assertExistence(e.getNameOfOtherside(),world.getRooms())){
+						throw new UnrecoverableInvariantViolation("Room has an exit leading to "+e.getNameOfOtherside()+" which is not a real room.");
+					}
+				}
 			}
-//			for (ItemContainer ic : r.getItems()) {
-//				if(!World.assertExistence(ic.getName(), world.getItems())){
-//					if(strict){
-//						throw new InvariantViolation("Item "+ic.getName()+" does not exist as a propper item");
-//					}else{
-//						ic.setAmount(0);
-//						report.add("Item "+ic.getName()+" does not exist as a propper item. Resolving by deleteing");
-//					}
-//				}
-//				if(ic.getAmount() <= 0){
-//					if(strict){
-//						throw new InvariantViolation("Item "+ic.getName()+" has an amount of zero or less.");
-//					}
-//				}
-//				name_found = false;
-//				for (ItemContainer ic2 : r.getItems()) {
-//					if(ic.getName().equals(ic2.getName())){
-//						if(name_found){
-//							if(strict){
-//								throw new InvariantViolation(ic.getName()+" is in more than one item container!");
-//							}else{
-//								ic.addAmount(ic2.getAmount());
-//								ic2.setAmount(0);
-//								report.add(ic.getName()+" i spresent in more than two item containers. Resolving by merging");
-//							}
-//						}else{
-//							name_found = true;
-//						}
-//					}
-//				}
-//				
-//			}
+			//Check validity of items.
 			HashMap<String, ItemContainer> clean_set = new HashMap<String, ItemContainer>();
 			for (ItemContainer ic : r.getItems()) {
 				if(clean_set.containsKey(ic.getName())){
@@ -197,19 +204,7 @@ public class RuntimeTests {
 						throw new UnrecoverableInvariantViolation("Tried to remove a player from a room in wich he is not.");
 					}
 				}
-			//Player logged in but not present in his own room.
 			}
-//			else if(!p.getLocation().getPlayers().contains(p) && p.isLoggedIn()){
-//				if(strict){
-//					throw new InvariantViolation("Player "+p.getName()+" is not present in his own room.");
-//				}else{
-//					p.getLocation().addPlayer(p);
-//					report.add("Player "+p.getName()+" was not present in his own room. Fixed by adding him to the room.");
-//				}
-//			}
-			
-			
-			
 		}
 		
 		return report.toArray(new String[0]);

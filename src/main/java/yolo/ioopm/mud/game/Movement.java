@@ -12,10 +12,31 @@ import yolo.ioopm.mud.generalobjects.Room;
 import yolo.ioopm.mud.generalobjects.World;
 import yolo.ioopm.mud.generalobjects.items.Key;
 
+/**
+ * 
+ * Class containing all methods related to moving around in the world.
+ * 
+ * @author TheGrandmother
+ *
+ */
 public abstract class Movement {
 	
-	//TODO
-	//TEST THIS FUNCTION LIKE A BOSS
+	/**
+	 * 
+	 * This method is called when the actor wants to move from one room to another. 
+	 * It will send the actor a {@link ReplyMessage} with the action {@literal Keywords#MOVE_REPLY}} if the move was successful.<p>
+	 * A {@link ErrorMessage} will be sent if<p>
+	 * The argument is malformed<p>
+	 * The destination room does not exist<p>
+	 * The current room has no exit to destination<p>
+	 * The destination room is locked and the player has no key to that room or the player does not have a sufficient level to use the key.<p>
+	 * 
+	 * 
+	 * @param actor	 The player who wants to move.
+	 * @param arguments Name to the room.
+	 * @param world Where all the stuff is
+	 * @param adapter Through which the messages will be sent.
+	 */
 	public static void move(Player actor, String[] arguments, World world, Adapter adapter){
 		if(arguments == null || arguments.length != 1){
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Wrong number of arguments for move operation."));
@@ -47,7 +68,7 @@ public abstract class Movement {
 			return;
 		}
 		
-		//This shit is pretty fucking ugly :(
+		//This shit is pretty ugly :(
 		Boolean has_key = true;
 		if(door.isLocked()){
 			has_key = false;
