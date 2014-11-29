@@ -102,7 +102,7 @@ public class GameEngine {
 		String actor_name = message.getSender();
 		//MessageType type = message.getType();
 		String[] arguments = message.getArguments();
-		if(arguments.length != 2){
+		if(arguments.length != 2 || arguments == null){
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Needs both username and a password!"));
 			return;
 		}
@@ -141,7 +141,7 @@ public class GameEngine {
 		String actor_name = message.getSender();
 		String[] arguments = message.getArguments();
 	
-		if(arguments.length != 2){
+		if(arguments.length != 2|| arguments == null){
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Needs both username and a password!"));
 			return;
 		}
