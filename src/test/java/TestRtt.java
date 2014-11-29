@@ -1,25 +1,20 @@
 import static org.junit.Assert.*;
 
-import java.util.HashSet;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import yolo.ioopm.mud.exceptions.EntityNotPresent;
-import yolo.ioopm.mud.exceptions.EntityNotUnique;
-import yolo.ioopm.mud.game.RuntimeTests;
-import yolo.ioopm.mud.game.RuntimeTests.InvariantViolation;
-import yolo.ioopm.mud.game.RuntimeTests.UnrecoverableInvariantViolation;
-import yolo.ioopm.mud.generalobjects.Entity;
-import yolo.ioopm.mud.generalobjects.ItemContainer;
-import yolo.ioopm.mud.generalobjects.Player;
-import yolo.ioopm.mud.generalobjects.Room;
-import yolo.ioopm.mud.generalobjects.World;
-import yolo.ioopm.mud.generalobjects.items.Key;
-import yolo.ioopm.mud.generalobjects.items.Weapon;
-import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
-import yolo.ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
+import ioopm.mud.exceptions.EntityNotPresent;
+import ioopm.mud.exceptions.EntityNotUnique;
+import ioopm.mud.game.RuntimeTests;
+import ioopm.mud.game.RuntimeTests.InvariantViolation;
+import ioopm.mud.game.RuntimeTests.UnrecoverableInvariantViolation;
+import ioopm.mud.generalobjects.ItemContainer;
+import ioopm.mud.generalobjects.Player;
+import ioopm.mud.generalobjects.Room;
+import ioopm.mud.generalobjects.World;
+import ioopm.mud.generalobjects.items.Weapon;
+import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
+import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
 
 public class TestRtt {
@@ -51,7 +46,7 @@ public class TestRtt {
 		weapon:tp:a magnificent roll of toilet paper.:12:2:35
 		*/
 		world = new World();
-		WorldBuilder wb = new WorldBuilder("world files/items.txt", "world files/rooms.txt");
+		WorldBuilder wb = new WorldBuilder("world files/test_items.txt", "world files/test_rooms.txt");
 		wb.buildWorld(world);
 	}
 	
