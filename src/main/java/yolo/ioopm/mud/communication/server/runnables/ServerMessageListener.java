@@ -74,7 +74,6 @@ public class ServerMessageListener implements Runnable {
 
 				try {
 					if(cc.hasUnreadData()) {
-						logger.fine("Reading data from client...");
 						data = cc.readLine();
 					}
 				}
@@ -88,8 +87,12 @@ public class ServerMessageListener implements Runnable {
 					if(msg != null) {
 						if(!ignored_messages.contains(msg.getType())) {
 							logger.info("Received message: \"" + data + "\"");
-//							logger.fine("Received message of type \"" + msg.getType() + "\" from user \"" + msg.getSender() + "\"");
 							inbox.offer(msg);
+
+							logger.fine(entry.getKey() + " sent logout, will now be marked as dead.");
+							if(msg.getType() == MessageType.LOGOUT) {
+								dead_clients.add(entry.getKey());
+							}
 						}
 						else if(msg.getType() == MessageType.HEARTBEAT) {
 							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
