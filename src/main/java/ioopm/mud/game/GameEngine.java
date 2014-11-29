@@ -140,7 +140,11 @@ public class GameEngine {
 	private void handleLoginRequest(Message message){
 		String actor_name = message.getSender();
 		String[] arguments = message.getArguments();
-		//TODO Fix so that players gets added to the lobby when they log in!
+	
+		if(arguments.length != 2){
+			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Needs both username and a password!"));
+			return;
+		}
 		String username = arguments[0];
 		String password = arguments[1];
 		Player player = null;
