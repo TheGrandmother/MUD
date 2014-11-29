@@ -29,6 +29,7 @@ public class ClientInterface {
 		// Prepare the terminal
 		formatTerminal();
 
+		// Connect to server
 		while(true) {
 			client.setServerAddress(prompt("Please enter server address:"));
 			client.setUsername(prompt("Please enter username:"));
@@ -51,8 +52,20 @@ public class ClientInterface {
 			}
 		}
 
+		// Prompt for password
 		client.setPassword(prompt("Please enter password:"));
 
+		// Print initial connection menu
+		connectionMenu();
+
+		// Start new thread that prints data from the adapter to the terminal
+		startMessageReader();
+
+		// Initiate main action menu
+		actionMenu();
+	}
+
+	private void connectionMenu() {
 		boolean connected = false;
 		while(!connected) {
 
@@ -104,67 +117,73 @@ public class ClientInterface {
 					break;
 			}
 		}
+	}
 
-		// Start new thread that prints data from the adapter to the terminal
-		new Thread(
-			() -> {
-				while(true) {
-
-					Message msg;
-					try {
-						logger.fine("MessageReader waiting for message...");
-						msg = client.pollMessage();
-						logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
-					}
-					catch(IOException e) {
-						logger.log(Level.SEVERE, e.getMessage(), e);
-						logger.severe("Terminating thread!");
-						return;
-					}
-
-					logger.fine("MessageReader should now print...");
-					logger.info(formatMessage(msg));
-				}
-			}, "MessageReader"
-		).start();
-
-		// Action menu
+	private void actionMenu() {
 		while(true) {
 			String input = prompt(getMenuQuestion(Action.class));
 
+			int space_index = input.indexOf(" ");
+
 			Action action;
 			try {
-				action = Action.valueOf(input.toUpperCase());
+				action = Action.valueOf(input.substring(0, (space_index == -1 ? input.length() : space_index)).toUpperCase());
 			}
 			catch(IllegalArgumentException e) {
 				logger.info("Incorrect choice! Please try again!");
 				continue;
 			}
 
-			String[] args = null;
+			String[] args;
+
+			if(space_index != -1) {
+				String substring = input.substring(space_index + 1, input.length());
+				if(substring.length() == 0) {
+					args = null;
+				}
+				else {
+					args = new String[]{substring};
+				}
+			}
+			else {
+				args = null;
+			}
+
 			switch(action) {
 
 				case MOVE:
-					args = new String[]{prompt("What room would you like to move too?")};
+					if(args == null) {
+						args = new String[]{prompt("What room would you like to move too?")};
+					}
 					break;
 
 				case SAY:
-					args = new String[]{prompt("What would you like to say?")};
+					if(args == null) {
+						args = new String[]{prompt("What would you like to say?")};
+					}
 					break;
 
 				case ATTACK:
-					args = new String[]{prompt("Please enter player to attack:")};
+					if(args == null) {
+						args = new String[]{prompt("Please enter player to attack:")};
+					}
 					break;
 
 				case DROP:
-					args = new String[]{prompt("What would you like to drop?")};
+					if(args == null) {
+						args = new String[]{prompt("What would you like to drop?")};
+					}
 					break;
 
 				case EQUIP:
-					args = new String[]{prompt("What would you like to equip?")};
+					if(args == null) {
+						args = new String[]{prompt("What would you like to equip?")};
+					}
 					break;
 				case EXAMINE:
-					args = new String[]{prompt("What would you like to examine?")};
+					if(args == null) {
+						args = new String[]{prompt("What would you like to examine?")};
+					}
 					break;
 
 				case INVENTORY:
@@ -176,7 +195,9 @@ public class ClientInterface {
 					break;
 
 				case TAKE:
-					args = new String[]{prompt("What do you want to take?")};
+					if(args == null) {
+						args = new String[]{prompt("What do you want to take?")};
+					}
 					break;
 
 				case UNEQUIP:
@@ -199,6 +220,30 @@ public class ClientInterface {
 
 			client.performAction(action, args);
 		}
+	}
+
+	private void startMessageReader() {
+		new Thread(
+			() -> {
+				while(true) {
+
+					Message msg;
+					try {
+						logger.fine("MessageReader waiting for message...");
+						msg = client.pollMessage();
+						logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
+					}
+					catch(IOException e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+						logger.severe("Terminating thread!");
+						return;
+					}
+
+					logger.fine("MessageReader should now print...");
+					logger.info(formatMessage(msg));
+				}
+			}, "MessageReader"
+		).start();
 	}
 
 	private void formatTerminal() {

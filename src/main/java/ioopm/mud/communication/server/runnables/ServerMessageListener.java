@@ -89,8 +89,8 @@ public class ServerMessageListener implements Runnable {
 							logger.info("Received message: \"" + data + "\"");
 							inbox.offer(msg);
 
-							logger.fine(entry.getKey() + " sent logout, will now be marked as dead.");
 							if(msg.getType() == MessageType.LOGOUT) {
+								logger.fine(entry.getKey() + " sent logout, will now be marked as dead.");
 								dead_clients.add(entry.getKey());
 							}
 						}
