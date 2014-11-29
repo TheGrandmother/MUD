@@ -351,6 +351,7 @@ public class ClientInterface {
 						break;
 					case "drop_reply":
 						retval = args[0];
+						break;
 					case "examine_reply":
 						retval = args[0];
 						break;
