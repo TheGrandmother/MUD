@@ -41,7 +41,7 @@ public class ServerMessageSender implements Runnable {
 
 			Message msg;
 			while((msg = outbox.poll()) != null) {
-				if(msg.getType() != MessageType.HEARTBEAT) {
+				if(msg.getType() != MessageType.HEARTBEAT_REPLY) {
 					logger.fine("Sending message: \"" + msg.getMessage() + "\"");
 				}
 				ClientConnection cc = connections.get(msg.getReceiver());

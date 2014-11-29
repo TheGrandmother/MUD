@@ -87,6 +87,7 @@ public class GameEngine {
 			player.setLoggedIn(false);
 			GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
 		} catch (EntityNotPresent e) {
+			logger.warning("Unknown player tried to log out! Username: \"" + actor_name + "\"");
 			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non existing player."));
 		}
 		
