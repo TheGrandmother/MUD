@@ -54,13 +54,7 @@ public class Main {
 				logger.fine("Initiating server...");
 
 				try {
-					if(args.length != 2){
-						System.out.println("Nowadays you have to type the path to the world files");
-						throw new Exception();
-					}
-
 					setConsoleFormatter(root_logger, new ServerConsoleFormatter(), Level.ALL);
-
 					new Server();
 				}
 				catch(Exception e) {

@@ -8,7 +8,7 @@ import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +41,14 @@ public class Server {
 		 Load resources
 		 */
 		logger.fine("Attempting to load resources...");
-
+		try {
+			loadResourceFile("items.txt");
+			loadResourceFile("rooms.txt");
+		}
+		catch(IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			return;
+		}
 
 		/*
 		 World builder
@@ -79,5 +86,26 @@ public class Server {
 	
 	protected Adapter getAdapter(){
 		return adapter;
+	}
+
+	/**
+	 * Attempts to copy the resource file with given name from  the jar file.
+	 * If the file already exists in current directory, the copy will not
+	 * be performed.
+	 *
+	 * @param filename - Name of file to copy.
+	 * @throws IOException - If an I/O error occurred
+	 */
+	private void loadResourceFile(String filename) throws IOException {
+		File items = new File(filename);
+		if(!items.exists()) {
+			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+			FileOutputStream fos = new FileOutputStream(items);
+			int data;
+			while((data = is.read()) != -1) {
+				fos.write(data);
+			}
+			fos.flush();
+		}
 	}
 }
