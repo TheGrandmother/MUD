@@ -7,22 +7,42 @@ import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.exceptions.EntityNotUnique;
 
 /**
- * This is the "main" class of the database.
+ * This is the "main" class of the database.<br>
  * 
- * As of now the namespace for the entities is global. I.e no two entities can have the same name regardless of type.
+ * As of now the namespace for the entities is global. I.e no two entities can have the same name regardless of type.<p>
+ * 
+ * Below follows the invariants for the different sets of {@link Entity}s<p>
+ * <b>PLAYER INVARIANTS:</b><br>
+ * All players have unique names.<br>
+ * No player has less than 1 health<br>
+ * If a player is logged that player is present in  {@link Character#location}<br>
+ * A Player is only present in one {@link Room}.<br>
+ * No player gets removed after being added to this set.<p>
+ * 
+ * <b>ROOM INVARIANTS:</b><br>
+ * All rooms have unique names.<br>
+ * All rooms have at least one {@link Room.Exit}<br>
+ * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<br>
+ * All {@link Player}s in the room are logged in.<br>
+ * No room gets created or removed at runtime.<br>
+ * All items in the {@link ItemContainer}s are present in the {@link Items} set.<br>
+ * All exits leads to valid rooms<p>
+ * 
+ * <b>ITEM INVARIANTS:</b><br>
+ * All items have unique names.<br>
+ * No item has negative size.<br>
+ * Weapons have positive damage.<br>
+ * Keys have valid rooms.<p>
  *
+ * <b>LOBBY INVARIANTS:</b><br>
+ * No two lobbies have the same entry level.<br>
+ * There exists one lobby with entry level 0.
  * @author TheGrandmother
  */
 public class World {
 
 	/**
 	 * This set contains all of the {@link Player}} in the game.<p>
-	 * <b>INVARIANTS:</b><p>
-	 * All players have unique names.<p>
-	 * No player has less than 1 health<p>
-	 * If a player is logged that player is present in  {@link Character#location}<p>
-	 * A Player is only present in one {@link Room}. <p>
-	 * No player gets removed after being added to this set.
 	 */
 	private  HashSet<Player>   players;
 	
@@ -33,39 +53,26 @@ public class World {
 	
 	/**
 	 * This set contains all of the {@link Room} in the game.<p>
-	 * <b>INVARIANTS:</b><p>
-	 * All rooms have unique names.<p>
-	 * All rooms have at least one {@link Room.Exit}<p>
-	 * No two {@link ItemContainer}s contain the same item or has an {@link ItemContainer#amount} of 0 or less.<p>
-	 * All {@link Player}s in the room are logged in.<p>
-	 * No room gets created or removed at runtime.<p>
-	 * All items in the {@link ItemContainer}s are present in the {@link Items} set.<p>
-	 * All exits leads to valid rooms
-	 * 
+
 	 */
 	private HashSet<Room> rooms;
 	
 	/**
 	 * This set contains all of the {@link Item} in the world.<p>
-	 * <b>INVARIANTS:</b><p>
-	 * All items have unique names.<p>
-	 * No item has negative size.<p>
-	 * Weapons have positive damage.<p>
-	 * Keys have valid rooms.<p>
+
 	 */
 	private HashSet<Item> items;
 	
 	/**
 	 * 
 	 * This list contains all of the {@link Lobby} in the world.<p>
-	 * <b>INVARIANT:</b><p>
-	 * No two lobbies have the same entry level.<p>
-	 * There exists one lobby with entry level 0.
 	 * 
 	 */
 	private ArrayList<Lobby> lobby_list;
 	
-
+	/**
+	 * Specifies whether there exists a administrator in the world. (Currently not used).
+	 */
 	boolean admin_exists;
 
 	/**
@@ -81,30 +88,6 @@ public class World {
 	}
 
 
-	/**
-	 * Moves character to the desired room and removes the character from the previous room.
-	 *
-	 * @param character
-	 * @param room
-	 * @throws EntityNotUnique
-	 */
-	public void moveCharacter(Character character, Room room) throws EntityNotUnique {
-		if(!assertUnique(character.getName(), room.getNpcs()) || !assertUnique(character.getName(), room.getPlayers())) {
-			throw new EntityNotUnique();
-		}
-
-		if(character.getClass() == Npc.class) {
-			room.getNpcs().add((Npc) character);
-			character.getLocation().getNpcs().remove(character);
-			character.setLocation(room);
-		}
-		else {
-			room.getPlayers().add((Player) character);
-			character.getLocation().getPlayers().remove(character);
-			character.setLocation(room);
-		}
-
-	}
 	/**
 	 * 
 	 * attempts to add a lobby to the world.
@@ -123,6 +106,12 @@ public class World {
 		lobby_list.add(new Lobby(room_name, level));
 	}
 	
+	
+	/**
+	 * Finds the lobby with the highest level that is of lower level than the players.
+	 * @param level The level of a player
+	 * @return The appropriate lobby for a player of that level
+	 */
 	public Room getLobby(int level){
 		int current_level = 0;
 		Room current_room = null;
@@ -188,6 +177,14 @@ public class World {
 
 	}
 
+	/**
+	 * 
+	 * Attempts to find a room in the world.
+	 * 
+	 * @param name The name of the room to be searched for
+	 * @return That room if it it exists
+	 * @throws EntityNotPresent If the room cen't be found.
+	 */
 	public Room findRoom(String name) throws EntityNotPresent {
 		for(Room e : rooms) {
 			if(e.getName().equals(name)) {
@@ -211,6 +208,12 @@ public class World {
 		throw new EntityNotPresent(name);
 	}
 
+	/**
+	 * Searches the world for an player
+	 * @param name The name of the player to be found.
+	 * @return That player if it exists.
+	 * @throws EntityNotPresent If that player does not exist.
+	 */
 	public Player findPlayer(String name) throws EntityNotPresent {
 		for(Player e : players) {
 			if(e.getName().equals(name)) {
@@ -220,6 +223,12 @@ public class World {
 		throw new EntityNotPresent();
 	}
 
+	/**
+	 * Searches the world for an npc
+	 * @param name The name of the NPCs
+	 * @return That nnpc if it exists
+	 * @throws EntityNotPresent If that npc does not exist.
+	 */
 	public Npc findNpc(String name) throws EntityNotPresent {
 		for(Npc e : npcs) {
 			if(e.getName().equals(name)) {
@@ -261,19 +270,35 @@ public class World {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * Returns the set of items.
+	 * @return the set of items.
+	 */
 	public HashSet<Item> getItems() {
 		return items;
 	}
 
+	/**
+	 * Returns the set of npcs.
+	 * @return the set of npcs.
+	 */
 	public HashSet<Npc> getNpcs() {
 		return npcs;
 	}
 
+	/**
+	 * Returns the set of players.
+	 * @return the set of players.
+	 */
 	public HashSet<Player> getPlayers() {
 		return players;
 	}
 
+	/**
+	 * Returns the set of rooms.
+	 * @return the set of rooms.
+	 */
 	public HashSet<Room> getRooms() {
 		return rooms;
 	}
