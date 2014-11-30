@@ -135,7 +135,7 @@ public class ClientInterface {
 			}
 
 			String[] args;
-
+			
 			if(space_index != -1) {
 				String substring = input.substring(space_index + 1, input.length());
 				if(substring.length() == 0) {
