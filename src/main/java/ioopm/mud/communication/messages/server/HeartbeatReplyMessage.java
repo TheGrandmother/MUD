@@ -15,6 +15,6 @@ public class HeartbeatReplyMessage extends Message {
 	 * @param receiver Name of the receiver.
 	 */
 	public HeartbeatReplyMessage(String receiver) {
-		super(receiver, "server", MessageType.HEARTBEAT_REPLY, null, null);
+		super(receiver, "server", MessageType.HEARTBEAT_REPLY, null);
 	}
 }
