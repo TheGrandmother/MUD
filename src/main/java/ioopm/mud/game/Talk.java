@@ -72,6 +72,11 @@ public abstract class Talk {
 		String recipient = arguments[0];
 		String message = arguments[1];
 		
+		if(recipient.equals(actor.getName())){
+			adapter.sendMessage( new ErrorMessage(actor.getName(), "You cant talk to yourself.... that is silly"));
+			return;
+		}
+		
 		Room actor_location = actor.getLocation();
 		try {	
 			if(actor_location.getPlayers().contains(world.findPlayer(recipient))){
