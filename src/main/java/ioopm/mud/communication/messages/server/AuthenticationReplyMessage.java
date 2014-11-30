@@ -12,7 +12,7 @@ import ioopm.mud.communication.MessageType;
  */
 public class AuthenticationReplyMessage extends Message {
 	/**
-	 * 
+	 * Constructs the message.
 	 * @param receiver Who requested the authentication
 	 * @param successful Weather or not it was successful.
 	 */

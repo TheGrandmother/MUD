@@ -12,7 +12,7 @@ import ioopm.mud.communication.Message;
  */
 public class RegistrationReplyMessage extends Message{
 	/**
-	 * 
+	 * Constructs the message.
 	 * @param receiver the name of the connection who wanted to register
 	 * @param success Weather or not the registration was successful
 	 */

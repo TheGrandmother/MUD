@@ -12,7 +12,7 @@ import ioopm.mud.communication.MessageType;
  */
 public class ActionMessage extends Message {
 	/**
-	 * 
+	 * Constructs the message.
 	 * @param receiver who is to receive the message
 	 * @param sender Who sent the message
 	 * @param action What type of action
