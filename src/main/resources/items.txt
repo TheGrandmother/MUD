@@ -2,5 +2,8 @@
 //weapon: name:description:size:level: damage
 key:room2:0
 key:ball room:0
+key:Otter Castle:0
 weapon:axe:a stupid axe:5:0:20
-weapon:tp:a magnificent roll of toilet paper.:12:2:35
+weapon:tp:A magnificent roll of toilet paper.:10:2:35
+weapon:Rusty knife:A rusty knife so dull it wont cut butter:1:0:3
+weapon:Crown:The crown of the otter king.:3:0:5
