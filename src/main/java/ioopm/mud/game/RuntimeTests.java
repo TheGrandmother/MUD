@@ -14,6 +14,7 @@ import ioopm.mud.generalobjects.items.Weapon;
 
 /**
  *This class is used to perform invariant checks at runtime.
+ *It can also resolve some invariant violations at runtime.
  * 
  * @author TheGrandmother
  */
@@ -23,7 +24,17 @@ public class RuntimeTests {
 	
 	}
 	
-	
+	/**
+	 * 
+	 * Checks for invariant violations for the {@link Item}s in the world.<br>
+	 * The invariants are specified in {@link World}
+	 * 
+	 * @param world The world whose invariants are to be tested.
+	 * @param strict If set to true no attempts to fix the problem will be made.
+	 * @return A an array of strings describing what was done to resolve the issues. If all was fine an array of length 0 will be returned.
+	 * @throws UnrecoverableInvariantViolation If a violation appears that is not resolvable.
+	 * @throws InvariantViolation Gets thrown for recoverable violations if the strict flag is set to true.
+	 */
 	public String[] checkItemInvariant(World world,Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		ArrayList<String> report = new ArrayList<>();
 		checkNameCollisions(world.getItems());
@@ -54,7 +65,11 @@ public class RuntimeTests {
 		
 		return report.toArray(new String[0]);
 	}
-	
+	/**
+	 * Removes an item from all the room in which it is present
+	 * @param i The item
+	 * @param world The world from which it is to be removed.
+	 */
 	private void removeItemFromAllRooms(Item i, World world){
 		for(Room r : world.getRooms()){
 			try {
@@ -64,6 +79,17 @@ public class RuntimeTests {
 		}
 	}
 	
+	/**
+	 * 
+	 * Checks for invariant violations for the {@link Room}s in the world.<br>
+	 * The invariants are specified in {@link World}
+	 * 
+	 * @param world The world whose invariants are to be tested.
+	 * @param strict If set to true no attempts to fix the problem will be made.
+	 * @return A an array of strings describing what was done to resolve the issues. If all was fine an array of length 0 will be returned.
+	 * @throws UnrecoverableInvariantViolation If a violation appears that is not resolvable.
+	 * @throws InvariantViolation Gets thrown for recoverable violations if the strict flag is set to true.
+	 */
 	public String[] checkRoomInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		ArrayList<String> report = new ArrayList<>();
 		
@@ -129,7 +155,17 @@ public class RuntimeTests {
 		return report.toArray(new String[0]);
 		
 	}
-	
+	/**
+	 * 
+	 * Checks for invariant violations for the {@link Player}s in the world.<br>
+	 * The invariants are specified in {@link World}
+	 * 
+	 * @param world The world whose invariants are to be tested.
+	 * @param strict If set to true no attempts to fix the problem will be made.
+	 * @return A an array of strings describing what was done to resolve the issues. If all was fine an array of length 0 will be returned.
+	 * @throws UnrecoverableInvariantViolation If a violation appears that is not resolvable.
+	 * @throws InvariantViolation Gets thrown for recoverable violations if the strict flag is set to true.
+	 */
 	public String[] checkPlayersInvariant(World world, Boolean strict) throws UnrecoverableInvariantViolation, InvariantViolation{
 		
 		ArrayList<String> report = new ArrayList<>();
