@@ -5,7 +5,7 @@ import ioopm.mud.communication.MessageType;
 import ioopm.mud.communication.client.ClientAdapter;
 import ioopm.mud.communication.messages.client.*;
 import ioopm.mud.exceptions.ConnectionRefusalException;
-import ioopm.mud.ui.Action;
+import ioopm.mud.ui.ActionMenu;
 import ioopm.mud.ui.ClientInterface;
 
 import java.io.BufferedReader;
@@ -43,7 +43,7 @@ public class Client {
 	 * @param action    - Action to perform.
 	 * @param arguments - Arguments if any to go with the action.
 	 */
-	public void performAction(Action action, String[] arguments) {
+	public void performAction(ActionMenu action, String[] arguments) {
 		adapter.sendMessage(new GeneralActionMessage(username, action.toString().toLowerCase(), arguments));
 	}
 

@@ -1,10 +1,10 @@
 package ioopm.mud.ui;
 
-import ioopm.mud.exceptions.ConnectionRefusalException;
-import ioopm.mud.ui.ansi.AnsiCodes;
-import ioopm.mud.ui.ansi.AnsiColorCodes;
 import ioopm.mud.Client;
 import ioopm.mud.communication.Message;
+import ioopm.mud.exceptions.ConnectionRefusalException;
+import ioopm.mud.ui.ansi.AnsiCodes;
+import ioopm.mud.ui.ansi.AnsiAttributeCodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,15 +15,22 @@ public class ClientInterface {
 
 	private static final Logger logger = Logger.getLogger(ClientInterface.class.getName());
 
-	private final Client client;
-
+	private final Client         client;
 	private final BufferedReader in;
 
+	/**
+	 * Constructs a the interface for the client side of the program.
+	 * @param instance - The client instance to work against.
+	 * @param in - Defines where the interface is reading the input.
+	 */
 	public ClientInterface(Client instance, BufferedReader in) {
 		this.client = instance;
 		this.in = in;
 	}
 
+	/**
+	 * Initiates the interface.
+	 */
 	public void run() {
 
 		// Prepare the terminal
@@ -65,17 +72,20 @@ public class ClientInterface {
 		actionMenu();
 	}
 
+	/**
+	 * Prints the first connection menu.
+	 */
 	private void connectionMenu() {
 		boolean connected = false;
 		while(!connected) {
 
 			// Show the initial menu
-			MenuItem menu;
+			ConnectionMenu menu;
 			while(true) {
-				String input = prompt(getMenuQuestion(MenuItem.class));
+				String input = prompt(getMenuQuestion(ConnectionMenu.class));
 
 				try {
-					menu = MenuItem.valueOf(input.toUpperCase());
+					menu = ConnectionMenu.valueOf(input.toUpperCase());
 					break;
 				}
 				catch(IllegalArgumentException e) {
@@ -119,15 +129,18 @@ public class ClientInterface {
 		}
 	}
 
+	/**
+	 * Prints the main action menu.
+	 */
 	private void actionMenu() {
 		while(true) {
-			String input = prompt(getMenuQuestion(Action.class));
+			String input = prompt(getMenuQuestion(ActionMenu.class));
 
 			int space_index = input.indexOf(" ");
 
-			Action action;
+			ActionMenu action;
 			try {
-				action = Action.valueOf(input.substring(0, (space_index == -1 ? input.length() : space_index)).toUpperCase());
+				action = ActionMenu.valueOf(input.substring(0, (space_index == -1 ? input.length() : space_index)).toUpperCase());
 			}
 			catch(IllegalArgumentException e) {
 				logger.info("Incorrect choice! Please try again!");
@@ -135,7 +148,7 @@ public class ClientInterface {
 			}
 
 			String[] args;
-			
+
 			if(space_index != -1) {
 				String substring = input.substring(space_index + 1, input.length());
 				if(substring.length() == 0) {
@@ -222,6 +235,9 @@ public class ClientInterface {
 		}
 	}
 
+	/**
+	 * Initiates an async thread that reads new messages from the client and outputs them to the "chat".
+	 */
 	private void startMessageReader() {
 		new Thread(
 			() -> {
@@ -246,18 +262,26 @@ public class ClientInterface {
 		).start();
 	}
 
+	/**
+	 * Outputs the necessary ANSI VT100 escape codes to System.out to format the terminal for usage.
+	 */
 	private void formatTerminal() {
 		System.out.print(AnsiCodes.CLEAR_SCREEN);
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(1).setIntTwo(1));
 		System.out.print("Welcome to SOUFAD! (the Scary University Of Fear And Doom) \n WARNING: All passwords are stored,logged and sent in PLAIN TEXT!");
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(16).setIntTwo(1));
-		System.out.print(AnsiColorCodes.WHITE_BACKGROUND_BLACK_TEXT);
+		System.out.print(AnsiAttributeCodes.WHITE_BACKGROUND_BLACK_TEXT);
 		System.out.print("What would you like to do?");
-		System.out.print(AnsiColorCodes.RESET_ATTRIBUTES);
+		System.out.print(AnsiAttributeCodes.RESET_ATTRIBUTES);
 		System.out.print(AnsiCodes.BUFFER_SET_TOP_BOTTOM.setIntOne(18).setIntTwo(18));
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(18).setIntTwo(1));
 	}
 
+	/**
+	 * Prints the question to the menu bar and waits for the user to input a new line of data.
+	 * @param question - The question to print.
+	 * @return - The data entered by the user.
+	 */
 	public String prompt(String question) {
 
 		printToPrompt(question);
@@ -276,6 +300,10 @@ public class ClientInterface {
 		return input.trim();
 	}
 
+	/**
+	 * Prints the given string to the menu bar.
+	 * @param output - String to print.
+	 */
 	private void printToPrompt(String output) {
 		System.out.print(AnsiCodes.CURSOR_STORE_POSITION);
 		System.out.print(AnsiCodes.CURSOR_SET_POSITION.setIntOne(17).setIntTwo(1));
@@ -284,6 +312,11 @@ public class ClientInterface {
 		System.out.print(AnsiCodes.CURSOR_RESTORE_POSITION);
 	}
 
+	/**
+	 * Formats the given message into a nicer looking string that can be printed to the "chat".
+	 * @param msg - The message to format.
+	 * @return - The nicer looking string.
+	 */
 	private String formatMessage(Message msg) {
 
 		logger.fine("Attempting to format message \"" + msg.getMessage() + "\"");
@@ -384,7 +417,12 @@ public class ClientInterface {
 		return retval;
 	}
 
-	// A bit of generics haxxory to generate a string of all enum constants of any given enum
+	/**
+	 * Iterates over the names of all constants in the given enum and constructs a new string from the names.
+	 * Example: The ConnectionMenu enum would give the following string; "LOGIN REGISTER"
+	 * @param enumClass - The enum to iterate over.
+	 * @return - The string of all constant names.
+	 */
 	private <E extends Enum<E>> String getMenuQuestion(Class<E> enumClass) {
 		StringBuilder sb = new StringBuilder();
 		for(Enum<E> i : enumClass.getEnumConstants()) {

@@ -4,8 +4,16 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * Used to format the ConsoleHandler for the logger on the server.
+ */
 public class ServerConsoleFormatter extends Formatter {
 
+	/**
+	 * Formats the given record.
+	 * @param record - Record to format.
+	 * @return - String representing the formatted record.
+	 */
 	public String format(LogRecord record) {
 		StringBuilder sb = new StringBuilder();
 

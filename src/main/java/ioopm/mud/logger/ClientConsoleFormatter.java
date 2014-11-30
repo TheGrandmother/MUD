@@ -1,12 +1,17 @@
 package ioopm.mud.logger;
 
 import ioopm.mud.ui.ansi.AnsiCodes;
-import ioopm.mud.ui.ansi.AnsiColorCodes;
+import ioopm.mud.ui.ansi.AnsiAttributeCodes;
 
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * The most important formatter of the program.
+ * Used to format the console handler for the client.
+ * Everything printed to the client "chat" will go through this.
+ */
 public class ClientConsoleFormatter extends Formatter {
 
 	public String format(LogRecord record) {
@@ -26,17 +31,17 @@ public class ClientConsoleFormatter extends Formatter {
 
 		switch(name) {
 			case "SEVERE":
-				sb.append(AnsiColorCodes.RED_BACKGROUND);
+				sb.append(AnsiAttributeCodes.RED_BACKGROUND);
 				break;
 
 			case "WARNING":
-				sb.append(AnsiColorCodes.YELLOW_BACKGROUND);
+				sb.append(AnsiAttributeCodes.YELLOW_BACKGROUND);
 				break;
 
 			case "FINE":
 			case "FINER":
 			case "FINEST":
-				sb.append(AnsiColorCodes.MAGENTA_BACKGROUND);
+				sb.append(AnsiAttributeCodes.MAGENTA_BACKGROUND);
 				break;
 
 			default:
@@ -44,7 +49,7 @@ public class ClientConsoleFormatter extends Formatter {
 		}
 
 		if(!name.equals("INFO")) {
-			sb.append(name).append(AnsiColorCodes.RESET_ATTRIBUTES).append(": ");
+			sb.append(name).append(AnsiAttributeCodes.RESET_ATTRIBUTES).append(": ");
 		}
 
 		sb.append(record.getMessage());

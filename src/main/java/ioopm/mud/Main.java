@@ -11,6 +11,10 @@ public class Main {
 
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 
+	/**
+	 * Initiates the program.
+	 * @param args - Needs to contain at least one element, which can be either "client" or "server".
+	 */
 	public static void main(String[] args) {
 
 		// -- Logger set up --
@@ -64,6 +68,12 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Sets the formatter for the ConsoleHandlers of the defined logger.
+	 * @param logger - Logger to get the ConsoleHandlers from.
+	 * @param formatter - The formatter to use on the ConsoleHandlers.
+	 * @param level - The level to log.
+	 */
 	private static void setConsoleFormatter(Logger logger, Formatter formatter, Level level) {
 		Handler[] handlers = logger.getHandlers();
 		for(Handler h : handlers) {

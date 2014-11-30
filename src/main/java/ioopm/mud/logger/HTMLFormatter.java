@@ -5,8 +5,16 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+/**
+ * Used by the handler for the log file to format it according to the HTML syntax.
+ */
 public class HTMLFormatter extends Formatter {
 
+	/**
+	 * Formats the given record to an html string.
+	 * @param record - The record to format.
+	 * @return - String representing the formatted record.
+	 */
 	public String format(LogRecord record) {
 		StringBuilder builder = new StringBuilder();
 
@@ -31,7 +39,7 @@ public class HTMLFormatter extends Formatter {
 	}
 
 	public String getHead(Handler h) {
-		return ("<html>\n <body>\n <Table border>\n<tr><td>Level</td><td>Time</td><td>Logger</td><td>Function</td><td>Log Message</td><td>Stack trace</td><</tr>\n");
+		return ("<html>\n <body>\n <Table border>\n<tr><td>Level</td><td>Time</td><td>Logger</td><td>Function</td><td>Log Message</td><td>Stack trace</td></tr>\n");
 	}
 
 	public String getTail(Handler h) {

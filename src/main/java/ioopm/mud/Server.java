@@ -22,6 +22,11 @@ public class Server {
 	private World      world   = new World();
 	private GameEngine engine;
 
+	/**
+	 * Constructs a MUD server.
+	 * Initiates the server adapter, loads resources, and constructs the world.
+	 * Then it starts listening for clients and messages.
+	 */
 	public Server() {
 
 		/*
@@ -83,7 +88,11 @@ public class Server {
 			engine.handleMessage(msg);
 		}
 	}
-	
+
+	/**
+	 * Returns the adapter associated with this server.
+	 * @return - The adapter instance.
+	 */
 	protected Adapter getAdapter(){
 		return adapter;
 	}

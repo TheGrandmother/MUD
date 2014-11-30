@@ -1,6 +1,6 @@
 package ioopm.mud.ui.ansi;
 
-public enum AnsiColorCodes {
+public enum AnsiAttributeCodes {
 
 	RESET_ATTRIBUTES("\u001b[0m"),
 	RED_BACKGROUND("\u001b[41m"),
@@ -10,7 +10,7 @@ public enum AnsiColorCodes {
 
 	private final String CODE;
 
-	private AnsiColorCodes(String code) {
+	private AnsiAttributeCodes(String code) {
 		this.CODE = code;
 	}
 
