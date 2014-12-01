@@ -1,3 +1,4 @@
+/DO NOT MESS WHIT THESE!!!! THEY ARE USED IN TESTS! BUSSFACTOR = 1 :)
 //key: target : level
 //weapon: name:description:size:level: damage
 key:room2:0
