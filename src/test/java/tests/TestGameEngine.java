@@ -14,6 +14,7 @@ import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
 import ioopm.mud.game.RuntimeTests;
+import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
@@ -33,7 +34,7 @@ public class TestGameEngine {
 	GameEngine ge;
 	private static final String player1 = "player1";
 	private static final String player1_password = "qwe";
-	private static final String player2 = "player1";
+	private static final String player2 = "player2";
 	private static final String player2_password = "123";
 	
 	@Before
@@ -43,26 +44,147 @@ public class TestGameEngine {
 		
 	}
 	
-	public void testTalk() throws BuilderException{
+	private void dumpMessages(){
+		for(Message m : adapter.messages){
+			System.out.println(m.getMessage());
+		}
+	}
+	
+	@Test
+	public void testTalk() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
 		ge = new GameEngine(adapter, world);
 		
-		//Login players This is tested in another function
+		//Login players. This is tested in another function
 		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
+		adapter.flush();
 		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, player2,player2_password));
 		adapter.flush();
+		assertTrue("Player 1 not logedin",world.findPlayer(player1).isLoggedIn());
+		assertTrue("Player 2 not logedin",world.findPlayer(player2).isLoggedIn());
+
 		
+		//Test SAY
 		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.SAY, "lol"));
 		boolean p1 = false;
 		boolean p2 = false;
+		
 		for (Message msg : adapter.messages) {
 			if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.SAY_REPLY)){
 				p1 = true;
-			}
-			if(msg.getReceiver().equals(player2) && msg.getAction().equals(Keywords.SAY_REPLY)){
+			}else if(msg.getReceiver().equals(player2) && msg.getAction().equals(Keywords.SAY_REPLY)){
 				p2 = true;
 			}
 		}
+		
+		if(!p1 || !p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		//Test Say with worng args
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.SAY));
+		p1 = false;
+		p2 = false;
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType().equals(MessageType.GENERAL_ERROR)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		assertTrue("Player 1 did not recive error:",p1);
+		assertFalse("Player 2 recieved message:",p2);
+		
+		//Test Whisper 
+		adapter.flush();
+		
+		//Test propper:
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.WHISPER, player2,"test"));
+		p1 = false;
+		p2 = false;
+		assertFalse("No messages sent",adapter.messages.isEmpty());
+	
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.WHISPER_REPLY)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2) && msg.getAction().equals(Keywords.WHISPER_REPLY)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || !p2){
+			dumpMessages();
+			fail("Whisper:Players did not recive replys.");
+		}
+		
+		//Test wrong name
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.WHISPER, "153","test"));
+		p1 = false;
+		p2 = false;
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType().equals(MessageType.GENERAL_ERROR)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		assertTrue("Player 1 did not recive error:",p1);
+		assertFalse("Player 2 recieved message:",p2);
+		
+		//Test self name
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.WHISPER, player1,"test"));
+		p1 = false;
+		p2 = false;
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType().equals(MessageType.GENERAL_ERROR)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		assertTrue("Player 1 did not recive error:",p1);
+		assertFalse("Player 2 recieved message:",p2);
+		
+		//test player in other room
+		adapter.flush(); 
+		world.findPlayer(player2).getLocation().removePlayer(world.findPlayer(player2));
+		world.findPlayer(player2).setLocation(world.findRoom("ball room"));
+		assertTrue("Player could not be added",world.findRoom("ball room").addPlayer(world.findPlayer(player2)));
+		
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.WHISPER, player2,"test"));
+		p1 = false;
+		p2 = false;
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType().equals(MessageType.GENERAL_ERROR)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		assertTrue("Player 1 did not recive error:",p1);
+		assertFalse("Player 2 recieved message:",p2);
+		
+		//Test whisper with wrong args
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.WHISPER));
+		p1 = false;
+		p2 = false;
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType().equals(MessageType.GENERAL_ERROR)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		assertTrue("Player 1 did not recive error:",p1);
+		assertFalse("Player 2 recieved message:",p2);
+		
+		
+		
 		
 		
 	}
