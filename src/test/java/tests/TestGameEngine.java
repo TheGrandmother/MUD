@@ -62,6 +62,257 @@ public class TestGameEngine {
 	
 	
 	@Test
+	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, InventoryOverflow{
+		makeMeAWorld();
+		ge = new GameEngine(adapter, world);
+		boolean p1;
+		boolean p2;
+		
+		
+		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
+		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, player2,player2_password));
+		assertTrue("Player 1 not logedin",world.findPlayer(player1).isLoggedIn());
+		assertTrue("Player 2 not logedin",world.findPlayer(player2).isLoggedIn());
+		adapter.flush();
+		
+		
+		//TEST EQUIP WITH NO ARGS
+		
+		adapter.flush();
+		//world.findPlayer(player1).getInventory().addItem(world.findItem(test_item));
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		//assertNull("Item was not removed from inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		//assertTrue("Player did not recive item",world.findPlayer(player1).getWeapon().getName().equals(test_item));
+		
+		
+		
+		//TEST EQUIP PROPER
+		
+		adapter.flush();
+		world.findPlayer(player1).getInventory().addItem(world.findItem(test_item));
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP, test_item));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.EQUIP_REPLY)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		assertNull("Item was not removed from inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		assertTrue("Player did not recive item",world.findPlayer(player1).getWeapon().getName().equals(test_item));
+		
+		
+		//TEST EQUIP WHILST SOMETHING IS EQUIPPED
+		
+		adapter.flush();
+		world.findPlayer(player1).getInventory().addItem(world.findItem(test_item));
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP, test_item));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		assertNotNull("Item was removed from inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		assertTrue("Player did not recive item",world.findPlayer(player1).getWeapon().getName().equals(test_item));
+		
+		//TEST UUNEQUIP  WITH OVERFLOW
+		
+		adapter.flush();
+		//world.findPlayer(player1).getInventory().addItem(world.findItem(test_item));
+
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.UNEQUIP,test_item));
+
+		p1 = false;
+		p2 = false;
+		//dumpMessages();
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+
+		assertNotNull("Player player still unequiped",world.findPlayer(player1).getWeapon());
+		//assertNotNull("Item was not returned to inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		
+		//TEST UNEQUIP PROPPER
+		
+		adapter.flush();
+		world.findPlayer(player1).getInventory().removeItem(world.findItem(test_item).getName());
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.UNEQUIP,test_item));
+		p1 = false;
+		p2 = false;
+		//dumpMessages();
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.UNEQUIP_REPLY)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+
+		assertNull("Player did not unequip",world.findPlayer(player1).getWeapon());
+		assertNotNull("Item was not returned to inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		
+		//TEST EQUIP NON WEAPON
+		adapter.flush();
+		world.findPlayer(player1).getInventory().removeItem(world.findItem(test_item).getName());
+		world.findPlayer(player1).getInventory().addItem(world.findItem(test_item));
+		assertNull("Item was not removed from inventory", world.findPlayer(player1).getInventory().findItem("Key to ball room"));
+		
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP, "Key to ball room"));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() ==  MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		//assertNull("Item was not removed from inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		assertNull("Player equiped the key",world.findPlayer(player1).getWeapon());
+		
+		//TEST EQUIP NON existing item.
+		adapter.flush();
+
+		
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP, "adsf"));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() ==  MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		//assertNull("Item was not removed from inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		assertNull("Player mounted the dumb thing",world.findPlayer(player1).getWeapon());
+		
+		//TEST UNEQUIP WITH NOTHING EQUIPPED
+		adapter.flush();
+		world.findPlayer(player1).getInventory().removeItem(world.findItem(test_item).getName());
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.UNEQUIP,test_item));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+
+		assertNull("Player did not unequip",world.findPlayer(player1).getWeapon());
+		//assertNotNull("Item was not returned to inventory", world.findPlayer(player1).getInventory().findItem(test_item));
+		
+		//TEST EQUIP NON WEAPON
+		adapter.flush();
+		world.findPlayer(player1).getInventory().removeItem(world.findItem(test_item).getName());
+		world.findPlayer(player1).getInventory().addItem(world.findItem("Key to ball room"));
+		
+		
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.EQUIP, "Key to ball room"));
+		
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() ==  MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		assertNotNull("Item was removed from inventory", world.findPlayer(player1).getInventory().findItem("Key to ball room"));
+		assertNull("Player equiped the key",world.findPlayer(player1).getWeapon());
+		
+		
+		
+		
+		
+	}	
+	
+	@Test
 	public void testTakeAndDrop() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
 		ge = new GameEngine(adapter, world);
