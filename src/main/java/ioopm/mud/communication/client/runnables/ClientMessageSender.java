@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 public class ClientMessageSender implements Runnable {
 
+	private volatile boolean isRunning = true;
+
 	private static final Logger logger = Logger.getLogger(ClientMessageSender.class.getName());
 
 	private final PrintWriter    pw;
@@ -27,7 +29,7 @@ public class ClientMessageSender implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) {
+		while(isRunning) {
 
 			// Iterate over outbox and send the messages every tick.
 			try {
@@ -47,9 +49,14 @@ public class ClientMessageSender implements Runnable {
 					}
 					pw.println(msg.getMessage());
 				}
-
-				pw.notifyAll();
 			}
 		}
+	}
+
+	/**
+	 * Attempts to stop the infinite loop driving this runnable.
+	 */
+	public void stop() {
+		isRunning = false;
 	}
 }
