@@ -12,6 +12,23 @@ import static org.junit.Assert.assertNotEquals;
 
 public class TestMessage {
 
+	/**
+	 * Uses reflection to overwrite the field "TIME_STAMP" in the abstract message class with the given value.
+	 * @param msg Message to overwrite.
+	 * @param value Value to overwrite with.
+	 */
+	private static void overwriteTimeStamp(Message msg, long value) {
+		try {
+			Field ts = msg.getClass().getSuperclass().getDeclaredField("TIME_STAMP");
+			ts.setAccessible(true);
+			ts.set(msg, value);
+			ts.setAccessible(false);
+		}
+		catch(NoSuchFieldException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Test
 	public void testDeconstructTransmission() {
 		String data = "server;greger;REGISTRATION;null;1417377860384;greger;123;";
@@ -42,20 +59,10 @@ public class TestMessage {
 
 	@Test
 	public void testGetMessage() {
-		long timestamp = 12L;
-
 		Message msg = new GeneralActionMessage("player", "foo", new String[]{"foo", "bar"});
 
 		// In order to test this method we need to overwrite the value stored in TIME_STAMP with our value.
-		try {
-			Field ts = msg.getClass().getSuperclass().getDeclaredField("TIME_STAMP");
-			ts.setAccessible(true);
-			ts.set(msg, timestamp);
-			ts.setAccessible(false);
-		}
-		catch(NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
+		overwriteTimeStamp(msg, 12L);
 
 		assertEquals("server;player;GENERAL_ACTION;foo;12;foo;bar;", msg.getMessage());
 	}

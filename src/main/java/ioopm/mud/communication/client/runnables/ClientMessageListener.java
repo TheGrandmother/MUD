@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 public class ClientMessageListener implements Runnable {
 
+	private volatile boolean isRunning = true;
+
 	private static final Logger logger = Logger.getLogger(ClientMessageListener.class.getName());
 
 	private static final EnumSet<MessageType> ignored_types = EnumSet.of(
@@ -38,7 +40,7 @@ public class ClientMessageListener implements Runnable {
 
 		// There is no need for this thread to sleep, br.readLine() is a blocking method.
 
-		while(true) {
+		while(isRunning) {
 			String data;
 			synchronized(br) {
 				try {
@@ -74,5 +76,12 @@ public class ClientMessageListener implements Runnable {
 				continue;
 			}
 		}
+	}
+
+	/**
+	 * Attempts to stop the infinite loop driving this runnable.
+	 */
+	public void stop() {
+		isRunning = false;
 	}
 }
