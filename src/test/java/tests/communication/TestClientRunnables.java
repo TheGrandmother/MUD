@@ -1,12 +1,19 @@
 package tests.communication;
 
+import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.Message;
+import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.client.runnables.ClientMessageSender;
 import ioopm.mud.communication.messages.client.LogoutMessage;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -14,25 +21,67 @@ import static org.junit.Assert.*;
 
 public class TestClientRunnables {
 
-	@Test
+	@Test(timeout = Adapter.TICKRATEMILLIS * 2)
 	public void testMessageSender() {
 		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
 		Queue<Message> outbox = new ConcurrentLinkedQueue<>();
 
-		Runnable sender = new ClientMessageSender(new PrintWriter(sw), outbox);
+		StringBuffer sb;
+		synchronized(pw) {
+			ClientMessageSender sender = new ClientMessageSender(pw, outbox);
 
-		Thread t = new Thread(sender);
+			Thread t = new Thread(sender);
+			t.start();
+
+			// Hand the message to the sender.
+			outbox.offer(new LogoutMessage("foo"));
+
+			// Wait for the sender to notify that it has sent the message.
+			try {
+				pw.wait();
+			}
+			catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			// Stop the runnable
+			sender.stop();
+
+			// Retrieve the message sent.
+			sb = sw.getBuffer();
+		}
+
+		// Deconstruct the data
+		Message msg = Message.deconstructTransmission(sb.toString());
+
+		// Test some random stuff to make sure it went through alright.
+		assertEquals("server", msg.getReceiver());
+		assertEquals("foo", msg.getSender());
+		assertEquals("null", msg.getAction());
+		assertEquals(MessageType.LOGOUT, msg.getType());
+	}
+
+	@Test(timeout = Adapter.TICKRATEMILLIS * 2)
+	public void testMessageListener() {
+		String sent = new LogoutMessage("foo").getMessage();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(sent)));
+		Queue<Message> inbox = new LinkedList<>();
+
+		ClientMessageListener cml = new ClientMessageListener(br ,inbox);
+		Thread t = new Thread(cml);
 		t.start();
 
-		try {
-			sw.wait();
-		}
-		catch(InterruptedException e) {
-			e.printStackTrace();
-		}
+		// Poll inbox till we get the message.
+		Message msg;
+		while((msg = inbox.poll()) == null); // BLOCKING!!
 
+		// Stop the listener
+		cml.stop();
 
+		String received = msg.getMessage();
 
-		StringBuffer sb = sw.getBuffer();
+		assertEquals(sent, received);
 	}
 }
