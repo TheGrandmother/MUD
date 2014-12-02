@@ -49,17 +49,19 @@ public abstract class ItemInteraction {
 			return;
 		}
 		
-		if(!current_room.removeItem(item)){
-			adapter.sendMessage(new ErrorMessage(actor.getName(),"There is no " + item_name + " here."));
-			return;
-		}
-		
 		try {
 			actor.getInventory().addItem(item);
 		} catch (InventoryOverflow e) {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is full!"));
 			return;
 		}
+		
+		if(!current_room.removeItem(item)){
+			adapter.sendMessage(new ErrorMessage(actor.getName(),"There is no " + item_name + " here."));
+			return;
+		}
+		
+
 		
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.TAKE_REPLY, "You picked up a/an " + item_name +"."));
 		GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name+".", actor.getName());
