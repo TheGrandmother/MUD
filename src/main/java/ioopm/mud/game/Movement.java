@@ -76,7 +76,7 @@ public abstract class Movement {
 			for (ItemContainer i : inventory.getitems()) {
 				if(i.getItem() instanceof Key && destination_name.equals(((Key)i.getItem()).getTargetRoom() ) ){
 					if(i.getItem().getLevel() > actor.getCs().getLevel()){
-						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level" + actor.getCs().getLevel()+"."));
+						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level " + actor.getCs().getLevel()+"."));
 						return;
 					}else{
 						has_key = true;
@@ -91,7 +91,7 @@ public abstract class Movement {
 			try {
 				current_room.removePlayer(actor);
 			} catch (EntityNotPresent e) {
-				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "You are not in the room you qre trying to leave!"));
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(), "You are not in the room you are trying to leave!"));
 				return;
 			}
 			destination_room.addPlayer(actor);
