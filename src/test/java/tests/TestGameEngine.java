@@ -588,7 +588,7 @@ public class TestGameEngine {
 		
 		assertTrue("Player1 not aassociated with " + test_room_unlocked,world.findPlayer(player1).getLocation().getName().equals(test_room_unlocked));
 		
-		//Move back
+		//MOVE BACK
 		adapter.flush();
 		
 		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, test_room_lobby));
@@ -610,7 +610,7 @@ public class TestGameEngine {
 		
 		assertTrue("Player1 not aassociated with " + test_room_unlocked,world.findPlayer(player1).getLocation().getName().equals(test_room_lobby));
 		
-		//test moving to locked room without key
+		//TEST MOVE TO LOCKED WITHOUT KEY
 		adapter.flush();
 		
 		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, test_room_locked));
@@ -632,9 +632,35 @@ public class TestGameEngine {
 		
 		assertFalse("Player1 moved to locked room without key",world.findPlayer(player1).getLocation().getName().equals(test_room_locked));
 		
-		//Test move to locked room with key
+		
+		//TEST MOVE TO LOCKED WITH KEY BUT UNSATISFACTORY LEVEL
 		adapter.flush();
+		world.findPlayer(player1).getCs().setLevel(0);
 		world.findPlayer(player1).getInventory().addItem(world.findItem("Key to "+test_room_locked));
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, test_room_locked));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive propperreplys.");
+		}
+		
+		assertFalse("Player1 moved to locked room without key",world.findPlayer(player1).getLocation().getName().equals(test_room_locked));
+		world.findPlayer(player1).getCs().setLevel(1);
+		
+		
+		//TEST MOVE TO LOCKED WITH KEY
+		adapter.flush();
+		//world.findPlayer(player1).getInventory().addItem(world.findItem("Key to "+test_room_locked));
 		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, test_room_locked));
 		p1 = false;
 		p2 = false;
@@ -654,7 +680,29 @@ public class TestGameEngine {
 		
 		assertTrue("Player1 didn't move to locked room with key",world.findPlayer(player1).getLocation().getName().equals(test_room_locked));
 		
-		//Test moving to nonexistent room
+		//TEST MOVE TO NON ADJACENT ROOM
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, test_room_unlocked));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType()== MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2) && msg.getType() == MessageType.NOTIFICATION){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive propperreplys.");
+		}
+		
+		assertTrue("Player1 moved to silly room",world.findPlayer(player1).getLocation().getName().equals(test_room_locked));
+		
+		
+		//TEST MOVE TO NONEXISTING ROOM
 		adapter.flush();
 		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.MOVE, "ndsfjghdjfjgjksdfnjkgsö"));
 		p1 = false;
@@ -719,7 +767,7 @@ public class TestGameEngine {
 		
 	
 	}
-	
+	 
 	
 	@Test
 	public void testTalk() throws BuilderException, EntityNotPresent{
