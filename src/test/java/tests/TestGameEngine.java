@@ -15,6 +15,7 @@ import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
 import ioopm.mud.game.RuntimeTests;
 import ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
+import ioopm.mud.generalobjects.ItemContainer;
 import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
@@ -40,6 +41,7 @@ public class TestGameEngine {
 	private static final String test_room_lobby = "lol room";
 	private static final String test_room_unlocked = "the otter kingdom";
 	private static final String test_room_locked = "ball room";
+	private static final String test_item = "test_item";
 	
 	
 	@Before
@@ -56,6 +58,249 @@ public class TestGameEngine {
 		for(Message m : adapter.messages){
 			System.out.println(m.getMessage());
 		}
+	}
+	
+	
+	@Test
+	public void testTakeAndDrop() throws BuilderException, EntityNotPresent{
+		makeMeAWorld();
+		ge = new GameEngine(adapter, world);
+		
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, player2,player2_password));
+		adapter.flush();
+		assertTrue("Player 1 not logedin",world.findPlayer(player1).isLoggedIn());
+		assertTrue("Player 2 not logedin",world.findPlayer(player2).isLoggedIn());
+		
+		int start_amount = 0;
+		for(ItemContainer ic: world.findRoom(test_room_lobby).getItems()){
+			if(ic.getName().equals(test_item)){
+				start_amount = ic.getAmount();
+			}
+		}
+		
+		//TEST TAKE PROPPER
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.TAKE, test_item));
+		boolean p1 = false;
+		boolean p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.TAKE_REPLY)){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2) && msg.getType() == MessageType.NOTIFICATION){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || !p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		int current_amount = 0;
+		for(ItemContainer ic: world.findRoom(test_room_lobby).getItems()){
+			if(ic.getName().equals(test_item)){
+				current_amount = ic.getAmount();
+			}
+		}
+		assertTrue("Amount did not decrease by one",current_amount == start_amount - 1);
+		assertFalse("Player did not recive item",world.findPlayer(player1).getInventory().findItem(test_item)==null); 
+		
+		//TEST nonexsiting item.
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.TAKE, "123"));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		assertNull("Lol... picked up notexsisting item",world.findPlayer(player1).getInventory().findItem("123"));
+		
+		//Test item in other room
+		adapter.flush();
+
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.TAKE, "Key to ball room"));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+
+		assertNull("Lol... picked up item from other room",world.findPlayer(player1).getInventory().findItem("Key to ball room")); 
+		
+		//Test wrong args
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.TAKE));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		
+		//TEST inventory full
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.TAKE, test_item));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		current_amount = 0;
+		for(ItemContainer ic: world.findRoom(test_room_lobby).getItems()){
+			if(ic.getName().equals(test_item)){
+				current_amount = ic.getAmount();
+			}
+		}
+		
+		assertTrue("Amount in room is "+current_amount,current_amount == start_amount-1);
+		
+		int lol_amount = 0;
+		for(ItemContainer ic: world.findPlayer(player1).getInventory().getitems()){
+			if(ic.getName().equals(test_item)){
+				lol_amount = ic.getAmount();
+			}
+		}
+		assertTrue("Lol... player got more the item :P", lol_amount == 1);
+		
+		
+		//----DROP-----
+		//TEST DROP PROPER
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.DROP, test_item));
+		p1 = false;
+		p2 = false;
+		
+		try{
+			for (Message msg : adapter.messages) {
+				if(msg.getReceiver().equals(player1) && msg.getAction().equals(Keywords.DROP_REPLY)){
+					p1 = true;
+				}else if(msg.getReceiver().equals(player2) && msg.getType() == MessageType.NOTIFICATION){
+					p2 = true;
+				}
+			}
+		}catch (NullPointerException e ){
+			dumpMessages();
+			fail("got NPE");
+		}
+		if(!p1 || !p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		current_amount = 0;
+		for(ItemContainer ic: world.findRoom(test_room_lobby).getItems()){
+			if(ic.getName().equals(test_item)){
+				current_amount = ic.getAmount();
+			}
+		}
+		assertTrue("Amount did not increase by one",current_amount == start_amount);
+		assertNull("Player did not drop item",world.findPlayer(player1).getInventory().findItem(test_item));
+		
+		//Test drop non existing
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.DROP, "123"));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		assertNull("Somehow managed to have the nonexisting item",world.findPlayer(player1).getInventory().findItem("123"));
+		
+		//TEST dropping unpossesed item
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.DROP, "axe"));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		} 
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		assertNull("Somehow managed to have the nonexisting item",world.findPlayer(player1).getInventory().findItem("123"));
+		
+		
+		//TEST wrong args
+		adapter.flush();
+		ge.handleMessage(new TestMessage(player1, MessageType.GENERAL_ACTION, Keywords.DROP));
+		p1 = false;
+		p2 = false;
+		
+		for (Message msg : adapter.messages) {
+			if(msg.getReceiver().equals(player1) && msg.getType() == MessageType.GENERAL_ERROR){
+				p1 = true;
+			}else if(msg.getReceiver().equals(player2)){
+				p2 = true;
+			}
+		}
+		
+		if(!p1 || p2){
+			dumpMessages();
+			fail("Say:Players did not recive replys.");
+		}
+		assertNull("Somehow managed to have the nonexisting item",world.findPlayer(player1).getInventory().findItem("123"));
+		
+		
+		
+		
 	}
 	
 	@Test
