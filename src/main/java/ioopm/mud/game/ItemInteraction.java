@@ -158,7 +158,7 @@ public abstract class ItemInteraction {
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EQUIP_REPLY, "You have equipped " + item_name + "."));
 			return;
 		}
-	}
+	} 
 	
 	/**
 	 * 
@@ -176,10 +176,12 @@ public abstract class ItemInteraction {
 			return;
 		}else{
 			Weapon w = actor.getWeapon();
-			actor.setWeapon(null);
+			
 			try {
 				actor.getInventory().addItem(w);
+				actor.setWeapon(null);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.UNEQUIP_REPLY, "You have unequipped your weapon."));
+				return;
 			} catch (InventoryOverflow e) {
 				adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have enough space in your inventory. " + w.getName() + " takes up " + w.getSize() +
 						" units of space but you only have " + (actor.getInventory().getMax_volume()-actor.getInventory().getVolume()) + " free."));
