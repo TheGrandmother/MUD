@@ -49,6 +49,9 @@ public class ClientMessageSender implements Runnable {
 					}
 					pw.println(msg.getMessage());
 				}
+
+				// Allows for testing, not used during actual runtime.
+				pw.notify();
 			}
 		}
 	}
