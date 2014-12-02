@@ -183,6 +183,22 @@ public class Room extends Entity {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * Checks if an item is present in the room.
+	 * 
+	 * @param itemName The name of the item to be searched for
+	 * @return true if item exists false otherwise
+	 */
+	public boolean hasItem(String itemName){
+		for (ItemContainer ic : items) {
+			if(ic.getName().equals(itemName)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Tries to remove the entire itemcontainer.
