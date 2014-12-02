@@ -47,6 +47,8 @@ public class ClientMessageSender implements Runnable {
 					}
 					pw.println(msg.getMessage());
 				}
+
+				pw.notifyAll();
 			}
 		}
 	}
