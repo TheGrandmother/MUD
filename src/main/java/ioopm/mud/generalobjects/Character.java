@@ -363,6 +363,7 @@ public abstract class Character extends Entity {
 					}else{
 						volume += item.getSize();
 						i.setAmount(i.getAmount()+1);
+						return;
 					}
 				}
 			}
@@ -371,6 +372,7 @@ public abstract class Character extends Entity {
 			}else{
 				volume += item.getSize();
 				items.add(new ItemContainer(item));
+				return;
 			}
 			
 		}
