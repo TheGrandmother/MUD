@@ -275,20 +275,45 @@ public class WorldBuilder {
 		
 	}
 	
-	
+	/**
+	 * Gets thrown when the builder encounters an error.
+	 * @author heso8370
+	 *
+	 */
 	@SuppressWarnings("serial")
 	public class BuilderException extends Exception{
+		/**
+		 * Creates a new BuilderException object
+		 * @param message Message describing what went wrong.
+		 */
 		public BuilderException(String message) {
 			super(message);
 		}
 	}
 	
+	/**
+	 * This exception is used when the world builder encounters a syntactical error in one of the files.
+	 * 
+	 * @author heso8370
+	 *
+	 */
 	@SuppressWarnings("serial")
 	class SyntaxError extends Exception{
 		String silly;
+		/**
+		 * Returns the reason for the syntax error.
+		 * @return
+		 */
 		public String getReason() {
 			return silly;
 		}
+		/**
+		 * Creates  a new SyntaxError with a message containing both what was wrong, at which line and what was written on that
+		 * line.
+		 * @param silly What the error was
+		 * @param line_number	At which line the error was encountered
+		 * @param line_contents The contents of that line.
+		 */
 		public SyntaxError(String silly,int line_number, String line_contents){
 			this.silly = "At line " + line_number + ". "+silly+"\n"+line_contents;
 		}

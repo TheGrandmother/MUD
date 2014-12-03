@@ -22,12 +22,10 @@ public class Weapon extends Item {
 	 * 
 	 * This method computes how much damage was dealt to the target.
 	 * 
-	 * will trow UseFailedException if the attack was unsuccessful.
-	 * 
 	 * @param user who is attacking
 	 * @param target who is being attacked
 	 * @return how much damage was dealt
-	 * @throws UseFailedException	
+	 * @throws UseFailedException gets thrown if the attack was unsuccesfull.	
 	 */
 	public int attack(Character user, Character target) throws UseFailedException {
 
@@ -46,7 +44,7 @@ public class Weapon extends Item {
 				}
 			}
 		}else{
-			throw new UseFailedException("Attack missed!");
+			throw new UseFailedException("Attack missed! You rolled: "+attack_roll+" but needed "+TARGET_NUMBER+" to hit!");
 		}
 	}
 
