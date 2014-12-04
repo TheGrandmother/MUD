@@ -240,23 +240,26 @@ public class ClientInterface {
 	 */
 	private void startMessageReader() {
 		new Thread(
-			() -> {
-				while(true) {
+			new Runnable() {
+				@Override
+				public void run() {
+					while(true) {
 
-					Message msg;
-					try {
-						logger.fine("MessageReader waiting for message...");
-						msg = client.pollMessage();
-						logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
-					}
-					catch(IOException e) {
-						logger.log(Level.SEVERE, e.getMessage(), e);
-						logger.severe("Terminating thread!");
-						return;
-					}
+						Message msg;
+						try {
+							logger.fine("MessageReader waiting for message...");
+							msg = client.pollMessage();
+							logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
+						}
+						catch(IOException e) {
+							logger.log(Level.SEVERE, e.getMessage(), e);
+							logger.severe("Terminating thread!");
+							return;
+						}
 
-					logger.fine("MessageReader should now print...");
-					logger.info(formatMessage(msg));
+						logger.fine("MessageReader should now print...");
+						logger.info(formatMessage(msg));
+					}
 				}
 			}, "MessageReader"
 		).start();
