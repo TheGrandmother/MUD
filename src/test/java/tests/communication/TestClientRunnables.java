@@ -6,7 +6,6 @@ import ioopm.mud.communication.MessageType;
 import ioopm.mud.communication.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.client.runnables.ClientMessageSender;
 import ioopm.mud.communication.messages.client.LogoutMessage;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.*;
