@@ -9,10 +9,7 @@ import ioopm.mud.communication.messages.client.LogoutMessage;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -68,7 +65,7 @@ public class TestClientRunnables {
 	public void testMessageListener() {
 		String sent = new LogoutMessage("foo").getMessage();
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(sent)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(sent.getBytes())));
 		Queue<Message> inbox = new LinkedList<>();
 
 		ClientMessageListener cml = new ClientMessageListener(br ,inbox);
