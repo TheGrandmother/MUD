@@ -16,8 +16,10 @@ import java.io.StringWriter;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TestClientRunnables {
 
@@ -70,6 +72,12 @@ public class TestClientRunnables {
 		Queue<Message> inbox = new LinkedList<>();
 
 		ClientMessageListener cml = new ClientMessageListener(br ,inbox);
+
+		// Disable the CML's logger.
+		Logger l = Logger.getLogger(ClientMessageListener.class.getName());
+		l.setLevel(Level.OFF);
+
+		// Start the CML in a separate thread.
 		Thread t = new Thread(cml);
 		t.start();
 
