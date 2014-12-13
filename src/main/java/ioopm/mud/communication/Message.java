@@ -60,7 +60,7 @@ public abstract class Message {
 	 * @return - The new message constructed from the data.
 	 * @throws IllegalArgumentException - If the data was incorrectly formed.
 	 */
-	public static Message deconstructTransmission(String transmission) {
+	public static Message deconstructTransmission(String transmission) throws IllegalArgumentException {
 
 		String[] sa = transmission.split(";");
 

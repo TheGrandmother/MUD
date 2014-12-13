@@ -16,6 +16,8 @@ public class ServerMessageListener implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(ServerMessageListener.class.getName());
 
+	private volatile boolean isRunning = true;
+
 	/*
 	 	These message types will not be added to the inbox when received!
 	 	Their timestamp however will be logged.
@@ -56,7 +58,7 @@ public class ServerMessageListener implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) {
+		while(isRunning) {
 
 			try {
 				Thread.sleep(Adapter.TICKRATEMILLIS);
@@ -131,5 +133,12 @@ public class ServerMessageListener implements Runnable {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Attempts to stop the infinite loop driving this runnable.
+	 */
+	public void stop() {
+		isRunning = false;
 	}
 }

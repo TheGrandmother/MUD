@@ -48,18 +48,20 @@ public class ServerConnectionVerifier implements Runnable {
 				data = client.readLine();
 			}
 			catch(IOException e) {
-				logger.log(Level.SEVERE, "IOException while listening for ClientRegistrationMessage!", e);
+				logger.log(Level.SEVERE, "IOException while listening for HandshakeMessage!", e);
 				return;
 			}
 
 			if(data == null) {
-				logger.severe("Received null data when listening for ClientRegistrationMessage!");
+				logger.severe("Received null data when listening for HandshakeMessage!");
 				return;
 			}
 
-			Message msg = Message.deconstructTransmission(data);
-
-			if(msg == null) {
+			Message msg = null;
+			try {
+				msg = Message.deconstructTransmission(data);
+			}
+			catch(IllegalArgumentException e) {
 				logger.severe("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 				return;
 			}
