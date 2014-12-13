@@ -377,20 +377,14 @@ public class ClientInterface {
 						break;
 
 					case "move_reply":
-						retval = args[0];
-						break;
 					case "cs_reply":
-						retval = args[0];
-						break;
 					case "equip_reply":
-						retval = args[0];
-						break;
+					case "unequip_reply":
 					case "drop_reply":
-						retval = args[0];
-						break;
 					case "examine_reply":
 						retval = args[0];
 						break;
+
 					default:
 						logger.severe("Unsupported message reply! Action: \"" + action + "\"");
 						retval = msg.getMessage();
