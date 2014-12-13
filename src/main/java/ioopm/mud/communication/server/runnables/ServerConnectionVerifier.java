@@ -15,12 +15,11 @@ public class ServerConnectionVerifier implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(ServerConnectionVerifier.class.getName());
 
+	private volatile boolean isRunning = true;
+
 	private final ClientConnection              client;
 	private final Map<String, ClientConnection> connections;
 	private final Map<String, Long>             timestamps;
-	private final Queue<Message>                inbox;
-	private final Queue<Message>                outbox;
-
 	/**
 	 * Listens for data from the client and tries to interpret it.
 	 * If the clients communicates according to the protocol it adds the client to the connections and timestamps maps
@@ -29,27 +28,21 @@ public class ServerConnectionVerifier implements Runnable {
 	 * @param client - Client to listen on.
 	 * @param connections - Map to put the client in.
 	 * @param timestamps - as connections.
-	 * @param inbox - Where to put ingoing messages.
-	 * @param outbox - Where to put outgoing messages.
 	 */
 	public ServerConnectionVerifier(
 			ClientConnection client,
 			Map<String, ClientConnection> connections,
-			Map<String, Long> timestamps,
-			Queue<Message> inbox,
-			Queue<Message> outbox
+			Map<String, Long> timestamps
 	) {
 		this.client = client;
 		this.connections = connections;
 		this.timestamps = timestamps;
-		this.inbox = inbox;
-		this.outbox = outbox;
 		logger.fine("New ServerConnectionVerifier created!");
 	}
 
 	@Override
 	public void run() {
-		while(true) {
+		while(isRunning) {
 			String data;
 			try {
 				data = client.readLine();
@@ -98,5 +91,12 @@ public class ServerConnectionVerifier implements Runnable {
 
 			return; // terminate thread
 		}
+	}
+
+	/**
+	 * Attempts to stop the infinite loop driving this runnable.
+	 */
+	public void stop() {
+		isRunning = false;
 	}
 }

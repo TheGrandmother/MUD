@@ -15,11 +15,11 @@ public class ServerConnectionListener implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(ServerConnectionListener.class.getName());
 
+	private volatile boolean isRunning = true;
+
 	private final ServerSocket                  server_socket;
 	private final Map<String, ClientConnection> connections;
 	private final Map<String, Long>             timestamps;
-	private final Queue<Message>                inbox;
-	private final Queue<Message>                outbox;
 
 	/**
 	 * Listens for new connections on the given socket.
@@ -30,19 +30,18 @@ public class ServerConnectionListener implements Runnable {
 	 * @param socket - socket to listen on.
 	 * @param connections - The map to add new connections to.
 	 * @param timestamps - Map with the latest message timestamps.
-	 * @param inbox - Inbox to add new messages to.
 	 */
-	public ServerConnectionListener(ServerSocket socket, Map<String, ClientConnection> connections, Map<String, Long> timestamps, Queue<Message> inbox, Queue<Message> outbox) {
+	public ServerConnectionListener(ServerSocket socket,
+									Map<String, ClientConnection> connections,
+									Map<String, Long> timestamps) {
 		this.server_socket = socket;
 		this.connections = connections;
 		this.timestamps = timestamps;
-		this.inbox = inbox;
-		this.outbox = outbox;
 	}
 
 	@Override
 	public void run() {
-		while(true) {
+		while(isRunning) {
 			try {
 				logger.fine("Waiting for connection...");
 				Socket socket = this.server_socket.accept();
@@ -51,7 +50,7 @@ public class ServerConnectionListener implements Runnable {
 				logger.fine("New connection: " + ip);
 
 				logger.fine("Creating new ServerConnectionVerifier for new connection!");
-				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps, inbox, outbox));
+				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps));
 				scv.setName("ServerConnectionVerifier - IP: " + ip);
 				scv.start();
 			}
@@ -59,5 +58,12 @@ public class ServerConnectionListener implements Runnable {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
+	}
+
+	/**
+	 * Attempts to stop the infinite loop driving this runnable.
+	 */
+	public void stop() {
+		isRunning = false;
 	}
 }
