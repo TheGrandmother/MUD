@@ -95,7 +95,12 @@ public abstract class Combat {
 		
 		if(target.getCs().getHealth()==0){
 			target.getCs().setHealth((int)(target.getCs().getMaxHealth()*0.75));
-		
+			try{
+				target.getLocation().removePlayer(target);	
+			}catch (EntityNotPresent e) {
+				adapter.sendMessage(new ErrorMessage(actor.getName(), "Something went absurdly wrong. This is our fault."));
+				adapter.sendMessage(new ErrorMessage(target.getName(), "Something went absurdly wrong. This is our fault."));
+			}
 			target.setLocation(world.getLobby(target.getCs().getLevel()));
 			target.getLocation().addPlayer(target);
 			GameEngine.broadcastToRoom(adapter, target.getLocation(), target_name+" returned from the dead.", target_name);
