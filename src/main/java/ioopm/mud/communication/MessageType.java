@@ -15,7 +15,4 @@ public enum MessageType {
 	HANDSHAKE,
 	HANDSHAKE_REPLY,
 	NOTIFICATION,
-
-	// Websocket poop
-	HANDSHAKE_WEBSOCKET
 }

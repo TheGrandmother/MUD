@@ -62,8 +62,6 @@ public abstract class Message {
 	 */
 	public static Message deconstructTransmission(String transmission) throws IllegalArgumentException {
 
-		//TODO add support for websocket handshakes
-
 		String[] sa = transmission.split(";");
 
 		// Length of smallest message, currently the heartbeat

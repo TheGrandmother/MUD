@@ -72,8 +72,6 @@ public class ServerConnectionVerifier implements Runnable {
 				continue;
 			}
 
-			//TODO add support for MessageType.HANDSHAKE_WEBSOCKET, just continue the loop when one is received to wait for a real MUD handshake
-
 			if(msg.getType() == MessageType.HANDSHAKE) {
 				if(!connections.containsKey(msg.getSender())) {
 					logger.fine("New client sent a \"" + msg.getType() + "\" message, adding them to connections and message to inbox.");

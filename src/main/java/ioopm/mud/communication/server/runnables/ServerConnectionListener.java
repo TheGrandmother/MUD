@@ -32,8 +32,8 @@ public class ServerConnectionListener implements Runnable {
 	 * @param timestamps - Map with the latest message timestamps.
 	 */
 	public ServerConnectionListener(ServerSocket socket,
-									Map<String, ClientConnection> connections,
-									Map<String, Long> timestamps) {
+					Map<String, ClientConnection> connections,
+					Map<String, Long> timestamps) {
 		this.server_socket = socket;
 		this.connections = connections;
 		this.timestamps = timestamps;
