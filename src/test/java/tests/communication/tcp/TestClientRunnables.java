@@ -1,4 +1,4 @@
-package tests.communication;
+package tests.communication.tcp;
 
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
