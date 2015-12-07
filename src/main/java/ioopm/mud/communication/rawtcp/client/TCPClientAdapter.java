@@ -1,6 +1,6 @@
 package ioopm.mud.communication.rawtcp.client;
 
-import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientHeartbeatSender;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageSender;
@@ -14,9 +14,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
 
-public class ClientAdapter extends Adapter {
+public class TCPClientAdapter extends TCPAdapter {
 
-	private static final Logger logger = Logger.getLogger(ClientAdapter.class.getName());
+	private static final Logger logger = Logger.getLogger(TCPClientAdapter.class.getName());
 
 	private final PrintWriter print_writer;
 
@@ -33,7 +33,7 @@ public class ClientAdapter extends Adapter {
 	 * @throws IllegalArgumentException - if a security manager exists and its checkConnect method doesn't allow the operation.
 	 * @throws SecurityException - if the port parameter is outside the specified range of valid port values, which is between 0 and 65535, inclusive.
 	 */
-	public ClientAdapter(String host, int port, String username)
+	public TCPClientAdapter(String host, int port, String username)
 			throws UnknownHostException, IOException, IllegalArgumentException, SecurityException {
 
 		logger.fine("Attempting to bind socket!");

@@ -2,7 +2,7 @@ package ioopm.mud;
 
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
-import ioopm.mud.communication.rawtcp.client.ClientAdapter;
+import ioopm.mud.communication.rawtcp.client.TCPClientAdapter;
 import ioopm.mud.communication.messages.client.*;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ActionMenu;
@@ -22,7 +22,7 @@ public class Client {
 	private String        host_address = null;
 	private String        username     = null;
 	private String        password     = null;
-	private ClientAdapter adapter      = null;
+	private TCPClientAdapter adapter      = null;
 
 	/**
 	 * Constructs a new client with an interface.
@@ -60,7 +60,7 @@ public class Client {
 
 		int port = Server.DEFAULT_PORT;
 
-		adapter = new ClientAdapter(host_address, port, username);
+		adapter = new TCPClientAdapter(host_address, port, username);
 		adapter.sendMessage(new HandshakeMessage(username));
 
 		Message answer = pollMessage();

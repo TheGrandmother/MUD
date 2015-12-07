@@ -1,10 +1,10 @@
 package ioopm.mud.communication.rawtcp.server.runnables;
 
-import ioopm.mud.communication.rawtcp.Adapter;
 import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.client.LogoutMessage;
 import ioopm.mud.communication.messages.server.HeartbeatReplyMessage;
 import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.communication.rawtcp.server.ClientConnection;
 
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class ServerMessageListener implements Runnable {
 		while(isRunning) {
 
 			try {
-				Thread.sleep(Adapter.TICKRATEMILLIS);
+				Thread.sleep(TCPAdapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -113,7 +113,7 @@ public class ServerMessageListener implements Runnable {
 					long delta = System.currentTimeMillis() - latest_time_stamp;
 
 					// If the client hasn't sent any messages during this time, mark them as dead.
-					if(delta > Adapter.TIMEOUT_SECONDS) {
+					if(delta > TCPAdapter.TIMEOUT_SECONDS) {
 						logger.fine("Found dead client!");
 						dead_clients.add(entry.getKey());
 

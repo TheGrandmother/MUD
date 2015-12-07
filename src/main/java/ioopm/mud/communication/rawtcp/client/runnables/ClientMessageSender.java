@@ -1,8 +1,8 @@
 package ioopm.mud.communication.rawtcp.client.runnables;
 
-import ioopm.mud.communication.rawtcp.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 
 import java.io.PrintWriter;
 import java.util.Queue;
@@ -33,7 +33,7 @@ public class ClientMessageSender implements Runnable {
 
 			// Iterate over outbox and send the messages every tick.
 			try {
-				Thread.sleep(Adapter.TICKRATEMILLIS);
+				Thread.sleep(TCPAdapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception

@@ -4,9 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import ioopm.mud.communication.rawtcp.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
@@ -1048,7 +1048,7 @@ public class TestGameEngine {
 		}
 	}
 	
-	class DummyAdapter extends Adapter{
+	class DummyAdapter extends TCPAdapter {
 		public DummyAdapter() {
 			
 		}

@@ -1,8 +1,8 @@
 package tests.communication;
 
-import ioopm.mud.communication.rawtcp.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageSender;
 import ioopm.mud.communication.messages.client.LogoutMessage;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestClientRunnables {
 
-	@Test(timeout = Adapter.TICKRATEMILLIS * 2)
+	@Test(timeout = TCPAdapter.TICKRATEMILLIS * 2)
 	public void testMessageSender() {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
@@ -60,7 +60,7 @@ public class TestClientRunnables {
 		assertEquals(MessageType.LOGOUT, msg.getType());
 	}
 
-	@Test(timeout = Adapter.TICKRATEMILLIS * 2)
+	@Test(timeout = TCPAdapter.TICKRATEMILLIS * 2)
 	public void testMessageListener() {
 		String sent = new LogoutMessage("foo").getMessage();
 

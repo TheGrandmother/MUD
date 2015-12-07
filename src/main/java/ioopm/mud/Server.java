@@ -1,8 +1,8 @@
 package ioopm.mud;
 
-import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
-import ioopm.mud.communication.rawtcp.server.ServerAdapter;
+import ioopm.mud.communication.rawtcp.server.TCPServerAdapter;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
@@ -34,10 +34,10 @@ public class Server {
 		 */
 		logger.fine("Attempting to create server adapter...");
 		try {
-			adapter = new ServerAdapter(DEFAULT_PORT);
+			adapter = new TCPServerAdapter(DEFAULT_PORT);
 		}
 		catch(IOException e) {
-			logger.log(Level.SEVERE, "Server failed to create ServerAdapter on port: " + DEFAULT_PORT, e);
+			logger.log(Level.SEVERE, "Server failed to create TCPServerAdapter on port: " + DEFAULT_PORT, e);
 			logger.severe("Severe error! Terminating server...");
 			return;
 		}
