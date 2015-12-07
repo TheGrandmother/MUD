@@ -3,6 +3,7 @@ package ioopm.mud;
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.rawtcp.server.TCPServerAdapter;
+import ioopm.mud.communication.websocket.WSServerAdapter;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
@@ -29,64 +30,68 @@ public class Server {
 	 */
 	public Server() {
 
-		/*
-		 Server adapter
-		 */
-		logger.fine("Attempting to create server adapter...");
-		try {
-			adapter = new TCPServerAdapter(DEFAULT_PORT);
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, "Server failed to create TCPServerAdapter on port: " + DEFAULT_PORT, e);
-			logger.severe("Severe error! Terminating server...");
-			return;
-		}
 
-		/*
-		 Load resources
-		 */
-		logger.fine("Attempting to load resources...");
-		try {
-			loadResourceFile("items.txt");
-			loadResourceFile("rooms.txt");
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			return;
-		}
+		WSServerAdapter lol = new WSServerAdapter(1337);
+		lol.start();
 
-		/*
-		 World builder
-		 */
-		logger.fine("Initiating world builder...");
-		WorldBuilder wb = new WorldBuilder("items.txt", "rooms.txt");
-		try {
-			wb.buildWorld(world);
-		} catch (BuilderException e1) {
-			e1.printStackTrace();
-		}
-
-		engine = new GameEngine(adapter, world);
-
-		/*
-		 Main polling loop
-		 */
-		logger.info("Starting main server loop.");
-		while(true) {
-			Message msg;
-
-			while((msg = adapter.poll()) == null) {
-				try {
-					Thread.sleep(10);
-				}
-				catch(InterruptedException e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-			}
-
-			logger.fine("Received message from client. Calling execute action.");
-			engine.handleMessage(msg);
-		}
+//		/*
+//		 Server adapter
+//		 */
+//		logger.fine("Attempting to create server adapter...");
+//		try {
+//			adapter = new TCPServerAdapter(DEFAULT_PORT);
+//		}
+//		catch(IOException e) {
+//			logger.log(Level.SEVERE, "Server failed to create TCPServerAdapter on port: " + DEFAULT_PORT, e);
+//			logger.severe("Severe error! Terminating server...");
+//			return;
+//		}
+//
+//		/*
+//		 Load resources
+//		 */
+//		logger.fine("Attempting to load resources...");
+//		try {
+//			loadResourceFile("items.txt");
+//			loadResourceFile("rooms.txt");
+//		}
+//		catch(IOException e) {
+//			logger.log(Level.SEVERE, e.getMessage(), e);
+//			return;
+//		}
+//
+//		/*
+//		 World builder
+//		 */
+//		logger.fine("Initiating world builder...");
+//		WorldBuilder wb = new WorldBuilder("items.txt", "rooms.txt");
+//		try {
+//			wb.buildWorld(world);
+//		} catch (BuilderException e1) {
+//			e1.printStackTrace();
+//		}
+//
+//		engine = new GameEngine(adapter, world);
+//
+//		/*
+//		 Main polling loop
+//		 */
+//		logger.info("Starting main server loop.");
+//		while(true) {
+//			Message msg;
+//
+//			while((msg = adapter.poll()) == null) {
+//				try {
+//					Thread.sleep(10);
+//				}
+//				catch(InterruptedException e) {
+//					logger.log(Level.SEVERE, e.getMessage(), e);
+//				}
+//			}
+//
+//			logger.fine("Received message from client. Calling execute action.");
+//			engine.handleMessage(msg);
+//		}
 	}
 
 	/**
