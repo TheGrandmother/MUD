@@ -1,8 +1,8 @@
 package ioopm.mud.communication.rawtcp.client.runnables;
 
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.messages.client.HeartBeatMessage;
-import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.messages.client.HeartBeatMessage;
+import ioopm.mud.communication.messages.Message;
 
 import java.util.Queue;
 import java.util.logging.Logger;

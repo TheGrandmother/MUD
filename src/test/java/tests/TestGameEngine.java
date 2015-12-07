@@ -3,31 +3,21 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Stack;
 
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
-import ioopm.mud.communication.rawtcp.messages.server.ActionMessage;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
-import ioopm.mud.game.RuntimeTests;
 import ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
 import ioopm.mud.generalobjects.ItemContainer;
-import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.sun.corba.se.spi.ior.MakeImmutable;
-
-import sun.misc.Queue;
 
 public class TestGameEngine {
 

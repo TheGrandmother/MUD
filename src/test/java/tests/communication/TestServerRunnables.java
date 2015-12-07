@@ -1,8 +1,8 @@
 package tests.communication;
 
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
-import ioopm.mud.communication.rawtcp.messages.client.HandshakeMessage;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.messages.client.HandshakeMessage;
 import ioopm.mud.communication.rawtcp.server.ClientConnection;
 import ioopm.mud.communication.rawtcp.server.runnables.ServerConnectionVerifier;
 import org.junit.Test;

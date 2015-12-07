@@ -1,7 +1,7 @@
 package ioopm.mud.ui;
 
 import ioopm.mud.Client;
-import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.messages.Message;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ansi.AnsiCodes;
 import ioopm.mud.ui.ansi.AnsiAttributeCodes;

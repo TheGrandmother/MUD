@@ -1,5 +1,7 @@
 package ioopm.mud.communication.rawtcp;
 
+import ioopm.mud.communication.messages.Message;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 

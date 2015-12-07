@@ -1,15 +1,15 @@
 package ioopm.mud.game;
 
-import ioopm.mud.communication.rawtcp.messages.server.AuthenticationReplyMessage;
-import ioopm.mud.communication.rawtcp.messages.server.ErrorMessage;
-import ioopm.mud.communication.rawtcp.messages.server.ReplyMessage;
+import ioopm.mud.communication.messages.server.AuthenticationReplyMessage;
+import ioopm.mud.communication.messages.server.ErrorMessage;
+import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
-import ioopm.mud.communication.rawtcp.messages.server.NotificationMessage;
-import ioopm.mud.communication.rawtcp.messages.server.RegistrationReplyMessage;
-import ioopm.mud.communication.rawtcp.messages.server.SeriousErrorMessage;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.messages.server.NotificationMessage;
+import ioopm.mud.communication.messages.server.RegistrationReplyMessage;
+import ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import ioopm.mud.exceptions.EntityNotUnique;
 import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.Room;

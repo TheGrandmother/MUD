@@ -1,7 +1,7 @@
-package ioopm.mud.communication.rawtcp.messages.client;
+package ioopm.mud.communication.messages.client;
 
-import ioopm.mud.communication.rawtcp.MessageType;
-import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.messages.Message;
 
 /**
  * Sent from the client to the server when a player wants to perform an action.

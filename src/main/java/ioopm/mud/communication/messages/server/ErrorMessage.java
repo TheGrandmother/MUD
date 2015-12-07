@@ -1,7 +1,7 @@
-package ioopm.mud.communication.rawtcp.messages.server;
+package ioopm.mud.communication.messages.server;
 
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 /**
  * 
  * This message is used for errors caused by the users actions. These are errors for which the player is responsible and should therefore be notified.

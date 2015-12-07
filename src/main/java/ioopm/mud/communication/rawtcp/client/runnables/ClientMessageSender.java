@@ -1,8 +1,8 @@
 package ioopm.mud.communication.rawtcp.client.runnables;
 
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 
 import java.io.PrintWriter;
 import java.util.Queue;

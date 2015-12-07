@@ -4,7 +4,7 @@ import ioopm.mud.communication.rawtcp.Adapter;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientHeartbeatSender;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageSender;
-import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.messages.Message;
 
 import java.io.BufferedReader;
 import java.io.IOException;

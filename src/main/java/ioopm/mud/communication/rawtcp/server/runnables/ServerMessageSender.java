@@ -1,8 +1,8 @@
 package ioopm.mud.communication.rawtcp.server.runnables;
 
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.rawtcp.server.ClientConnection;
 
 import java.util.Map;

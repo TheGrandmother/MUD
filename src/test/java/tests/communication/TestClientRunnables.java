@@ -1,11 +1,11 @@
 package tests.communication;
 
 import ioopm.mud.communication.rawtcp.Adapter;
-import ioopm.mud.communication.rawtcp.Message;
-import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageListener;
 import ioopm.mud.communication.rawtcp.client.runnables.ClientMessageSender;
-import ioopm.mud.communication.rawtcp.messages.client.LogoutMessage;
+import ioopm.mud.communication.messages.client.LogoutMessage;
 import org.junit.Test;
 
 import java.io.*;
