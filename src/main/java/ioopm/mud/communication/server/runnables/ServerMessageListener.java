@@ -84,27 +84,43 @@ public class ServerMessageListener implements Runnable {
 				}
 
 				if(data != null) {
-					Message msg = Message.deconstructTransmission(data);
 
-					if(msg != null) {
-						if(!ignored_messages.contains(msg.getType())) {
-							logger.info("Received message: \"" + data + "\"");
-							inbox.offer(msg);
-
-							if(msg.getType() == MessageType.LOGOUT) {
-								logger.fine(entry.getKey() + " sent logout, will now be marked as dead.");
-								dead_clients.add(entry.getKey());
-							}
-						}
-						else if(msg.getType() == MessageType.HEARTBEAT) {
-							outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
-						}
-
-						timestamps.put(entry.getKey(), msg.getTimeStamp());
+					// Can we make sense of what the connection is talking about?
+					Message msg;
+					try {
+						msg = Message.deconstructTransmission(data);
 					}
-					else {
-						logger.severe("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
+					catch (IllegalArgumentException e) {
+						logger.warning("Connected user does not speak our protocol! Killing the connection! Full stack follows:");
+						logger.log(Level.WARNING, e.getMessage(), e);
+
+						// Kill socket
+						try {
+							entry.getValue().killSocket();
+						} catch (IOException e1) {
+							logger.log(Level.SEVERE, e1.getMessage(), e);
+						}
+
+						// Add socket to dead clients for later removal
+						dead_clients.add(entry.getKey());
+
+						continue;
 					}
+
+                    if(!ignored_messages.contains(msg.getType())) {
+                        logger.info("Received message: \"" + data + "\"");
+                        inbox.offer(msg);
+
+                        if(msg.getType() == MessageType.LOGOUT) {
+                            logger.fine(entry.getKey() + " sent logout, will now be marked as dead.");
+                            dead_clients.add(entry.getKey());
+                        }
+                    }
+                    else if(msg.getType() == MessageType.HEARTBEAT) {
+                        outbox.offer(new HeartbeatReplyMessage(msg.getSender()));
+                    }
+
+                    timestamps.put(entry.getKey(), msg.getTimeStamp());
 				}
 				else {
 					//The client has not sent any message, check if they are still alive
