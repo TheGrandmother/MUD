@@ -1,8 +1,8 @@
 package ioopm.mud;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.server.ServerAdapter;
+import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.server.ServerAdapter;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;

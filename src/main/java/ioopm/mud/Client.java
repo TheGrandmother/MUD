@@ -1,9 +1,9 @@
 package ioopm.mud;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
-import ioopm.mud.communication.client.ClientAdapter;
-import ioopm.mud.communication.messages.client.*;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.rawtcp.client.ClientAdapter;
+import ioopm.mud.communication.rawtcp.messages.client.*;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ActionMenu;
 import ioopm.mud.ui.ClientInterface;

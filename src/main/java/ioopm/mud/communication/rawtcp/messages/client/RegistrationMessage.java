@@ -1,7 +1,7 @@
-package ioopm.mud.communication.messages.client;
+package ioopm.mud.communication.rawtcp.messages.client;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
 
 /**
  * Sent from client to server when the client wants to register it self.

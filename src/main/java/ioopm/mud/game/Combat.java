@@ -1,8 +1,8 @@
 package ioopm.mud.game;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.messages.server.ErrorMessage;
-import ioopm.mud.communication.messages.server.ReplyMessage;
+import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.rawtcp.messages.server.ErrorMessage;
+import ioopm.mud.communication.rawtcp.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.generalobjects.Item;
 import ioopm.mud.generalobjects.Player;

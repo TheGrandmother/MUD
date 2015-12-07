@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
-import ioopm.mud.communication.messages.server.ActionMessage;
+import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.rawtcp.messages.server.ActionMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;

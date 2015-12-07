@@ -1,9 +1,9 @@
-package ioopm.mud.communication.server;
+package ioopm.mud.communication.rawtcp.server;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.server.runnables.ServerMessageListener;
-import ioopm.mud.communication.server.runnables.ServerMessageSender;
-import ioopm.mud.communication.server.runnables.ServerConnectionListener;
+import ioopm.mud.communication.rawtcp.Adapter;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerMessageListener;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerMessageSender;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerConnectionListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;

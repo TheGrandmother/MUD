@@ -1,8 +1,8 @@
 package tests.communication;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
-import ioopm.mud.communication.messages.client.GeneralActionMessage;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
+import ioopm.mud.communication.rawtcp.messages.client.GeneralActionMessage;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

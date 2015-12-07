@@ -1,4 +1,4 @@
-package ioopm.mud.communication;
+package ioopm.mud.communication.rawtcp;
 
 public enum MessageType {
 	GENERAL_ACTION,

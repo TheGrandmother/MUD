@@ -1,7 +1,7 @@
-package ioopm.mud.communication.messages.server;
+package ioopm.mud.communication.rawtcp.messages.server;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
 
 public class HandshakeReplyMessage extends Message {
 

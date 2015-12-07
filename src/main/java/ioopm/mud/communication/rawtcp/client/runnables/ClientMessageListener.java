@@ -1,7 +1,7 @@
-package ioopm.mud.communication.client.runnables;
+package ioopm.mud.communication.rawtcp.client.runnables;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.rawtcp.Message;
+import ioopm.mud.communication.rawtcp.MessageType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
