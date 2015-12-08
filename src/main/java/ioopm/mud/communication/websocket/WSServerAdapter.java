@@ -2,11 +2,17 @@ package ioopm.mud.communication.websocket;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.server.ErrorMessage;
+import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayDeque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +28,9 @@ import java.util.logging.Logger;
 public class WSServerAdapter extends WebSocketServer implements Adapter {
 
     private static final Logger logger = Logger.getLogger(WSServerAdapter.class.getName());
+
+    private final Queue<Message> inbox = new ArrayDeque<>();
+    private final Map<String, WebSocket> legit_connections = new HashMap<>();
 
     public WSServerAdapter(int port) {
         super(new InetSocketAddress(port));
@@ -41,6 +50,37 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
     @Override
     public void onMessage(WebSocket conn, String message) {
         logger.info("IP: " + getIP(conn) + " sent message: " + message);
+
+        Message msg;
+        try  {
+            msg = Message.deconstructTransmission(message);
+        }
+        catch (IllegalArgumentException e) {
+            logger.warning("Received malformed message! Message: " + message);
+            logger.log(Level.FINE, e.getMessage(), e);
+
+            conn.send(new ErrorMessage("foo", "Malformed message!").toString());
+
+            return;
+        }
+
+        switch (msg.getType()) {
+            case HANDSHAKE:
+                String sender = msg.getSender();
+
+                if(legit_connections.containsKey(sender)) {
+                    conn.send(new HandshakeReplyMessage(false, "There is already a user with that name connected!").toString());
+                }
+                else {
+                    legit_connections.put(sender, conn);
+                    conn.send(new HandshakeReplyMessage(true, "Welcome to the server!").toString());
+                }
+
+                break;
+
+            default:
+                inbox.add(msg);
+        }
     }
 
     @Override
@@ -58,11 +98,19 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
     @Override
     public Message poll() {
-        return null;
+        return inbox.poll();
     }
 
     @Override
     public void sendMessage(Message m) {
+        String receiver = m.getReceiver();
 
+        if(legit_connections.containsKey(receiver)) {
+            WebSocket conn = legit_connections.get(receiver);
+            conn.send(m.toString());
+        }
+        else {
+            logger.warning("Tried to send message to non legit connection! Receiver: " + receiver);
+        }
     }
 }

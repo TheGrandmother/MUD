@@ -24,3 +24,4 @@ dependency-reduced-pom.xml
 
 # Testing
 /test
+MUD-log*

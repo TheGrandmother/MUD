@@ -34,7 +34,7 @@ public class Main {
 				logger.fine("Initiating client...");
 
 				try {
-					//setRootFormatter(new ClientConsoleFormatter(), Level.INFO);
+					setRootFormatter(new ClientConsoleFormatter(), Level.INFO);
 					new Client();
 				}
 				catch(Exception e) {

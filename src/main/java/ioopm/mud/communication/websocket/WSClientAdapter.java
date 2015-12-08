@@ -6,12 +6,16 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WSClientAdapter extends WebSocketClient implements Adapter {
 
     private static final Logger logger = Logger.getLogger(WSClientAdapter.class.getName());
+
+    private final Queue<Message> inbox = new ArrayDeque<>();
 
     public WSClientAdapter(URI serverURI) {
         super(serverURI);
@@ -25,6 +29,17 @@ public class WSClientAdapter extends WebSocketClient implements Adapter {
     @Override
     public void onMessage(String message) {
         logger.info("Received message: " + message);
+
+        Message msg;
+        try {
+            msg = Message.deconstructTransmission(message);
+        }
+        catch (IllegalArgumentException e) {
+            logger.warning("Could not translate answer from server! Message: " + message);
+            return;
+        }
+
+        inbox.add(msg);
     }
 
     @Override
@@ -39,7 +54,7 @@ public class WSClientAdapter extends WebSocketClient implements Adapter {
 
     @Override
     public Message poll() {
-        return null;
+        return inbox.poll();
     }
 
     @Override

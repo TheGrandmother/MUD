@@ -36,19 +36,6 @@ public class Client {
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		//WSClientAdapter clientAdapter = new WSClientAdapter(new URI("ws://188.166.94.208:1337"));
-		//clientAdapter.connect();
-
-		//while(true) {
-		//	try {
-		//		String m = keyboard_reader.readLine();
-		//		clientAdapter.send(m);
-		//	} catch (IOException e) {
-		//		e.printStackTrace();
-		//	}
-
-		//}
-
 		ClientInterface ui = new ClientInterface(this, keyboard_reader);
 		ui.run();
 	}
@@ -79,20 +66,22 @@ public class Client {
 		WSClientAdapter websockclient = new WSClientAdapter(new URI("ws://" + host_address + ":" + Server.DEFAULT_PORT));
 		websockclient.connect();
 
-		// Wait some time to let the connection get established
-		try {
-			Thread.sleep(1000L);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		// Wait for the connection to be established
+		while(!websockclient.isOpen()) {
+			try {
+				Thread.sleep(100L);
+			} catch (InterruptedException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
 
-		// Store a reference to the adapter
+		// Store the reference to the adapter
 		adapter = websockclient;
 
 		// Initiate the MUD protocol
 		adapter.sendMessage(new HandshakeMessage(username));
 
-		// Retrieve the servers reply
+		// Retrieve the server's reply
 		Message answer = pollMessage();
 		if(answer.getType() == MessageType.HANDSHAKE_REPLY) {
 			String[] args = answer.getArguments();
@@ -238,7 +227,6 @@ public class Client {
 	 * Force sends a logout message to the server.
 	 */
 	public void logout() {
-		//adapter.forceSendMessage(new LogoutMessage(username));
 		adapter.sendMessage(new LogoutMessage(username));
 	}
 
