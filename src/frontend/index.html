@@ -1,5 +1,28 @@
 <html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+<script src="formatter.js"></script>
 <script>
+
+
+
+
+$(document).ready(function(){
+
+var out_ = document.getElementById("output");
+var c = 0;
+var add = setInterval(function() {
+		// allow 1px inaccuracy by adding 1
+		var isScrolledToBottom = out_.scrollHeight - out_.clientHeight <= out_.scrollTop + 1;
+		//TODO Fix so that it just sticks when the user hass scrolled down and stops stiking when the user scrolls upp.
+		if(isScrolledToBottom){
+			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
+			}else{
+			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
+			}
+		}, 1000);
+});
+
 	user  = window.prompt("Please enter username(password is the same)",""); 
   ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
 	socket = new WebSocket("ws://188.166.94.208:1337");  
@@ -27,6 +50,11 @@
 		output.innerHTML += "sent message: " + val + "<br>"
 	}
 
+	function look(){
+		msg = formatToSend(new makeRequest("look",[],user));
+		console.log("sending message: " + msg);
+		socket.send(msg);
+	}
 
 	function appendToOut(text){
 		output = document.getElementById("output");
@@ -37,6 +65,9 @@
 	    var now = new Date().getTime();
 			while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 	}
+
+
+
 
 	function Message(message){
 		
@@ -53,6 +84,24 @@
 			this.args.push(split_array[i]);
 		}
 
+		this.setNow = function () {this.time_stamp = new Date.getTime();}
+
+	}
+
+
+	function makeRequest(action_,args_,sender_){
+		return message = {
+			receiver:"server",
+			sender:sender_,
+			type:"GENERAL_ACTION",
+			action:action_,
+			time_stamp:""+ new Date().getTime(),
+			args:args_.join(";")
+		};	
+	}
+
+	function formatToSend(m){
+		return m.receiver + ";" + m.sender + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";" + m.args;
 	}
 
 	function basicMessageFormat(message){
@@ -76,14 +125,17 @@
 
 
 </script>
+</head>
+
 <body>
 
 <div>
-	<div id="output" style="overflow-y:scroll; height:400px;">
+	<div id="output" style="overflow:auto; height:400px;">
 		test :D<br>
 	</div>
 	<div>
 		<input type="text" id="input" onkeydown="if (event.keyCode == 13) ass()">
+		<button onclick="look()">look</button>
 	</div>
 
 </div>
