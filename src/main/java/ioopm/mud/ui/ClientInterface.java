@@ -1,13 +1,14 @@
 package ioopm.mud.ui;
 
 import ioopm.mud.Client;
-import ioopm.mud.communication.Message;
+import ioopm.mud.communication.messages.Message;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ansi.AnsiCodes;
 import ioopm.mud.ui.ansi.AnsiAttributeCodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,6 +57,9 @@ public class ClientInterface {
 			}
 			catch(ConnectionRefusalException e) {
 				logger.warning(e.getMessage());
+			}
+			catch(URISyntaxException e) {
+				logger.warning("Incorrect address! Please try again!");
 			}
 		}
 

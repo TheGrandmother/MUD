@@ -1,6 +1,6 @@
-package tests.communication;
+package tests.communication.tcp;
 
-import ioopm.mud.communication.server.ClientConnection;
+import ioopm.mud.communication.rawtcp.server.ClientConnection;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
-package tests.communication;
+package tests.communication.tcp;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.client.GeneralActionMessage;
 import org.junit.Test;
 

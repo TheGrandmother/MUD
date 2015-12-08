@@ -1,9 +1,9 @@
-package ioopm.mud.communication.server;
+package ioopm.mud.communication.rawtcp.server;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.server.runnables.ServerMessageListener;
-import ioopm.mud.communication.server.runnables.ServerMessageSender;
-import ioopm.mud.communication.server.runnables.ServerConnectionListener;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerMessageListener;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerMessageSender;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerConnectionListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-public class ServerAdapter extends Adapter {
+public class TCPServerAdapter extends TCPAdapter{
 
-	private static final Logger logger = Logger.getLogger(ServerAdapter.class.getName());
+	private static final Logger logger = Logger.getLogger(TCPServerAdapter.class.getName());
 
 	private final Map<String, ClientConnection> connections = new ConcurrentHashMap<>();
 	private final Map<String, Long>             timestamps  = new ConcurrentHashMap<>();
@@ -26,9 +26,9 @@ public class ServerAdapter extends Adapter {
 	 * @throws SecurityException - if a security manager exists and its checkListen method doesn't allow the operation.
 	 * @throws IllegalArgumentException - if the port parameter is outside the specified range of valid port values, which is between 0 and 65535, inclusive.
 	 */
-	public ServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
+	public TCPServerAdapter(int port) throws IOException, SecurityException, IllegalArgumentException {
 
-		logger.fine("Initiating ServerAdapter!");
+		logger.fine("Initiating TCPServerAdapter!");
 
 		// Async thread - Listens for new connections and adds them to connections.
 		Thread scl = new Thread(new ServerConnectionListener(new ServerSocket(port), connections, timestamps));

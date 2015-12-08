@@ -1,4 +1,4 @@
-package ioopm.mud.communication;
+package ioopm.mud.communication.messages;
 
 
 import java.util.logging.Logger;

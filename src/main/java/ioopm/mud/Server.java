@@ -1,14 +1,17 @@
 package ioopm.mud;
 
 import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.server.ServerAdapter;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.rawtcp.server.TCPServerAdapter;
+import ioopm.mud.communication.websocket.WSServerAdapter;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
+import org.java_websocket.WebSocketImpl;
 
 import java.io.*;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,20 +30,16 @@ public class Server {
 	 * Initiates the server adapter, loads resources, and constructs the world.
 	 * Then it starts listening for clients and messages.
 	 */
-	public Server() {
+	public Server() throws UnknownHostException {
 
 		/*
 		 Server adapter
 		 */
 		logger.fine("Attempting to create server adapter...");
-		try {
-			adapter = new ServerAdapter(DEFAULT_PORT);
-		}
-		catch(IOException e) {
-			logger.log(Level.SEVERE, "Server failed to create ServerAdapter on port: " + DEFAULT_PORT, e);
-			logger.severe("Severe error! Terminating server...");
-			return;
-		}
+
+        WSServerAdapter serverAdapter = new WSServerAdapter(1337);
+        serverAdapter.start();
+        adapter = serverAdapter;
 
 		/*
 		 Load resources
