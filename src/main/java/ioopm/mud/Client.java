@@ -4,6 +4,7 @@ import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.rawtcp.client.TCPClientAdapter;
 import ioopm.mud.communication.messages.client.*;
+import ioopm.mud.communication.websocket.WSClientAdapter;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ActionMenu;
 import ioopm.mud.ui.ClientInterface;
@@ -11,6 +12,8 @@ import ioopm.mud.ui.ClientInterface;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,13 +30,28 @@ public class Client {
 	/**
 	 * Constructs a new client with an interface.
 	 */
-	public Client() {
+	public Client() throws URISyntaxException {
 		logger.fine("Initiating client!");
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
 
-		ClientInterface ui = new ClientInterface(this, keyboard_reader);
-		ui.run();
+		WSClientAdapter clientAdapter = new WSClientAdapter(new URI("wss://localhost:1337"));
+		clientAdapter.connect();
+
+		//clientAdapter.sendMessage(new HandshakeMessage("poop"));
+
+		while(true) {
+			try {
+				String m = keyboard_reader.readLine();
+				clientAdapter.send(m);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		//ClientInterface ui = new ClientInterface(this, keyboard_reader);
+		//ui.run();
 	}
 
 	/**

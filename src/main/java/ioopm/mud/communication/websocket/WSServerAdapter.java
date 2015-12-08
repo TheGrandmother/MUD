@@ -1,5 +1,7 @@
 package ioopm.mud.communication.websocket;
 
+import ioopm.mud.communication.Adapter;
+import ioopm.mud.communication.messages.Message;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -17,12 +19,13 @@ import java.util.logging.Logger;
  * It also supports SSL secured communication thanks to WSS.
  * This requires the host to have a valid certificate to work properly.
  */
-public class WSServerAdapter extends WebSocketServer {
+public class WSServerAdapter extends WebSocketServer implements Adapter {
 
     private static final Logger logger = Logger.getLogger(WSServerAdapter.class.getName());
 
     public WSServerAdapter(int port) {
         super(new InetSocketAddress(port));
+        logger.info("WSServerAdapter initiated!");
     }
 
     @Override
@@ -42,11 +45,24 @@ public class WSServerAdapter extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        logger.warning("IP: " + getIP(conn) + " cause an exception!");
+        if (conn != null) {
+            logger.warning("IP: " + getIP(conn) + " caused an exception!");
+        }
+
         logger.log(Level.WARNING, ex.getMessage(), ex);
     }
 
     private String getIP(WebSocket conn) {
         return conn.getRemoteSocketAddress().getAddress().getHostAddress();
+    }
+
+    @Override
+    public Message poll() {
+        return null;
+    }
+
+    @Override
+    public void sendMessage(Message m) {
+
     }
 }

@@ -8,8 +8,10 @@ import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
+import org.java_websocket.WebSocketImpl;
 
 import java.io.*;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,8 +30,9 @@ public class Server {
 	 * Initiates the server adapter, loads resources, and constructs the world.
 	 * Then it starts listening for clients and messages.
 	 */
-	public Server() {
+	public Server() throws UnknownHostException {
 
+		//WebSocketImpl.DEBUG = true;
 
 		WSServerAdapter lol = new WSServerAdapter(1337);
 		lol.start();
