@@ -1,0 +1,60 @@
+<html>
+<script>
+	user  = window.prompt("Please enter username(password is the same)",""); 
+	
+	socket = new WebSocket("ws://188.166.94.208:1337");  
+
+	socket.onopen= function (){
+		appendToOut("started connection");
+		sleepFor(100);
+		socket.send("server;"+user+";HANDSHAKE;null;"+new Date().getTime()+";");
+		appendToOut("Sent handhsake");
+		socket.send("server;"+user+";REGISTRATION;null;"+new Date().getTime()+";"+user+";"+user+";");
+		appendToOut("Sent registration");
+
+	}
+	
+	socket.onmessage = function (env){
+		data = env.data;
+		output = document.getElementById("output");
+		output.innerHTML += "recieved message: " + data + "<br>"
+	
+	}
+
+	function ass(){
+		val =	document.getElementById("input").value;
+		document.getElementById("input").value = "";
+		socket.send(val);
+		output = document.getElementById("output");
+		output.innerHTML += "sent message: " + val + "<br>"
+	}
+
+
+	function appendToOut(text){
+		output = document.getElementById("output");
+		output.innerHTML += text + "<br>";
+	}
+
+	function sleepFor( sleepDuration ){
+	    var now = new Date().getTime();
+			while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+	}
+
+
+</script>
+<body>
+
+<div>
+	<div id="output" style="overflow-y:scroll; height:400px;">
+		test :D<br>
+	</div>
+	<div>
+		<input type="text" id="input" onkeydown="if (event.keyCode == 13) ass()">
+	</div>
+
+</div>
+
+
+</body>
+
+</html>
