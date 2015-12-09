@@ -45,6 +45,18 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         logger.info("A connection has been terminated! IP: " + getIP(conn));
+
+		String to_remove = null;
+        for(Map.Entry<String, WebSocket> entry : legit_connections.entrySet()) {
+			if(entry.getValue() == conn) {
+				to_remove = entry.getKey();
+			}
+		}
+
+		if(to_remove != null) {
+			logger.info("Removing " + to_remove + " from legit connections!");
+			legit_connections.remove(to_remove);
+		}
     }
 
     @Override
@@ -110,7 +122,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
             conn.send(m.toString());
         }
         else {
-            logger.warning("Tried to send message to non legit connection! Receiver: " + receiver);
+            logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
         }
     }
 }
