@@ -10,16 +10,15 @@ import java.util.logging.Logger;
 
 public class ClientMessageSender implements Runnable {
 
-	private volatile boolean isRunning = true;
-
 	private static final Logger logger = Logger.getLogger(ClientMessageSender.class.getName());
-
-	private final PrintWriter    pw;
+	private final PrintWriter pw;
 	private final Queue<Message> outbox;
+	private volatile boolean isRunning = true;
 
 	/**
 	 * Sends the messages in the given outbox to the given PrintWriter.
-	 * @param pw PrintWriter to write to
+	 *
+	 * @param pw     PrintWriter to write to
 	 * @param outbox Outbox to poll from
 	 */
 	public ClientMessageSender(PrintWriter pw, Queue<Message> outbox) {
@@ -34,8 +33,7 @@ public class ClientMessageSender implements Runnable {
 			// Iterate over outbox and send the messages every tick.
 			try {
 				Thread.sleep(TCPAdapter.TICKRATEMILLIS);
-			}
-			catch(InterruptedException e) {
+			} catch(InterruptedException e) {
 				//TODO unhandled exception
 				e.printStackTrace();
 			}

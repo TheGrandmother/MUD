@@ -17,12 +17,12 @@ public abstract class Message {
 
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
-	private final String      RECEIVER;
-	private final String      SENDER;
+	private final String RECEIVER;
+	private final String SENDER;
 	private final MessageType TYPE;
-	private final String      ACTION;
-	private final String[]    ARGUMENTS;
-	private final long        TIME_STAMP;
+	private final String ACTION;
+	private final String[] ARGUMENTS;
+	private final long TIME_STAMP;
 
 	/**
 	 * Creates a new message.
@@ -76,8 +76,7 @@ public abstract class Message {
 			nouns = new String[delta];
 			try {
 				System.arraycopy(sa, 5, nouns, 0, delta);
-			}
-			catch(ArrayIndexOutOfBoundsException e) {
+			} catch(ArrayIndexOutOfBoundsException e) {
 				System.out.println("System.arraycopy failed! ArrayIndexOutOfBounds! delta:" + delta);
 				nouns = null;
 			}

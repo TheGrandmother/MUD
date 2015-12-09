@@ -5,13 +5,14 @@ import ioopm.mud.communication.messages.MessageType;
 
 /**
  * These messages are used to keep verify that a client is still connected
- * 
+ *
  * @author TheGrandmother
  */
 public class HeartbeatReplyMessage extends Message {
 
 	/**
 	 * Constructs the message.
+	 *
 	 * @param receiver Name of the receiver.
 	 */
 	public HeartbeatReplyMessage(String receiver) {

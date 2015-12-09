@@ -1,19 +1,19 @@
 package ioopm.mud.generalobjects;
 
-import java.util.HashSet;
-
 import ioopm.mud.exceptions.EntityNotPresent;
+
+import java.util.HashSet;
 
 public class Room extends Entity {
 
 	private final String description;
-	
-	private final boolean pvp; 
 
-	private HashSet<Exit> exits   = new HashSet<Exit>();
-	private HashSet<Player>   players = new HashSet<Player>();
-	private HashSet<Npc>  npcs    = new HashSet<Npc>();
-	private HashSet<ItemContainer> items   = new HashSet<ItemContainer>();
+	private final boolean pvp;
+
+	private HashSet<Exit> exits = new HashSet<Exit>();
+	private HashSet<Player> players = new HashSet<Player>();
+	private HashSet<Npc> npcs = new HashSet<Npc>();
+	private HashSet<ItemContainer> items = new HashSet<ItemContainer>();
 
 	/**
 	 * Generates a new room. with pvp set to false.
@@ -26,29 +26,30 @@ public class Room extends Entity {
 		this.description = description;
 		this.pvp = false;
 	}
+
 	/**
-	 * 
 	 * generates a room with pvp.
-	 * 
-	 * @param name name of the room
+	 *
+	 * @param name        name of the room
 	 * @param description a description of the room
-	 * @param pvp weather or not pvp is enabled.
+	 * @param pvp         weather or not pvp is enabled.
 	 */
-	public Room(String name, String description,boolean pvp) {
+	public Room(String name, String description, boolean pvp) {
 		super(name);
-		
+
 		this.description = description;
 		this.pvp = pvp;
 	}
 
 	/**
 	 * returns weather or not the room is pvp
+	 *
 	 * @return pvp
 	 */
 	public boolean isPVP() {
 		return pvp;
 	}
-	
+
 	/**
 	 * @return Name of room.
 	 */
@@ -83,30 +84,31 @@ public class Room extends Entity {
 	 */
 	//TODO this method is fucking suicidal. I'll need to refactor it to use exceptions instead of dumb retro booleans.
 	public boolean addPlayer(Player player) {
-		if(World.assertUnique(player.getName(), players) && player.isLoggedIn()){
+		if(World.assertUnique(player.getName(), players) && player.isLoggedIn()) {
 			return players.add(player);
-		}else{
+		} else {
 			return false;
 		}
 
-		
+
 	}
 
 	/**
 	 * Checks if the player is present in the room.
+	 *
 	 * @param player The player to be checked.
 	 * @return true if the player is in the room otherwise false.
 	 */
-	public boolean playerPresent(Player player){
-		for(Player p : players){
-			if(p.getName().equals(player.getName())){
+	public boolean playerPresent(Player player) {
+		for(Player p : players) {
+			if(p.getName().equals(player.getName())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Adds an NPC to the room.
 	 *
@@ -114,8 +116,8 @@ public class Room extends Entity {
 	 * @return True if NPC was successfully added.
 	 */
 	public boolean addNPC(Npc n) {
-		for (Player npc : players) {
-			if(npc.getName().equals(n.getName())){
+		for(Player npc : players) {
+			if(npc.getName().equals(n.getName())) {
 				return false;
 			}
 		}
@@ -129,71 +131,71 @@ public class Room extends Entity {
 	 * @return True if the item was successfully added.
 	 */
 	public boolean addItem(Item i) {
-		for (ItemContainer container : items) {
-			if(container.getName().equals(i.getName())){
-				container.setAmount(container.getAmount()+1);
+		for(ItemContainer container : items) {
+			if(container.getName().equals(i.getName())) {
+				container.setAmount(container.getAmount() + 1);
 				return true;
 			}
 		}
 		items.add(new ItemContainer(i));
 		return true;
 	}
-	
+
 	/**
 	 * Adds several items (many of the same item). Creates a new {@link ItemContainer} if the item is not already in the room or just adds the amount.
-	 * 
+	 *
 	 * @param i
 	 * @param amount
 	 * @return
 	 */
 	public boolean addItem(Item i, int amount) {
-		for (ItemContainer container : items) {
-			if(container.getName().equals(i.getName())){
-				container.setAmount(container.getAmount()+amount);
+		for(ItemContainer container : items) {
+			if(container.getName().equals(i.getName())) {
+				container.setAmount(container.getAmount() + amount);
 				return true;
 			}
 		}
-		
+
 		items.add(new ItemContainer(i));
-		for (ItemContainer container : items) {
-			if(container.getName().equals(i.getName())){
+		for(ItemContainer container : items) {
+			if(container.getName().equals(i.getName())) {
 				container.setAmount(amount);
 				return true;
 			}
 		}
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * tries to remove the specified item. May remove the {@link ItemContainer} or just decrease the amount.
+	 *
 	 * @param name
 	 * @return returns true if the item could be removed
 	 */
-	public boolean removeItem(Item i){
-		for (ItemContainer container : items) {
-			if(container.getName().equals(i.getName())){
-				if(container.amount == 1){
+	public boolean removeItem(Item i) {
+		for(ItemContainer container : items) {
+			if(container.getName().equals(i.getName())) {
+				if(container.amount == 1) {
 					items.remove(container);
-				}else{
-					container.setAmount(container.getAmount()-1);
+				} else {
+					container.setAmount(container.getAmount() - 1);
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
-	 * 
 	 * Checks if an item is present in the room.
-	 * 
+	 *
 	 * @param itemName The name of the item to be searched for
 	 * @return true if item exists false otherwise
 	 */
-	public boolean hasItem(String itemName){
-		for (ItemContainer ic : items) {
-			if(ic.getName().equals(itemName)){
+	public boolean hasItem(String itemName) {
+		for(ItemContainer ic : items) {
+			if(ic.getName().equals(itemName)) {
 				return true;
 			}
 		}
@@ -202,37 +204,38 @@ public class Room extends Entity {
 
 	/**
 	 * Tries to remove the entire itemcontainer.
-	 * 
+	 *
 	 * @param i The item to be removed
 	 * @throws EntityNotPresent If the item is not in the room
 	 */
-	public void removeItemCompletley(Item i) throws EntityNotPresent{
-		for(ItemContainer ic : items){
-			if(ic.getName().equals(i.getName())){
+	public void removeItemCompletley(Item i) throws EntityNotPresent {
+		for(ItemContainer ic : items) {
+			if(ic.getName().equals(i.getName())) {
 				items.remove(ic);
 				return;
 			}
 		}
 		throw new EntityNotPresent("Tried to remove nonexisting item");
 	}
-	
+
 	/**
 	 * Gets exit to specific room
+	 *
 	 * @param name The name of the room which you want.
 	 * @return null if no exit to room exists.
 	 * @throws EntityNotPresent
 	 */
-	public Exit getExit(String name){
-		for (Exit door : exits) {
-			if(door.getNameOfOtherside().equals(name)){
+	public Exit getExit(String name) {
+		for(Exit door : exits) {
+			if(door.getNameOfOtherside().equals(name)) {
 				return door;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Returns an array with the names of all rooms that this room is connected too.
 	 *
@@ -251,21 +254,25 @@ public class Room extends Entity {
 
 	/**
 	 * Returns the available exits.
+	 *
 	 * @return the set of exits
 	 */
 	public HashSet<Exit> getExits() {
 		return exits;
 	}
-	
+
 	/**
 	 * Returns the set of {@link ItemContainer} in the room
+	 *
 	 * @return
 	 */
 	public HashSet<ItemContainer> getItems() {
 		return items;
 	}
+
 	/**
 	 * Returns the set of all the {@link Npc}s in the room.
+	 *
 	 * @return
 	 */
 	public HashSet<Npc> getNpcs() {
@@ -274,6 +281,7 @@ public class Room extends Entity {
 
 	/**
 	 * Returns the set of all of the {@link Player}s in the room.
+	 *
 	 * @return the set of Players.
 	 */
 	public HashSet<Player> getPlayers() {
@@ -288,10 +296,10 @@ public class Room extends Entity {
 	 * @throws EntityNotPresent if the player is not in the room
 	 */
 	public boolean removePlayer(Player p) throws EntityNotPresent {
-		if(players.remove(p)){
+		if(players.remove(p)) {
 			return true;
-		}else{
-			throw new EntityNotPresent("Tried to remove player " + p.getName()+ " but no such player in the room");
+		} else {
+			throw new EntityNotPresent("Tried to remove player " + p.getName() + " but no such player in the room");
 		}
 	}
 
@@ -307,15 +315,13 @@ public class Room extends Entity {
 
 
 	/**
-	 * 
 	 * This class specifies how an exit works.
-	 * 
-	 * @author TheGrandmother
 	 *
+	 * @author TheGrandmother
 	 */
 	public class Exit {
-		private final Room    otherside;
-		private       boolean is_locked;
+		private final Room otherside;
+		private boolean is_locked;
 
 		/**
 		 * Constructs the exit-object.
@@ -370,10 +376,5 @@ public class Room extends Entity {
 		}
 	}
 
-
-
-	
-	
-	
 
 }

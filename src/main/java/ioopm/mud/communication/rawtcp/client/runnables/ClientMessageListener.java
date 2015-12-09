@@ -12,20 +12,18 @@ import java.util.logging.Logger;
 
 public class ClientMessageListener implements Runnable {
 
-	private volatile boolean isRunning = true;
-
 	private static final Logger logger = Logger.getLogger(ClientMessageListener.class.getName());
-
 	private static final EnumSet<MessageType> ignored_types = EnumSet.of(
 		MessageType.HEARTBEAT_REPLY
 	);
-
 	private final BufferedReader br;
 	private final Queue<Message> inbox;
+	private volatile boolean isRunning = true;
 
 	/**
 	 * Listens for messages on the given BufferedReader and adds them to the given inbox.
-	 * @param br Reader to listen on
+	 *
+	 * @param br    Reader to listen on
 	 * @param inbox Inbox to put the messages in
 	 */
 	public ClientMessageListener(BufferedReader br, Queue<Message> inbox) {
@@ -46,8 +44,7 @@ public class ClientMessageListener implements Runnable {
 				try {
 					logger.fine("Waiting for data...");
 					data = br.readLine();
-				}
-				catch(IOException e) {
+				} catch(IOException e) {
 					logger.log(Level.SEVERE, "IOException when reading from BufferedReader! Terminating thread!", e);
 					return;
 				}
@@ -70,8 +67,7 @@ public class ClientMessageListener implements Runnable {
 				logger.fine("Received msg: \"" + msg.getMessage() + "\"");
 				logger.fine("Added message to inbox");
 				inbox.offer(msg);
-			}
-			else {
+			} else {
 				logger.warning("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 				continue;
 			}

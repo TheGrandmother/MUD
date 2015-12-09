@@ -13,6 +13,7 @@ public class Main {
 
 	/**
 	 * Initiates the program.
+	 *
 	 * @param args - Needs to contain at least one element, which can be either "client" or "server".
 	 */
 	public static void main(String[] args) {
@@ -36,8 +37,7 @@ public class Main {
 				try {
 					setRootFormatter(new ClientConsoleFormatter(), Level.INFO);
 					new Client();
-				}
-				catch(Exception e) {
+				} catch(Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 				break;
@@ -48,8 +48,7 @@ public class Main {
 				try {
 					setRootFormatter(new ServerConsoleFormatter(), Level.ALL);
 					new Server();
-				}
-				catch(Exception e) {
+				} catch(Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 				break;
@@ -71,8 +70,7 @@ public class Main {
 		FileHandler log_file;
 		try {
 			log_file = new FileHandler("MUD-log.html");
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			return;
 		}
@@ -86,8 +84,9 @@ public class Main {
 
 	/**
 	 * Sets the formatter for the ConsoleHandlers of the defined logger.
+	 *
 	 * @param formatter - The formatter to use on the ConsoleHandlers.
-	 * @param level - The level to log.
+	 * @param level     - The level to log.
 	 */
 	private static void setRootFormatter(Formatter formatter, Level level) {
 		Logger root = Logger.getLogger("");

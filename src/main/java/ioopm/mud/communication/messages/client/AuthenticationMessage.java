@@ -9,7 +9,8 @@ import ioopm.mud.communication.messages.MessageType;
 public class AuthenticationMessage extends Message {
 	/**
 	 * Constructs the message.
-	 * @param sender The sender whom sent the message.
+	 *
+	 * @param sender   The sender whom sent the message.
 	 * @param username The username to authenticate with.
 	 * @param password The password to authenticate with.
 	 */

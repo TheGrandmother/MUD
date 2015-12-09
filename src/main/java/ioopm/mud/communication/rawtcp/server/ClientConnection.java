@@ -13,7 +13,7 @@ public class ClientConnection {
 	private static final Logger logger = Logger.getLogger(ClientConnection.class.getName());
 
 	private final Socket socket;
-	private PrintWriter    print_writer    = null;
+	private PrintWriter print_writer = null;
 	private BufferedReader buffered_reader = null;
 
 	/**
@@ -29,8 +29,7 @@ public class ClientConnection {
 		try {
 			this.print_writer = new PrintWriter(socket.getOutputStream(), true);
 			this.buffered_reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			logger.log(Level.SEVERE, "Failed to create PrintWriter or BufferedReader for ip-address: " + socket.getLocalAddress().toString(), e);
 			throw e;
 		}

@@ -15,14 +15,14 @@ public class ServerMessageSender implements Runnable {
 	private static final Logger logger = Logger.getLogger(ServerMessageSender.class.getName());
 
 	private final Map<String, ClientConnection> connections;
-	private final Queue<Message>                outbox;
+	private final Queue<Message> outbox;
 
 	/**
 	 * Iterates over the given outbox and sends messages to the clients in
 	 * the given connections map.
 	 *
 	 * @param connections - Verified client connections, mapped by their usernames.
-	 * @param outbox - The outbox to iterate over.
+	 * @param outbox      - The outbox to iterate over.
 	 */
 	public ServerMessageSender(Map<String, ClientConnection> connections, Queue<Message> outbox) {
 		this.connections = connections;
@@ -34,8 +34,7 @@ public class ServerMessageSender implements Runnable {
 		while(true) {
 			try {
 				Thread.sleep(TCPAdapter.TICKRATEMILLIS);
-			}
-			catch(InterruptedException e) {
+			} catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 

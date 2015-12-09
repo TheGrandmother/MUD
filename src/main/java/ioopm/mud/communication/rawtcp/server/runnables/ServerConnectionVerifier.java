@@ -1,8 +1,8 @@
 package ioopm.mud.communication.rawtcp.server.runnables;
 
-import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
 import ioopm.mud.communication.rawtcp.server.ClientConnection;
 
 import java.io.IOException;
@@ -13,25 +13,24 @@ import java.util.logging.Logger;
 public class ServerConnectionVerifier implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(ServerConnectionVerifier.class.getName());
-
+	private final ClientConnection client;
+	private final Map<String, ClientConnection> connections;
+	private final Map<String, Long> timestamps;
 	private volatile boolean isRunning = true;
 
-	private final ClientConnection              client;
-	private final Map<String, ClientConnection> connections;
-	private final Map<String, Long>             timestamps;
 	/**
 	 * Listens for data from the client and tries to interpret it.
 	 * If the clients communicates according to the protocol it adds the client to the connections and timestamps maps
 	 * and any messages the client sent to the inbox.
 	 *
-	 * @param client - Client to listen on.
+	 * @param client      - Client to listen on.
 	 * @param connections - Map to put the client in.
-	 * @param timestamps - as connections.
+	 * @param timestamps  - as connections.
 	 */
 	public ServerConnectionVerifier(
-			ClientConnection client,
-			Map<String, ClientConnection> connections,
-			Map<String, Long> timestamps
+		ClientConnection client,
+		Map<String, ClientConnection> connections,
+		Map<String, Long> timestamps
 	) {
 		this.client = client;
 		this.connections = connections;
@@ -45,8 +44,7 @@ public class ServerConnectionVerifier implements Runnable {
 			String data;
 			try {
 				data = client.readLine();
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				logger.log(Level.SEVERE, "IOException while listening for HandshakeMessage!", e);
 				return;
 			}
@@ -59,8 +57,7 @@ public class ServerConnectionVerifier implements Runnable {
 			Message msg = null;
 			try {
 				msg = Message.deconstructTransmission(data);
-			}
-			catch(IllegalArgumentException e) {
+			} catch(IllegalArgumentException e) {
 				logger.severe("Failed to deconstruct transmission! Transmission: \"" + data + "\"");
 				return;
 			}
@@ -80,13 +77,11 @@ public class ServerConnectionVerifier implements Runnable {
 					timestamps.put(msg.getSender(), System.currentTimeMillis());
 
 					client.write(new HandshakeReplyMessage(true, null).getMessage());
-				}
-				else {
+				} else {
 					logger.warning("New client tried to connect with name that is already connected!");
 					client.write(new HandshakeReplyMessage(false, "That name is already connected").getMessage());
 				}
-			}
-			else {
+			} else {
 				logger.warning("New connection sent another type of message than a handshake message!");
 			}
 

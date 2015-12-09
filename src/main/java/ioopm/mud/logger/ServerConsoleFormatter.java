@@ -11,6 +11,7 @@ public class ServerConsoleFormatter extends Formatter {
 
 	/**
 	 * Formats the given record.
+	 *
 	 * @param record - Record to format.
 	 * @return - String representing the formatted record.
 	 */
