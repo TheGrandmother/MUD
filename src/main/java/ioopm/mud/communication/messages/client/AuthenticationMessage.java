@@ -1,7 +1,7 @@
 package ioopm.mud.communication.messages.client;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 
 /**
  * This message is sent from client to server when a client wants to authenticate itself.

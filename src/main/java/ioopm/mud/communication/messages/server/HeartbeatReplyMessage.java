@@ -1,7 +1,7 @@
 package ioopm.mud.communication.messages.server;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 
 /**
  * These messages are used to keep verify that a client is still connected

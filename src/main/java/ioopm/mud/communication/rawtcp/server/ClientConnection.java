@@ -1,4 +1,4 @@
-package ioopm.mud.communication.server;
+package ioopm.mud.communication.rawtcp.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

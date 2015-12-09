@@ -1,9 +1,11 @@
 package ioopm.mud;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
-import ioopm.mud.communication.client.ClientAdapter;
+import ioopm.mud.communication.Adapter;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.rawtcp.client.TCPClientAdapter;
 import ioopm.mud.communication.messages.client.*;
+import ioopm.mud.communication.websocket.WSClientAdapter;
 import ioopm.mud.exceptions.ConnectionRefusalException;
 import ioopm.mud.ui.ActionMenu;
 import ioopm.mud.ui.ClientInterface;
@@ -11,6 +13,8 @@ import ioopm.mud.ui.ClientInterface;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,15 +23,15 @@ public class Client {
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
 	private final BufferedReader keyboard_reader;
 
-	private String        host_address = null;
-	private String        username     = null;
-	private String        password     = null;
-	private ClientAdapter adapter      = null;
+	private String  host_address = null;
+	private String  username     = null;
+	private String  password     = null;
+	private Adapter adapter      = null;
 
 	/**
 	 * Constructs a new client with an interface.
 	 */
-	public Client() {
+	public Client() throws URISyntaxException {
 		logger.fine("Initiating client!");
 
 		keyboard_reader = new BufferedReader(new InputStreamReader(System.in));
@@ -55,16 +59,30 @@ public class Client {
 	 * @throws IOException                - If an I/O error occurred.
 	 * @throws ioopm.mud.exceptions.ConnectionRefusalException - If the host refused the connection.
 	 */
-	public boolean connect() throws IOException, ConnectionRefusalException {
+	public boolean connect() throws IOException, ConnectionRefusalException, URISyntaxException {
 		logger.info("Connecting to server...");
 
-		int port = Server.DEFAULT_PORT;
+		//adapter = new TCPClientAdapter(host_address, port, username);
+		WSClientAdapter websockclient = new WSClientAdapter(new URI("ws://" + host_address + ":" + Server.DEFAULT_PORT));
+		websockclient.connect();
 
-		adapter = new ClientAdapter(host_address, port, username);
+		// Wait for the connection to be established
+		while(!websockclient.isOpen()) {
+			try {
+				Thread.sleep(100L);
+			} catch (InterruptedException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+
+		// Store the reference to the adapter
+		adapter = websockclient;
+
+		// Initiate the MUD protocol
 		adapter.sendMessage(new HandshakeMessage(username));
 
+		// Retrieve the server's reply
 		Message answer = pollMessage();
-
 		if(answer.getType() == MessageType.HANDSHAKE_REPLY) {
 			String[] args = answer.getArguments();
 
@@ -209,7 +227,7 @@ public class Client {
 	 * Force sends a logout message to the server.
 	 */
 	public void logout() {
-		adapter.forceSendMessage(new LogoutMessage(username));
+		adapter.sendMessage(new LogoutMessage(username));
 	}
 
 	/**

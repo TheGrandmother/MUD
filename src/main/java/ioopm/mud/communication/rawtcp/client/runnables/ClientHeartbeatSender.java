@@ -1,8 +1,8 @@
-package ioopm.mud.communication.client.runnables;
+package ioopm.mud.communication.rawtcp.client.runnables;
 
-import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.client.HeartBeatMessage;
-import ioopm.mud.communication.Message;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
 
 import java.util.Queue;
 import java.util.logging.Logger;
@@ -30,7 +30,7 @@ public class ClientHeartbeatSender implements Runnable {
 		while(true) {
 
 			try {
-				Thread.sleep(Adapter.HEARTBEAT_FREQUENCY);
+				Thread.sleep(TCPAdapter.HEARTBEAT_FREQUENCY);
 			}
 			catch(InterruptedException e) {
 				//TODO unhandled exception

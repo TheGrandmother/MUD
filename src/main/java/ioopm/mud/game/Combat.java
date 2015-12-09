@@ -113,7 +113,7 @@ public abstract class Combat {
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "You killed " + target_name + " and got " + hp_taken + " university credits :D"));
 			adapter.sendMessage(new ReplyMessage(target_name, Keywords.ATTACK_REPLY, "You was killed by " + actor.getName() + " and he stole " + hp_taken/2 + " university credits!. "
 					+ "You respawned in " + target.getLocation().getName()));
-			
+
 			
 			GameEngine.broadcastToRoom(adapter, actor.getLocation(), target_name+" was killed by "+ actor.getName() +"!", actor.getName(),target_name);
 			if(actor.getCs().levelUp()){

@@ -1,13 +1,11 @@
-package ioopm.mud.communication.server.runnables;
+package ioopm.mud.communication.rawtcp.server.runnables;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.server.ClientConnection;
+import ioopm.mud.communication.rawtcp.server.ClientConnection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

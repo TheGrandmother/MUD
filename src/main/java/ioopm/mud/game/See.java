@@ -5,7 +5,7 @@ import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.generalobjects.*;
 import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.Message;
+import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import ioopm.mud.generalobjects.Character.Inventory;
 

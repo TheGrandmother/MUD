@@ -1,10 +1,10 @@
-package tests.communication;
+package tests.communication.tcp;
 
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.client.HandshakeMessage;
-import ioopm.mud.communication.server.ClientConnection;
-import ioopm.mud.communication.server.runnables.ServerConnectionVerifier;
+import ioopm.mud.communication.rawtcp.server.ClientConnection;
+import ioopm.mud.communication.rawtcp.server.runnables.ServerConnectionVerifier;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

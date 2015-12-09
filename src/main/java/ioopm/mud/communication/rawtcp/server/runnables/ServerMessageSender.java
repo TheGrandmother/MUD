@@ -1,9 +1,9 @@
-package ioopm.mud.communication.server.runnables;
+package ioopm.mud.communication.rawtcp.server.runnables;
 
-import ioopm.mud.communication.Adapter;
-import ioopm.mud.communication.Message;
-import ioopm.mud.communication.MessageType;
-import ioopm.mud.communication.server.ClientConnection;
+import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.rawtcp.TCPAdapter;
+import ioopm.mud.communication.rawtcp.server.ClientConnection;
 
 import java.util.Map;
 import java.util.Queue;
@@ -33,7 +33,7 @@ public class ServerMessageSender implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				Thread.sleep(Adapter.TICKRATEMILLIS);
+				Thread.sleep(TCPAdapter.TICKRATEMILLIS);
 			}
 			catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
