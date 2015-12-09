@@ -2,27 +2,26 @@ package ioopm.mud;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
-import ioopm.mud.communication.rawtcp.server.TCPServerAdapter;
 import ioopm.mud.communication.websocket.WSServerAdapter;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
-import org.java_websocket.WebSocketImpl;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Server {
 
-	private static final Logger logger = Logger.getLogger(Server.class.getName());
-
 	public final static int DEFAULT_PORT = 1337;
-
-	private Adapter    adapter = null;
-	private World      world   = new World();
+	private static final Logger logger = Logger.getLogger(Server.class.getName());
+	private Adapter adapter = null;
+	private World world = new World();
 	private GameEngine engine;
 
 	/**
@@ -37,9 +36,9 @@ public class Server {
 		 */
 		logger.fine("Attempting to create server adapter...");
 
-        WSServerAdapter serverAdapter = new WSServerAdapter(1337);
-        serverAdapter.start();
-        adapter = serverAdapter;
+		WSServerAdapter serverAdapter = new WSServerAdapter(1337);
+		serverAdapter.start();
+		adapter = serverAdapter;
 
 		/*
 		 Load resources
@@ -48,8 +47,7 @@ public class Server {
 		try {
 			loadResourceFile("items.txt");
 			loadResourceFile("rooms.txt");
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			return;
 		}
@@ -61,7 +59,7 @@ public class Server {
 		WorldBuilder wb = new WorldBuilder("items.txt", "rooms.txt");
 		try {
 			wb.buildWorld(world);
-		} catch (BuilderException e1) {
+		} catch(BuilderException e1) {
 			e1.printStackTrace();
 		}
 
@@ -77,8 +75,7 @@ public class Server {
 			while((msg = adapter.poll()) == null) {
 				try {
 					Thread.sleep(10);
-				}
-				catch(InterruptedException e) {
+				} catch(InterruptedException e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
@@ -90,9 +87,10 @@ public class Server {
 
 	/**
 	 * Returns the adapter associated with this server.
+	 *
 	 * @return - The adapter instance.
 	 */
-	protected Adapter getAdapter(){
+	protected Adapter getAdapter() {
 		return adapter;
 	}
 

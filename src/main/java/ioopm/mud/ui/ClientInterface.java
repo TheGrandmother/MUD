@@ -3,8 +3,8 @@ package ioopm.mud.ui;
 import ioopm.mud.Client;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.exceptions.ConnectionRefusalException;
-import ioopm.mud.ui.ansi.AnsiCodes;
 import ioopm.mud.ui.ansi.AnsiAttributeCodes;
+import ioopm.mud.ui.ansi.AnsiCodes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,13 +16,14 @@ public class ClientInterface {
 
 	private static final Logger logger = Logger.getLogger(ClientInterface.class.getName());
 
-	private final Client         client;
+	private final Client client;
 	private final BufferedReader in;
 
 	/**
 	 * Constructs a the interface for the client side of the program.
+	 *
 	 * @param instance - The client instance to work against.
-	 * @param in - Defines where the interface is reading the input.
+	 * @param in       - Defines where the interface is reading the input.
 	 */
 	public ClientInterface(Client instance, BufferedReader in) {
 		this.client = instance;
@@ -46,19 +47,15 @@ public class ClientInterface {
 				if(client.connect()) {
 					logger.info("Connected to server!");
 					break;
-				}
-				else {
+				} else {
 					logger.info("Could not connect to specified address!");
 					logger.info("Please try again!");
 				}
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				logger.warning("Failed to connect to given server address!");
-			}
-			catch(ConnectionRefusalException e) {
+			} catch(ConnectionRefusalException e) {
 				logger.warning(e.getMessage());
-			}
-			catch(URISyntaxException e) {
+			} catch(URISyntaxException e) {
 				logger.warning("Incorrect address! Please try again!");
 			}
 		}
@@ -91,8 +88,7 @@ public class ClientInterface {
 				try {
 					menu = ConnectionMenu.valueOf(input.toUpperCase());
 					break;
-				}
-				catch(IllegalArgumentException e) {
+				} catch(IllegalArgumentException e) {
 					logger.info("Incorrect choice! Please try again!");
 				}
 			}
@@ -101,13 +97,11 @@ public class ClientInterface {
 				case LOGIN:
 					try {
 						connected = client.authenticate();
-					}
-					catch(IOException e) {
+					} catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
 						logger.warning("You are not connected to any server!");
 						break;
-					}
-					catch(ConnectionRefusalException e) {
+					} catch(ConnectionRefusalException e) {
 						logger.warning(e.getMessage());
 						break;
 					}
@@ -117,13 +111,11 @@ public class ClientInterface {
 				case REGISTER:
 					try {
 						connected = client.register();
-					}
-					catch(IOException e) {
+					} catch(IOException e) {
 						logger.log(Level.FINE, e.getMessage(), e);
 						logger.warning("You are not connected to any server!");
 						break;
-					}
-					catch(ConnectionRefusalException e) {
+					} catch(ConnectionRefusalException e) {
 						logger.warning(e.getMessage());
 						break;
 					}
@@ -145,8 +137,7 @@ public class ClientInterface {
 			ActionMenu action;
 			try {
 				action = ActionMenu.valueOf(input.substring(0, (space_index == -1 ? input.length() : space_index)).toUpperCase());
-			}
-			catch(IllegalArgumentException e) {
+			} catch(IllegalArgumentException e) {
 				logger.info("Incorrect choice! Please try again!");
 				continue;
 			}
@@ -157,12 +148,10 @@ public class ClientInterface {
 				String substring = input.substring(space_index + 1, input.length());
 				if(substring.length() == 0) {
 					args = null;
+				} else {
+					args = new String[] {substring};
 				}
-				else {
-					args = new String[]{substring};
-				}
-			}
-			else {
+			} else {
 				args = null;
 			}
 
@@ -170,36 +159,36 @@ public class ClientInterface {
 
 				case MOVE:
 					if(args == null) {
-						args = new String[]{prompt("What room would you like to move too?")};
+						args = new String[] {prompt("What room would you like to move too?")};
 					}
 					break;
 
 				case SAY:
 					if(args == null) {
-						args = new String[]{prompt("What would you like to say?")};
+						args = new String[] {prompt("What would you like to say?")};
 					}
 					break;
 
 				case ATTACK:
 					if(args == null) {
-						args = new String[]{prompt("Please enter player to attack:")};
+						args = new String[] {prompt("Please enter player to attack:")};
 					}
 					break;
 
 				case DROP:
 					if(args == null) {
-						args = new String[]{prompt("What would you like to drop?")};
+						args = new String[] {prompt("What would you like to drop?")};
 					}
 					break;
 
 				case EQUIP:
 					if(args == null) {
-						args = new String[]{prompt("What would you like to equip?")};
+						args = new String[] {prompt("What would you like to equip?")};
 					}
 					break;
 				case EXAMINE:
 					if(args == null) {
-						args = new String[]{prompt("What would you like to examine?")};
+						args = new String[] {prompt("What would you like to examine?")};
 					}
 					break;
 
@@ -213,7 +202,7 @@ public class ClientInterface {
 
 				case TAKE:
 					if(args == null) {
-						args = new String[]{prompt("What do you want to take?")};
+						args = new String[] {prompt("What do you want to take?")};
 					}
 					break;
 
@@ -221,7 +210,7 @@ public class ClientInterface {
 					break;
 
 				case WHISPER:
-					args = new String[]{prompt("Who do you want to whisper too?"), prompt("What do you want to whisper?")};
+					args = new String[] {prompt("Who do you want to whisper too?"), prompt("What do you want to whisper?")};
 					break;
 
 				case QUIT:
@@ -254,8 +243,7 @@ public class ClientInterface {
 							logger.fine("MessageReader waiting for message...");
 							msg = client.pollMessage();
 							logger.fine("MessageReader popped new message! Msg: \"" + msg.getMessage() + "\"");
-						}
-						catch(IOException e) {
+						} catch(IOException e) {
 							logger.log(Level.SEVERE, e.getMessage(), e);
 							logger.severe("Terminating thread!");
 							return;
@@ -286,6 +274,7 @@ public class ClientInterface {
 
 	/**
 	 * Prints the question to the menu bar and waits for the user to input a new line of data.
+	 *
 	 * @param question - The question to print.
 	 * @return - The data entered by the user.
 	 */
@@ -296,8 +285,7 @@ public class ClientInterface {
 		String input;
 		try {
 			input = in.readLine();
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			return null;
 		}
@@ -309,6 +297,7 @@ public class ClientInterface {
 
 	/**
 	 * Prints the given string to the menu bar.
+	 *
 	 * @param output - String to print.
 	 */
 	private void printToPrompt(String output) {
@@ -321,6 +310,7 @@ public class ClientInterface {
 
 	/**
 	 * Formats the given message into a nicer looking string that can be printed to the "chat".
+	 *
 	 * @param msg - The message to format.
 	 * @return - The nicer looking string.
 	 */
@@ -361,11 +351,9 @@ public class ClientInterface {
 					case "inventory_reply":
 						if(args.length == 2) {
 							retval = "Inventory: " + args[0] + "/" + args[1] + " space left. No items in bag.";
-						}
-						else if(args.length == 3) {
+						} else if(args.length == 3) {
 							retval = "Inventory: " + args[0] + "/" + args[1] + " space left. Items: " + args[2];
-						}
-						else {
+						} else {
 							logger.severe("Incorrect argument length in inventory_reply!");
 							retval = "Incorrect argument length in inventory_reply!";
 						}
@@ -421,6 +409,7 @@ public class ClientInterface {
 	/**
 	 * Iterates over the names of all constants in the given enum and constructs a new string from the names.
 	 * Example: The ConnectionMenu enum would give the following string; "LOGIN REGISTER"
+	 *
 	 * @param enumClass - The enum to iterate over.
 	 * @return - The string of all constant names.
 	 */

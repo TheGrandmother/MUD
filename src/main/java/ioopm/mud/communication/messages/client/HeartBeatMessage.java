@@ -9,6 +9,7 @@ import ioopm.mud.communication.messages.MessageType;
 public class HeartBeatMessage extends Message {
 	/**
 	 * Constructs the message.
+	 *
 	 * @param sender Name of the sender.
 	 */
 	public HeartBeatMessage(String sender) {

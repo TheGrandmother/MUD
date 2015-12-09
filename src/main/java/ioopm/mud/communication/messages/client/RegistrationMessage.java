@@ -9,7 +9,8 @@ import ioopm.mud.communication.messages.MessageType;
 public class RegistrationMessage extends Message {
 	/**
 	 * Constructs the message.
-	 * @param sender Name of the sender.
+	 *
+	 * @param sender   Name of the sender.
 	 * @param username Username to register.
 	 * @param password Password to register with the username.
 	 */

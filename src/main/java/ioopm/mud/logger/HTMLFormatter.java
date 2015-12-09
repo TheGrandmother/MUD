@@ -12,6 +12,7 @@ public class HTMLFormatter extends Formatter {
 
 	/**
 	 * Formats the given record to an html string.
+	 *
 	 * @param record - The record to format.
 	 * @return - String representing the formatted record.
 	 */

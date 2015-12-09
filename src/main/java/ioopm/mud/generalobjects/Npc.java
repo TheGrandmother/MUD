@@ -1,11 +1,10 @@
 package ioopm.mud.generalobjects;
+
 /**
- * 
  * Class representing a non player character.<br>
  * NOT YET IMPLEMENTED.
- * 
- * @author heso8370
  *
+ * @author heso8370
  */
 public class Npc extends Character {
 

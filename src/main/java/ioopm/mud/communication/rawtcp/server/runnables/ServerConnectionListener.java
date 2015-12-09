@@ -12,12 +12,10 @@ import java.util.logging.Logger;
 public class ServerConnectionListener implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(ServerConnectionListener.class.getName());
-
-	private volatile boolean isRunning = true;
-
-	private final ServerSocket                  server_socket;
+	private final ServerSocket server_socket;
 	private final Map<String, ClientConnection> connections;
-	private final Map<String, Long>             timestamps;
+	private final Map<String, Long> timestamps;
+	private volatile boolean isRunning = true;
 
 	/**
 	 * Listens for new connections on the given socket.
@@ -25,13 +23,13 @@ public class ServerConnectionListener implements Runnable {
 	 * and then adds it to the given connections and timestamps maps.
 	 * Any messages received in that auxiliary thread is added to the inbox.
 	 *
-	 * @param socket - socket to listen on.
+	 * @param socket      - socket to listen on.
 	 * @param connections - The map to add new connections to.
-	 * @param timestamps - Map with the latest message timestamps.
+	 * @param timestamps  - Map with the latest message timestamps.
 	 */
 	public ServerConnectionListener(ServerSocket socket,
-					Map<String, ClientConnection> connections,
-					Map<String, Long> timestamps) {
+									Map<String, ClientConnection> connections,
+									Map<String, Long> timestamps) {
 		this.server_socket = socket;
 		this.connections = connections;
 		this.timestamps = timestamps;
@@ -51,8 +49,7 @@ public class ServerConnectionListener implements Runnable {
 				Thread scv = new Thread(new ServerConnectionVerifier(new ClientConnection(socket), connections, timestamps));
 				scv.setName("ServerConnectionVerifier - IP: " + ip);
 				scv.start();
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}

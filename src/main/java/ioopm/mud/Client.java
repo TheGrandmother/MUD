@@ -3,7 +3,6 @@ package ioopm.mud;
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
-import ioopm.mud.communication.rawtcp.client.TCPClientAdapter;
 import ioopm.mud.communication.messages.client.*;
 import ioopm.mud.communication.websocket.WSClientAdapter;
 import ioopm.mud.exceptions.ConnectionRefusalException;
@@ -23,10 +22,10 @@ public class Client {
 	private static final Logger logger = Logger.getLogger(Client.class.getName());
 	private final BufferedReader keyboard_reader;
 
-	private String  host_address = null;
-	private String  username     = null;
-	private String  password     = null;
-	private Adapter adapter      = null;
+	private String host_address = null;
+	private String username = null;
+	private String password = null;
+	private Adapter adapter = null;
 
 	/**
 	 * Constructs a new client with an interface.
@@ -56,7 +55,7 @@ public class Client {
 	 * Uses the default port defined in Server.DEFAULT_PORT
 	 *
 	 * @return true if connection was established
-	 * @throws IOException                - If an I/O error occurred.
+	 * @throws IOException                                     - If an I/O error occurred.
 	 * @throws ioopm.mud.exceptions.ConnectionRefusalException - If the host refused the connection.
 	 */
 	public boolean connect() throws IOException, ConnectionRefusalException, URISyntaxException {
@@ -70,7 +69,7 @@ public class Client {
 		while(!websockclient.isOpen()) {
 			try {
 				Thread.sleep(100L);
-			} catch (InterruptedException e) {
+			} catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
@@ -88,12 +87,10 @@ public class Client {
 
 			if(args[0].equals("true")) {
 				return true;
-			}
-			else {
+			} else {
 				throw new ConnectionRefusalException(args[1]);
 			}
-		}
-		else {
+		} else {
 			logger.severe("Server sent a \"" + answer.getType() + "\" message instead of a handshake reply!");
 		}
 
@@ -117,8 +114,7 @@ public class Client {
 		while((msg = adapter.poll()) == null) {
 			try {
 				Thread.sleep(50);
-			}
-			catch(InterruptedException e) {
+			} catch(InterruptedException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
@@ -149,8 +145,7 @@ public class Client {
 			while((answer = adapter.poll()) == null) {
 				try {
 					Thread.sleep(200);
-				}
-				catch(InterruptedException e) {
+				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -168,8 +163,7 @@ public class Client {
 						logger.severe("Received unexpected message! Message: \"" + answer.getMessage() + "\"");
 						throw new IOException("Reply message was illegally formed!");
 				}
-			}
-			else {
+			} else {
 				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			}
 		}
@@ -198,8 +192,7 @@ public class Client {
 			while((answer = adapter.poll()) == null) {
 				try {
 					Thread.sleep(200);
-				}
-				catch(InterruptedException e) {
+				} catch(InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
@@ -216,8 +209,7 @@ public class Client {
 					default:
 						throw new IOException("Reply message was illegally formed!");
 				}
-			}
-			else {
+			} else {
 				logger.fine("Received incorrect message! Message: \"" + answer.getMessage() + "\"");
 			}
 		}
