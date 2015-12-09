@@ -20,14 +20,14 @@ public abstract class Message {
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	/* Regex groups #:
-			1 - Sender
-			2 - Receiver
-			3 - Type
-			4 - Action
-			5 - Timestamp
-			6 - List of arguments (if any)
+		1 - Sender
+		2 - Receiver
+		3 - Type
+		4 - Action
+		5 - Timestamp
+		6 - List of arguments (if any)
 	 */
-	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s]+;)*)?$";
+	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s]+;)*)\\s?$";
 	private static final Pattern MESSAGE_PATTERN = Pattern.compile(MESSAGE_REGEX);
 
 	private final String RECEIVER;
@@ -105,12 +105,13 @@ public abstract class Message {
 		}
 
 		// Retrieve the arguments
-		String[] args = null;
-		if(matcher.groupCount() == 6) {
-			args = matcher.group(6).split(";");
+		String[] arg_arr = null;
+		String args = matcher.group(6);
+		if(!args.equals("")) {
+			arg_arr = args.split(";");
 		}
 
-		return new Message(receiver, sender, type, action, timestamp, args) {
+		return new Message(receiver, sender, type, action, timestamp, arg_arr) {
 		};
 	}
 
