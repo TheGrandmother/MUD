@@ -83,7 +83,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 					conn.send(new HandshakeReplyMessage(false, "There is already a user with that name connected!").toString());
 				} else {
 					legit_connections.put(sender, conn);
-					conn.send(new HandshakeReplyMessage(true, "Welcome to the server!").toString());
+					conn.send(new HandshakeReplyMessage(true, null).toString());
 				}
 
 				break;
