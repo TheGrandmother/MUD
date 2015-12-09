@@ -68,6 +68,31 @@ public class TestMessage {
 	}
 
 	@Test
+	public void testGetMessage2() {
+		Message msg = new Message("server", "player", MessageType.GENERAL_ACTION, "foo", null) {
+		};
+
+		// In order to test this method we need to overwrite the value stored in TIME_STAMP with our value.
+		overwriteTimeStamp(msg, 12L);
+
+		assertEquals("server;player;GENERAL_ACTION;foo;12;", msg.getMessage());
+	}
+
+	@Test
+	public void testDeconstruct1() {
+		String str = "server;foo;LOGOUT;null;1234;";
+
+		Message msg = Message.deconstructTransmission(str);
+
+		assertEquals("server", msg.getReceiver());
+		assertEquals("foo", msg.getSender());
+		assertEquals(MessageType.LOGOUT, msg.getType());
+		assertEquals(1234L, msg.getTimeStamp());
+
+		assertEquals(str, msg.toString());
+	}
+
+	@Test
 	public void testToString() {
 		Message msg = new GeneralActionMessage("player", "foo", new String[]{"foo", "bar"});
 		assertEquals(msg.toString(), msg.getMessage());
