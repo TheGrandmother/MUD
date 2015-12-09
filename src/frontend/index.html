@@ -27,19 +27,59 @@ var add = setInterval(function() {
   ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
 	socket = new WebSocket("ws://188.166.94.208:1337");  
 
+	handshake_complete = false;
+	connection_established = false;
+
+
 	socket.onopen= function (){
-		appendToOut("started connection");
+		console.log("started connection");
 		sleepFor(100);
 		socket.send("server;"+user+";HANDSHAKE;null;"+new Date().getTime()+";");
-		appendToOut("Sent handhsake");
-		socket.send("server;"+user+";REGISTRATION;null;"+new Date().getTime()+";"+user+";"+user+";");
-		appendToOut("Sent registration");
+
 
 	}
 	
 	socket.onmessage = function (env){
 		data = env.data;
-		appendToOut(basicMessageFormat(new Message(data)));
+		console.log("you most likley recieved this: "+ data);
+		msg = new Message(data);
+		switch(msg.type){
+			case "HANDSHAKE_REPLY":
+				console.log("recieved handshake reply");
+				console.log(msg.args);
+				if(msg.args[0]=="true"){
+					handshake_complete = true;
+					socket.send("server;"+user+";REGISTRATION;null;"+new Date().getTime()+";"+user+";"+user+";");
+					console.log("Handshake reply confirmed. Sent registration request")
+				}else{
+					console.log("handshake failed. attempting login");
+					socket.send("server;"+user+";LOGIN;null;"+new Date().getTime()+";"+user+";"+user+";");
+				}
+				break;
+			case "REGISTRATION_REPLY":
+				console.log("Received registration reply");
+				if(msg.args[0]=="true"){
+					connection_established = true;
+					console.log("Registartion complete");
+					appendToOut("Welcome to the game :D")
+
+				}else{
+					alert("HANDSHAKE FAILED!");
+					console.log("Registration failed");
+				}
+				break;
+			case "GENERAL_REPLY":
+				switch (msg.action){
+						case "look_reply":
+							formatLookReply(msg);
+							break;
+				}
+				break;
+			default:
+				appendToOut(basicMessageFormat(msg));
+
+		}
+		
 	}
 
 	function ass(){
@@ -121,6 +161,19 @@ var add = setInterval(function() {
 
 		return str;
 		
+	}
+
+	function formatLookReply(message){
+	
+		appendToOut("<b>"+message.args[0] +"</b>");
+		appendToOut(message.args[1]);
+		exits = message.args[2];
+		appendToOut("Exits are: " + exits);
+		appendToOut("Users here are: " + message.args[3]);
+		
+
+
+	
 	}
 
 
