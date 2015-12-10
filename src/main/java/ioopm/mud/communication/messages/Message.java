@@ -20,8 +20,8 @@ public abstract class Message {
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	/* Regex groups #:
-		1 - Sender
-		2 - Receiver
+		1 - Receiver
+		2 - Sender
 		3 - Type
 		4 - Action
 		5 - Timestamp

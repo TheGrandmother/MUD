@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 public class TestMessage {
 
@@ -120,5 +121,15 @@ public class TestMessage {
 	public void testUnixLinebreak() {
 		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\n";
 		Message.deconstructTransmission(str);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInjection1() {
+		String inject_username = "somerandomlegituser;LOGOUT;null;12345;\n";
+		String real_msg = "server;" + inject_username + ";HANDSHAKE;null;12345;";
+		Message msg = Message.deconstructTransmission(real_msg);
+
+		fail("testInjection1 did not fail when parsing injected message! " +
+				"It successfully parsed the message: " + msg.toString());
 	}
 }
