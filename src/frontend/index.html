@@ -90,7 +90,10 @@ var add = setInterval(function() {
 			case "GENERAL_REPLY":
 				switch (msg.action){
 						case "look_reply":
-							formatLookReply(msg);
+							appendToOut( formatTime(msg.time_stamp)+ formatLookReply(msg));
+							break;
+						case "say":
+							appendToOut(formatTime(msg.time_stamp)+formatSayReply(msg));
 							break;
 						default:
 							appendToOut(basicMessageFormat(msg));

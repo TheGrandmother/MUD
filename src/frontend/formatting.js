@@ -63,15 +63,27 @@ function formatToSend(m){
 
 function formatLookReply(message){
 
-	appendToOut("<b>"+message.args[0] +"</b>");
-	appendToOut(message.args[1]);
-	exits = message.args[2];
-	appendToOut("Exits are: " + exits);
-	appendToOut("Users here are: " + message.args[3]);
+	str = ("<b>"+message.args[0] +"</b><br>");
+	str += (message.args[1])+"<br>";
+	str += "Exits are: " + message.args[2] + "<br>";
+	str += "Users here are: " + message.args[3];
+	return str;
 
 }
 
+function formatTime(stamp){
+ var date = new Date(parseInt(stamp));
+ var hours = date.getHours();
+ var minutes = "0" + date.getMinutes();
+ var seconds = "0" + date.getSeconds();
+ return  "["+hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2)+"] ";
 
+}
+
+function formatSayReply(message){
+	str = "<b>"+message.args[0]+": </b>"+message.args[1];
+	return str;
+}
 
 
 
