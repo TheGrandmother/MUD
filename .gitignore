@@ -25,3 +25,10 @@ dependency-reduced-pom.xml
 # Testing
 /test
 MUD-log*
+
+
+#Vim swaps
+*.swp
+*.swo
+*.swn
+

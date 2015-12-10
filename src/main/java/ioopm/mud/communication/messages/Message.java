@@ -2,6 +2,8 @@ package ioopm.mud.communication.messages;
 
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
@@ -16,6 +18,17 @@ import java.util.logging.Logger;
 public abstract class Message {
 
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
+
+	/* Regex groups #:
+		1 - Sender
+		2 - Receiver
+		3 - Type
+		4 - Action
+		5 - Timestamp
+		6 - List of arguments (if any)
+	 */
+	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s\\.!,@]+;)*)\\s?$";
+	private static final Pattern MESSAGE_PATTERN = Pattern.compile(MESSAGE_REGEX);
 
 	private final String RECEIVER;
 	private final String SENDER;
@@ -62,28 +75,43 @@ public abstract class Message {
 	 */
 	public static Message deconstructTransmission(String transmission) throws IllegalArgumentException {
 
-		String[] sa = transmission.split(";");
+		Matcher matcher = MESSAGE_PATTERN.matcher(transmission);
 
-		// Length of smallest message, currently the heartbeat
-		if(sa.length < 5) {
-			throw new IllegalArgumentException("The transmission was not correctly formed!");
+		if(!matcher.matches()) {
+			throw new IllegalArgumentException("Given transmission does not follow correct message structure! Trans: " + transmission);
 		}
 
-		int delta = sa.length - 5;
-		String[] nouns = null;
+		String receiver = matcher.group(1);
+		String sender = matcher.group(2);
+		String action = matcher.group(4);
 
-		if(delta > 0) {
-			nouns = new String[delta];
-			try {
-				System.arraycopy(sa, 5, nouns, 0, delta);
-			} catch(ArrayIndexOutOfBoundsException e) {
-				System.out.println("System.arraycopy failed! ArrayIndexOutOfBounds! delta:" + delta);
-				nouns = null;
-			}
+		MessageType type;
+		try {
+			type = MessageType.valueOf(matcher.group(3));
+		}
+		catch(IllegalArgumentException e) {
+			logger.severe("Given transmission does not contain a legal messagetype/action!");
+			throw new IllegalArgumentException("Failed to retrieve a correct messagetype/action from the given transmission");
 		}
 
-		return new Message(sa[0], sa[1], MessageType.valueOf(sa[2]), sa[3], Long.valueOf(sa[4]), nouns) {
-			// "Instantiate" the Message-class by creating an empty sub-class
+		long timestamp;
+		try {
+			timestamp = Long.parseLong(matcher.group(5));
+		}
+		catch(NumberFormatException e) {
+			// If this block is executed there is something wrong with our regex!
+			logger.severe("Regex failed on timestamp cast!! Please check regex-pattern to make sure it is correct!");
+			throw new IllegalArgumentException("Failed to retrieve the timestamp from the given transmission!");
+		}
+
+		// Retrieve the arguments
+		String[] arg_arr = null;
+		String args = matcher.group(6);
+		if(!args.equals("")) {
+			arg_arr = args.split(";");
+		}
+
+		return new Message(receiver, sender, type, action, timestamp, arg_arr) {
 		};
 	}
 
