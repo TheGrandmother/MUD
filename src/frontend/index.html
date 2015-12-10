@@ -1,14 +1,33 @@
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-<script src="formatter.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="formatting.js" async></script>
+<script src="parser.js" async></script>
 <script>
+function require(script) {
+	$.ajax({
+		url: script,
+		dataType: "script",
+		async: false,           // <-- This is the key
+		success: function () {
+			// all good...
+		},
+		error: function () {
+			throw new Error("Could not load script " + script);
+		}
+		});
+}
 
+//require("formatting.js")
 
+/*
+$.getScript("formatting.js", function(){
+					alert("something something darkside");
 
-
+			 });
+*/
 $(document).ready(function(){
-
 var out_ = document.getElementById("output");
 var c = 0;
 var add = setInterval(function() {
@@ -73,6 +92,9 @@ var add = setInterval(function() {
 						case "look_reply":
 							formatLookReply(msg);
 							break;
+						default:
+							appendToOut(basicMessageFormat(msg));
+							break;
 				}
 				break;
 			default:
@@ -85,9 +107,9 @@ var add = setInterval(function() {
 	function ass(){
 		val =	document.getElementById("input").value;
 		document.getElementById("input").value = "";
-		socket.send(val);
-		output = document.getElementById("output");
-		output.innerHTML += "sent message: " + val + "<br>"
+		msg = formatToSend(parseInput(val));
+		console.log("Sending message: " + msg);
+		socket.send(msg);
 	}
 
 	function look(){
@@ -108,73 +130,6 @@ var add = setInterval(function() {
 
 
 
-
-	function Message(message){
-		
-		split_array = message.split(";");
-		this.receiver = split_array[0];
-		this.sender = split_array[1];
-		this.type = split_array[2];
-		this.action = split_array[3];
-		this.time_stamp = split_array[4];
-
-		this.args = [];
-	
-		for(i = 5; i < split_array.length; i++){
-			this.args.push(split_array[i]);
-		}
-
-		this.setNow = function () {this.time_stamp = new Date.getTime();}
-
-	}
-
-
-	function makeRequest(action_,args_,sender_){
-		return message = {
-			receiver:"server",
-			sender:sender_,
-			type:"GENERAL_ACTION",
-			action:action_,
-			time_stamp:""+ new Date().getTime(),
-			args:args_.join(";")
-		};	
-	}
-
-	function formatToSend(m){
-		return m.receiver + ";" + m.sender + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";" + m.args;
-	}
-
-	function basicMessageFormat(message){
-		str = "Message:<br>";
-		str += ugly_tab+"Type: " + message.type + "<br>";
-		str += ugly_tab+"Action: " + message.action + "<br>";
-		str += ugly_tab+"Time Stamp: " + message.time_stamp + "<br>";
-		str += ugly_tab+"Arguments: " + "<br>";
-		if(message.args.length == 0){
-			str += ugly_tab+ugly_tab+"NONE" + "<br>";
-		}else{
-			for(i = 0; i < message.args.length; i++){
-				str += ugly_tab+ugly_tab+message.args[i] + "<br>";
-			}
-		
-		}
-
-		return str;
-		
-	}
-
-	function formatLookReply(message){
-	
-		appendToOut("<b>"+message.args[0] +"</b>");
-		appendToOut(message.args[1]);
-		exits = message.args[2];
-		appendToOut("Exits are: " + exits);
-		appendToOut("Users here are: " + message.args[3]);
-		
-
-
-	
-	}
 
 
 </script>
