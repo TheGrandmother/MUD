@@ -90,6 +90,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 			case LOGOUT:
 				legit_connections.remove(msg.getSender());
+				conn.close();
 			default:
 				inbox.add(msg);
 		}
