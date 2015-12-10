@@ -1,4 +1,4 @@
-package tests.communication.tcp;
+package tests.communication;
 
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 public class TestMessage {
 
@@ -96,5 +97,39 @@ public class TestMessage {
 	public void testToString() {
 		Message msg = new GeneralActionMessage("player", "foo", new String[]{"foo", "bar"});
 		assertEquals(msg.toString(), msg.getMessage());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRandom1() {
+		String str = "ajkdjfsgho3ir3h89rwherf99234,;;,2342,;;,l23i4j903@£$0";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testIncorrectType() {
+		String str = "tjenare;ksdfkjf234234;NOT_CORRECT_TYPE;action;12345;";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test
+	public void testWindowsLinebreak() {
+		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\r\n";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test
+	public void testUnixLinebreak() {
+		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\n";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testInjection1() {
+		String inject_username = "somerandomlegituser;LOGOUT;null;12345;\n";
+		String real_msg = "server;" + inject_username + ";HANDSHAKE;null;12345;";
+		Message msg = Message.deconstructTransmission(real_msg);
+
+		fail("testInjection1 did not fail when parsing injected message! " +
+				"It successfully parsed the message: " + msg.toString());
 	}
 }

@@ -20,14 +20,14 @@ public abstract class Message {
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	/* Regex groups #:
-		1 - Sender
-		2 - Receiver
+		1 - Receiver
+		2 - Sender
 		3 - Type
 		4 - Action
 		5 - Timestamp
 		6 - List of arguments (if any)
 	 */
-	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s\\.!,@]+;)*)\\s?$";
+	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s\\.!,@]+;)*)\\s{0,2}$";
 	private static final Pattern MESSAGE_PATTERN = Pattern.compile(MESSAGE_REGEX);
 
 	private final String RECEIVER;
