@@ -97,4 +97,28 @@ public class TestMessage {
 		Message msg = new GeneralActionMessage("player", "foo", new String[]{"foo", "bar"});
 		assertEquals(msg.toString(), msg.getMessage());
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRandom1() {
+		String str = "ajkdjfsgho3ir3h89rwherf99234,;;,2342,;;,l23i4j903@£$0";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testIncorrectType() {
+		String str = "tjenare;ksdfkjf234234;NOT_CORRECT_TYPE;action;12345;";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test
+	public void testWindowsLinebreak() {
+		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\r\n";
+		Message.deconstructTransmission(str);
+	}
+
+	@Test
+	public void testUnixLinebreak() {
+		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\n";
+		Message.deconstructTransmission(str);
+	}
 }
