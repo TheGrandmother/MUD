@@ -1,6 +1,8 @@
 
-
-
+  ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
+	//[11,11,11[
+	time_stamp_offs = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	
 	function Message(message){
 		
 		split_array = message.split(";");
@@ -60,13 +62,13 @@ function formatToSend(m){
 
 }
 
-
+//TODO Add all arguments!!
 function formatLookReply(message){
 
 	str = ("<b>"+message.args[0] +"</b><br>");
-	str += (message.args[1])+"<br>";
-	str += "Exits are: " + message.args[2] + "<br>";
-	str += "Users here are: " + message.args[3];
+	str +=time_stamp_offs + (message.args[1])+"<br>";
+	str +=time_stamp_offs + "Exits are: " + message.args[2] + "<br>";
+	str +=time_stamp_offs + "Users here are: " + message.args[3];
 	return str;
 
 }
@@ -82,6 +84,11 @@ function formatTime(stamp){
 
 function formatSayReply(message){
 	str = "<b>"+message.args[0]+": </b>"+message.args[1];
+	return str;
+}
+
+function formatMoveReply(message){
+	str = "<b>"+message.args[0]+" </b>";
 	return str;
 }
 

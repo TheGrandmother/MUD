@@ -43,7 +43,6 @@ var add = setInterval(function() {
 });
 
 	user  = window.prompt("Please enter username(password is the same)",""); 
-  ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
 	socket = new WebSocket("ws://188.166.94.208:1337");  
 
 	handshake_complete = false;
@@ -91,6 +90,9 @@ var add = setInterval(function() {
 				switch (msg.action){
 						case "look_reply":
 							appendToOut( formatTime(msg.time_stamp)+ formatLookReply(msg));
+							break;
+						case "move_reply":
+							appendToOut( formatTime(msg.time_stamp)+ formatMoveReply(msg));
 							break;
 						case "say":
 							appendToOut(formatTime(msg.time_stamp)+formatSayReply(msg));
@@ -141,7 +143,7 @@ var add = setInterval(function() {
 <body>
 
 <div>
-	<div id="output" style="overflow:auto; height:400px;">
+	<div id="output" style="overflow:auto; height:400px;font-family: Mono;font-size: 12px;">
 		test :D<br>
 	</div>
 	<div>
