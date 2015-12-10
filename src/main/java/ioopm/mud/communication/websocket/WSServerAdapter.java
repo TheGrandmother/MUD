@@ -2,6 +2,7 @@ package ioopm.mud.communication.websocket;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.client.LogoutMessage;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
 import org.java_websocket.WebSocket;
@@ -56,6 +57,9 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 		if(to_remove != null) {
 			logger.info("Removing " + to_remove + " from legit connections!");
 			legit_connections.remove(to_remove);
+
+			// Notify the game engine about the dropped connection
+			inbox.add(new LogoutMessage(to_remove));
 		}
 	}
 
@@ -90,6 +94,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 			case LOGOUT:
 				legit_connections.remove(msg.getSender());
+				conn.close();
 			default:
 				inbox.add(msg);
 		}
