@@ -1,6 +1,5 @@
 
   ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
-	//[11,11,11[
 	time_stamp_offs = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	
 	function Message(message){
@@ -92,5 +91,8 @@ function formatMoveReply(message){
 	return str;
 }
 
-
+function formatNotification(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
 

@@ -102,6 +102,9 @@ var add = setInterval(function() {
 							break;
 				}
 				break;
+			case "NOTIFICATION":
+				appendToOut(formatTime(msg.time_stamp)+formatNotification(msg));
+				break;
 			default:
 				appendToOut(basicMessageFormat(msg));
 
