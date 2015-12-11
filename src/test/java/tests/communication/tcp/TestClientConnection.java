@@ -69,7 +69,7 @@ public class TestClientConnection {
 		output.reset();
 		cc.write("foo");
 		String received = output.toString("UTF-8");
-		assertEquals("foo\n", received);
+		assertEquals("foo" + System.lineSeparator(), received);
 	}
 
 	@Test
