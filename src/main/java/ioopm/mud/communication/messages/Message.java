@@ -220,6 +220,9 @@ public abstract class Message {
 
 		if(ARGUMENTS != null) {
 			for(String s : ARGUMENTS) {
+				if(s == null) {
+					s = "null";
+				}
 				sb.append(encoder.encodeToString(s.getBytes())).append(';');
 			}
 		}
