@@ -32,7 +32,7 @@ public class TestMessage {
 
 	@Test
 	public void testDeconstructTransmission() {
-		String data = "server;greger;REGISTRATION;null;1417377860384;greger;123;";
+		String data = "c2VydmVy;Z3JlZ2Vy;REGISTRATION;null;1417377860384;Z3JlZ2Vy;MTIz;";
 
 		Message msg = Message.deconstructTransmission(data);
 		String[] args = msg.getArguments();
@@ -65,7 +65,7 @@ public class TestMessage {
 		// In order to test this method we need to overwrite the value stored in TIME_STAMP with our value.
 		overwriteTimeStamp(msg, 12L);
 
-		assertEquals("server;player;GENERAL_ACTION;foo;12;foo;bar;", msg.getMessage());
+		assertEquals("c2VydmVy;cGxheWVy;GENERAL_ACTION;foo;12;Zm9v;YmFy;", msg.getMessage());
 	}
 
 	@Test
@@ -76,12 +76,12 @@ public class TestMessage {
 		// In order to test this method we need to overwrite the value stored in TIME_STAMP with our value.
 		overwriteTimeStamp(msg, 12L);
 
-		assertEquals("server;player;GENERAL_ACTION;foo;12;", msg.getMessage());
+		assertEquals("c2VydmVy;cGxheWVy;GENERAL_ACTION;foo;12;", msg.getMessage());
 	}
 
 	@Test
 	public void testDeconstruct1() {
-		String str = "server;foo;LOGOUT;null;1234;";
+		String str = "c2VydmVy;Zm9v;LOGOUT;null;1234;";
 
 		Message msg = Message.deconstructTransmission(str);
 
@@ -107,29 +107,29 @@ public class TestMessage {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testIncorrectType() {
-		String str = "tjenare;ksdfkjf234234;NOT_CORRECT_TYPE;action;12345;";
+		String str = "dGplbmFyZQ==;a3NkZmtqZjIzNDIzNA==;NOT_CORRECT_TYPE;action;12345;";
 		Message.deconstructTransmission(str);
 	}
 
 	@Test
 	public void testWindowsLinebreak() {
-		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\r\n";
+		String str = "dGplbmFyZQ==;a3NkZmtqZjIzNDIzNA==;GENERAL_ACTION;action;12345;\r\n";
 		Message.deconstructTransmission(str);
 	}
 
 	@Test
 	public void testUnixLinebreak() {
-		String str = "tjenare;ksdfkjf234234;GENERAL_ACTION;action;12345;\n";
+		String str = "dGplbmFyZQ==;a3NkZmtqZjIzNDIzNA==;GENERAL_ACTION;action;12345;\n";
 		Message.deconstructTransmission(str);
 	}
 
-//	@Test(expected = IllegalArgumentException.class)
-//	public void testInjection1() {
-//		String inject_username = "somerandomlegituser;LOGOUT;null;12345;\n";
-//		String real_msg = "server;" + inject_username + ";HANDSHAKE;null;12345;";
-//		Message msg = Message.deconstructTransmission(real_msg);
-//
-//		fail("testInjection1 did not fail when parsing injected message! " +
-//				"It successfully parsed the message: " + msg.toString());
-//	}
+	@Test(expected = IllegalArgumentException.class)
+	public void testInjection1() {
+		String inject_username = "somerandomlegituser;LOGOUT;null;12345;\n";
+		String real_msg = "server;" + inject_username + ";HANDSHAKE;null;12345;";
+		Message msg = Message.deconstructTransmission(real_msg);
+
+		fail("testInjection1 did not fail when parsing injected message! " +
+				"It successfully parsed the message: " + msg.toString());
+	}
 }
