@@ -1,6 +1,6 @@
 package ioopm.mud.communication.messages;
 
-
+import java.util.Base64;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,15 +20,18 @@ public abstract class Message {
 	private static final Logger logger = Logger.getLogger(Message.class.getName());
 
 	/* Regex groups #:
-		1 - Receiver
-		2 - Sender
+		1 - Receiver  (base64 encoded)
+		2 - Sender    (base64 encoded)
 		3 - Type
 		4 - Action
 		5 - Timestamp
-		6 - List of arguments (if any)
+		6 - List of arguments (if any) (base64 encoded)
 	 */
-	private static final String MESSAGE_REGEX = "^(\\w+);(\\w+);(\\w+);(\\w+);(\\d+);((?:[\\w\\s\\.!,@]+;)*)\\s{0,2}$";
+	private static final String MESSAGE_REGEX = "^([\\w+/=]+);([\\w+/=]+);(\\w+);(\\w+);(\\d+);((?:[\\w+/=]+;)*)\\s{0,2}$";
 	private static final Pattern MESSAGE_PATTERN = Pattern.compile(MESSAGE_REGEX);
+
+	private static final Base64.Encoder encoder = Base64.getEncoder();
+	private static final Base64.Decoder decoder = Base64.getDecoder();
 
 	private final String RECEIVER;
 	private final String SENDER;
@@ -81,18 +84,27 @@ public abstract class Message {
 			throw new IllegalArgumentException("Given transmission does not follow correct message structure! Trans: " + transmission);
 		}
 
-		String receiver = matcher.group(1);
-		String sender = matcher.group(2);
-		String action = matcher.group(4);
+		String receiver;
+		String sender;
+		try {
+			receiver = new String(decoder.decode(matcher.group(1)));
+			sender = new String(decoder.decode(matcher.group(2)));
+		}
+		catch(IllegalArgumentException e) {
+			logger.warning("Received transmission did was not correctly encoded! Trans: " + transmission);
+			throw new IllegalArgumentException("Transmission sender/receiver was not correctly Base64 encoded!");
+		}
 
 		MessageType type;
 		try {
 			type = MessageType.valueOf(matcher.group(3));
 		}
 		catch(IllegalArgumentException e) {
-			logger.severe("Given transmission does not contain a legal messagetype/action!");
-			throw new IllegalArgumentException("Failed to retrieve a correct messagetype/action from the given transmission");
+			logger.severe("Given transmission does not contain a legal messagetype!");
+			throw new IllegalArgumentException("Failed to retrieve a correct messagetype from the given transmission");
 		}
+
+		String action = matcher.group(4);
 
 		long timestamp;
 		try {
@@ -109,6 +121,17 @@ public abstract class Message {
 		String args = matcher.group(6);
 		if(!args.equals("")) {
 			arg_arr = args.split(";");
+
+			// Decode the arguments
+			for(int i = 0; i < arg_arr.length; i++) {
+				try {
+					arg_arr[i] = new String(decoder.decode(arg_arr[i]));
+				}
+				catch(IllegalArgumentException e) {
+					logger.warning("Argument was not correctly bas64 encoded! arg: " + arg_arr[i]);
+					throw new IllegalArgumentException("Transmission argument was not correctly bas64 encoded!");
+				}
+			}
 		}
 
 		return new Message(receiver, sender, type, action, timestamp, arg_arr) {
@@ -189,15 +212,15 @@ public abstract class Message {
 	public String getMessage() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(RECEIVER).append(';');
-		sb.append(SENDER).append(';');
+		sb.append(encoder.encodeToString(RECEIVER.getBytes())).append(';');
+		sb.append(encoder.encodeToString(SENDER.getBytes())).append(';');
 		sb.append(TYPE).append(';');
 		sb.append(ACTION).append(';');
 		sb.append(TIME_STAMP).append(';');
 
 		if(ARGUMENTS != null) {
 			for(String s : ARGUMENTS) {
-				sb.append(s).append(';');
+				sb.append(encoder.encodeToString(s.getBytes())).append(';');
 			}
 		}
 
