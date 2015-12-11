@@ -76,7 +76,7 @@ public class ServerConnectionVerifier implements Runnable {
 					connections.put(msg.getSender(), client);
 					timestamps.put(msg.getSender(), System.currentTimeMillis());
 
-					client.write(new HandshakeReplyMessage(true, null).getMessage());
+					client.write(new HandshakeReplyMessage(true, "Welcome to the server!").getMessage());
 				} else {
 					logger.warning("New client tried to connect with name that is already connected!");
 					client.write(new HandshakeReplyMessage(false, "That name is already connected").getMessage());
