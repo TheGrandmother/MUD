@@ -5,8 +5,8 @@
 	function Message(message){
 		
 		split_array = message.split(";");
-		this.receiver = split_array[0];
-		this.sender = split_array[1];
+		this.receiver = window.atob(split_array[0]);
+		this.sender = window.atob(split_array[1]);
 		this.type = split_array[2];
 		this.action = split_array[3];
 		this.time_stamp = split_array[4];
@@ -14,7 +14,7 @@
 		this.args = [];
 	
 		for(i = 5; i < split_array.length; i++){
-			this.args.push(split_array[i]);
+			this.args.push(window.atob(split_array[i]));
 		}
 
 	}
@@ -46,17 +46,20 @@ function makeRequest(action_,args_,sender_){
 		type:"GENERAL_ACTION",
 		action:action_,
 		time_stamp:""+ new Date().getTime(),
-		args:args_.join(";")
+		args:args_
 	};	
 }
 
 function formatToSend(m){
 
-	str = m.receiver + ";" + m.sender + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
+	str = window.btoa(m.receiver) + ";" + window.btoa(m.sender) + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
+
+	console.log(m.args + " mvkf : " + m.args.length);
+	
 	if(m.args == []){
 		return str;
 	}else{
-		return str + m.args + ";";
+		return str + (m.args).map(window.btoa).join(";")+";";
 	}
 
 }
@@ -95,4 +98,15 @@ function formatNotification(message){
 	str = "<b>"+message.args[0]+" </b>";
 	return str;
 }
+
+function formatWhisperReply(message){
+	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
+	return str;
+
+}
+
+
+
+
+
 

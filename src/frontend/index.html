@@ -52,7 +52,7 @@ var add = setInterval(function() {
 	socket.onopen= function (){
 		console.log("started connection");
 		sleepFor(100);
-		socket.send("server;"+user+";HANDSHAKE;null;"+new Date().getTime()+";");
+		socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
 
 
 	}
@@ -67,11 +67,11 @@ var add = setInterval(function() {
 				console.log(msg.args);
 				if(msg.args[0]=="true"){
 					handshake_complete = true;
-					socket.send("server;"+user+";REGISTRATION;null;"+new Date().getTime()+";"+user+";"+user+";");
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";REGISTRATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(user)+";");
 					console.log("Handshake reply confirmed. Sent registration request")
 				}else{
 					console.log("handshake failed. attempting login");
-					socket.send("server;"+user+";LOGIN;null;"+new Date().getTime()+";"+user+";"+user+";");
+//					socket.send("server;"+user+";LOGIN;null;"+new Date().getTime()+";"+user+";"+user+";");
 				}
 				break;
 			case "REGISTRATION_REPLY":
@@ -96,6 +96,9 @@ var add = setInterval(function() {
 							break;
 						case "say":
 							appendToOut(formatTime(msg.time_stamp)+formatSayReply(msg));
+							break;
+						case "whisper_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatWhisperReply(msg));
 							break;
 						default:
 							appendToOut(basicMessageFormat(msg));
