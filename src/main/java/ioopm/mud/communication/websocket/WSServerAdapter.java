@@ -5,15 +5,17 @@ import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.client.LogoutMessage;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
+import ioopm.mud.communication.messages.server.HeartbeatReplyMessage;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,12 +32,56 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 	private static final Logger logger = Logger.getLogger(WSServerAdapter.class.getName());
 
-	private final Queue<Message> inbox = new ArrayDeque<>();
-	private final Map<String, WSClientConnection> legit_connections = new HashMap<>();
+	private final Queue<Message> inbox = new ConcurrentLinkedDeque<>();
+	private final Map<String, WSClientConnection> legit_connections = new ConcurrentHashMap<>();
 
 	public WSServerAdapter(int port) {
 		super(new InetSocketAddress(port));
 		logger.info("WSServerAdapter initiated!");
+
+		// Thread that checks for dead clients
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						// Allow at least three heartbeats to be sent to the server before we recheck the clients
+						Thread.sleep(HEARTBEAT_FREQUENCY * 3);
+					} catch(InterruptedException e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+					}
+
+					// Check for dead clients
+					HashSet<String> dead_clients = null;
+					for(Map.Entry<String, WSClientConnection> entry : legit_connections.entrySet()) {
+						if(entry.getValue().timeSinceLatestMessage() > TIMEOUT_SECONDS) {
+
+							logger.info("Connection \"" + entry.getKey() + "\" has timed out!");
+
+							if(dead_clients == null) {
+								dead_clients = new HashSet<String>();
+							}
+
+							dead_clients.add(entry.getKey());
+						}
+					}
+
+					// Remove dead clients
+					if(dead_clients != null) {
+						logger.info("Removing " + dead_clients.size() + " timed out clients!");
+
+						for(String dead : dead_clients) {
+							// Close socket and remove from legit connections
+							legit_connections.get(dead).getSocket().close();
+							legit_connections.remove(dead);
+
+							// Notify the game
+							inbox.add(new LogoutMessage(dead));
+						}
+					}
+				}
+			}
+		}).start();
 	}
 
 	@Override
@@ -93,9 +139,23 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				break;
 
 			case LOGOUT:
+				// Close and remove connection
 				legit_connections.remove(msg.getSender());
 				conn.close();
+
+				// Notify the game
 				inbox.add(msg);
+
+				break;
+
+			case HEARTBEAT:
+				if(legit_connections.containsKey(msg.getSender())) {
+					legit_connections.get(msg.getSender()).updateTimestamp(msg.getTimeStamp());
+					conn.send(new HeartbeatReplyMessage(msg.getSender()).toString());
+				}
+				else {
+					logger.warning("Non legit connection sent heartbeat! Sender: " + msg.getSender());
+				}
 				break;
 
 			default:
