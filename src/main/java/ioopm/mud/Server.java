@@ -3,6 +3,7 @@ package ioopm.mud;
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.websocket.WSServerAdapter;
+import ioopm.mud.database.SQLite;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
@@ -13,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +51,22 @@ public class Server {
 			loadResourceFile("rooms.txt");
 		} catch(IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
+			return;
+		}
+
+		/*
+		 Initiate database
+		 */
+		logger.fine("Initiating database...");
+		SQLite database;
+		try {
+			database = new SQLite(new File("storage.db"));
+			database.setupDatabase();
+		} catch(ClassNotFoundException e) {
+			logger.severe("Could not load the JDBC driver!");
+			return;
+		} catch(SQLException e) {
+			logger.severe("Could not establish a connection to the storage file!");
 			return;
 		}
 
