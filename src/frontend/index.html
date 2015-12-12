@@ -121,6 +121,9 @@ var add = setInterval(function() {
 						case "attack_reply":
 							appendToOut(formatTime(msg.time_stamp)+formatAttackReply(msg));
 							break;
+						case "drop_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatDropReply(msg));
+							break;
 						default:
 							appendToOut(basicMessageFormat(msg));
 							break;
@@ -175,11 +178,25 @@ var add = setInterval(function() {
 
 <div>
 	<div id="output" style="overflow:auto; height:400px;font-family: Mono;font-size: 12px;">
-		test :D<br>
+		<b>Welcome to the scary university of fear and doom!!!!</b><br>
+		This is so fucking beta it is silly.<br>
+		<p>
+		USAGE:<br>
+		If you justtype something into the text field you will say something to all the players in the room.<br>
+		To do an action you need to type a ":" first. <br>
+		Actions are:<br>
+		<b>look</b> Returns a description of the room you are in. <br>
+		<b>move [room]</b> Moves the player to [room] if possible. <br>
+		<b>whisper [player]</b> Whispers something to the [player]. Only [player] can see this message <br>
+		<b>take [item]</b> Tries to pickup [item] <br>
+		<b>drop [item]</b> Tries to drop [item] <br>
+		<b>examine [item]</b> Examines [item] <br>
+		<b>equip [item]</b> Tries to equip item <br>
+		<b>unequip</b> Unequips the current item<br>
+		<b>attack [player]</b> Attacks [player] <br>
 	</div>
 	<div>
 		<input type="text" id="input" onkeydown="if (event.keyCode == 13) ass()">
-		<button onclick="look()">look</button>
 	</div>
 
 </div>

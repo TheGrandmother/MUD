@@ -161,5 +161,9 @@ function formatAttackReply(message){
 	return str;
 }
 
+function formatDropReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
 
 
