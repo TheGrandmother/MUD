@@ -100,6 +100,27 @@ var add = setInterval(function() {
 						case "whisper_reply":
 							appendToOut(formatTime(msg.time_stamp)+formatWhisperReply(msg));
 							break;
+						case "inventory_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatInventoryReply(msg));
+							break;
+						case "take_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatTakeReply(msg));
+							break;
+						case "examine_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatExamineReply(msg));
+							break;
+						case "cs_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatCsReply(msg));
+							break;
+						case "equip_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatEquipReply(msg));
+							break;
+						case "unequip_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatUnequipReply(msg));
+							break;
+						case "attack_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatAttackReply(msg));
+							break;
 						default:
 							appendToOut(basicMessageFormat(msg));
 							break;
@@ -108,6 +129,10 @@ var add = setInterval(function() {
 			case "NOTIFICATION":
 				appendToOut(formatTime(msg.time_stamp)+formatNotification(msg));
 				break;
+			case "GENERAL_ERROR":
+				appendToOut(formatTime(msg.time_stamp)+formatError(msg));
+				break;
+
 			default:
 				appendToOut(basicMessageFormat(msg));
 
