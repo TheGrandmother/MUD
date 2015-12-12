@@ -5,6 +5,7 @@ import ioopm.mud.logger.HTMLFormatter;
 import ioopm.mud.logger.ServerConsoleFormatter;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.*;
 
 public class Main {
@@ -17,6 +18,9 @@ public class Main {
 	 * @param args - Needs to contain at least one element, which can be either "client" or "server".
 	 */
 	public static void main(String[] args) {
+
+		// Set VM-wide locale to swedish
+		Locale.setDefault(Locale.forLanguageTag("SE"));
 
 		// Set up the logger.
 		setUpLogger();
