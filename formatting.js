@@ -1,6 +1,6 @@
 
   ugly_tab = "&nbsp;&nbsp;&nbsp;&nbsp;";	
-	time_stamp_offs = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	time_stamp_offs = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 	
 	function Message(message){
 		
@@ -50,6 +50,18 @@ function makeRequest(action_,args_,sender_){
 	};	
 }
 
+function logoutMessage(){
+	return message = {
+		receiver:"server",
+		sender:user,
+		type:"LOGOUT",
+		action:"null",
+		time_stamp:""+ new Date().getTime(),
+		args:[]
+	};	
+
+}
+
 function formatToSend(m){
 
 	str = window.btoa(m.receiver) + ";" + window.btoa(m.sender) + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
@@ -65,13 +77,13 @@ function formatToSend(m){
 
 }
 
-//TODO Add all arguments!!
 function formatLookReply(message){
 
 	str = ("<b>"+message.args[0] +"</b><br>");
 	str +=time_stamp_offs + (message.args[1])+"<br>";
 	str +=time_stamp_offs + "Exits are: " + message.args[2] + "<br>";
-	str +=time_stamp_offs + "Users here are: " + message.args[3];
+	str +=time_stamp_offs + "Users here are: " + message.args[3]+"<br>";
+	str +=time_stamp_offs + "Items here are: " + message.args[5]; //TODO fix to make pretty
 	return str;
 
 }
@@ -107,7 +119,51 @@ function formatWhisperReply(message){
 }
 
 
+function formatInventoryReply(message){
+	str = "<b>Your inventory contains:</b><br>";
+	str += time_stamp_offs + message.args[2] + "<br>";
+	str += time_stamp_offs + "You have " + message.args[0] + " units of space left out of " + message.args[1] + " possible.";
+	return str;
+}
 
+function formatError(message){
+	str = "<b>ERROR: </b>"+ message.args[0];
+	return str;
+}
+	
+function formatTakeReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
 
+function formatTakeReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatCsReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatEquipReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatUnequipReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatAttackReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatDropReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
 
 
