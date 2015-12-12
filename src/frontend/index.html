@@ -5,42 +5,12 @@
 <script src="formatting.js" async></script>
 <script src="parser.js" async></script>
 <script>
-function require(script) {
-	$.ajax({
-		url: script,
-		dataType: "script",
-		async: false,           // <-- This is the key
-		success: function () {
-			// all good...
-		},
-		error: function () {
-			throw new Error("Could not load script " + script);
-		}
-		});
-}
 
-//require("formatting.js")
+	jQuery(window).bind('beforeunload', function(){
+		return 'IF YOU NAVIGATE AWAY FROM THE GAME YOU WILL BE LOGGED OUT!';
+	});
+	
 
-/*
-$.getScript("formatting.js", function(){
-					alert("something something darkside");
-
-			 });
-*/
-$(document).ready(function(){
-var out_ = document.getElementById("output");
-var c = 0;
-var add = setInterval(function() {
-		// allow 1px inaccuracy by adding 1
-		var isScrolledToBottom = out_.scrollHeight - out_.clientHeight <= out_.scrollTop + 1;
-		//TODO Fix so that it just sticks when the user hass scrolled down and stops stiking when the user scrolls upp.
-		if(isScrolledToBottom){
-			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
-			}else{
-			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
-			}
-		}, 1000);
-});
 
 	user  = window.prompt("Please enter username(password is the same)",""); 
 	socket = new WebSocket("ws://188.166.94.208:1337");  
@@ -143,12 +113,16 @@ var add = setInterval(function() {
 		
 	}
 
-	function ass(){
+	function onInput(){
 		val =	document.getElementById("input").value;
-		document.getElementById("input").value = "";
-		msg = formatToSend(parseInput(val));
-		console.log("Sending message: " + msg);
-		socket.send(msg);
+		msg =	parseInput(val);
+		if(msg != null){
+			msg = formatToSend(msg);
+			console.log("Sending message: " + msg);
+			socket.send(msg);
+			document.getElementById("input").value = "";
+
+		}
 	}
 
 	function look(){
@@ -158,8 +132,12 @@ var add = setInterval(function() {
 	}
 
 	function appendToOut(text){
-		output = document.getElementById("output");
-		output.innerHTML += text + "<br>";
+		out = document.getElementById("output");
+		var isScrolledToBottom = out.scrollHeight - out.clientHeight <= out.scrollTop + 1;
+		out.innerHTML += text + "<br>";
+		if(isScrolledToBottom){
+			out.scrollTop = out.scrollHeight - out.clientHeight;
+		}
 	}
 
 	function sleepFor( sleepDuration ){
@@ -196,7 +174,7 @@ var add = setInterval(function() {
 		<b>attack [player]</b> Attacks [player] <br>
 	</div>
 	<div>
-		<input type="text" id="input" onkeydown="if (event.keyCode == 13) ass()">
+		<input type="text" id="input" onkeydown="if (event.keyCode == 13) onInput()" style="width:100%;">
 	</div>
 
 </div>
