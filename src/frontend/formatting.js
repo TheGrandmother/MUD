@@ -55,8 +55,9 @@ function formatToSend(m){
 	str = window.btoa(m.receiver) + ";" + window.btoa(m.sender) + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
 
 	console.log(m.args + " mvkf : " + m.args.length);
-	
-	if(m.args == []){
+
+	//Okay..... why can't i just check for empty array..
+	if(m.args == [] || m.args.length == 0){
 		return str;
 	}else{
 		return str + (m.args).map(window.btoa).join(";")+";";
