@@ -31,7 +31,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 	private static final Logger logger = Logger.getLogger(WSServerAdapter.class.getName());
 
 	private final Queue<Message> inbox = new ArrayDeque<>();
-	private final Map<String, WebSocket> legit_connections = new HashMap<>();
+	private final Map<String, WSClientConnection> legit_connections = new HashMap<>();
 
 	public WSServerAdapter(int port) {
 		super(new InetSocketAddress(port));
@@ -48,7 +48,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 		logger.info("A connection has been terminated! IP: " + getIP(conn));
 
 		String to_remove = null;
-		for(Map.Entry<String, WebSocket> entry : legit_connections.entrySet()) {
+		for(Map.Entry<String, WSClientConnection> entry : legit_connections.entrySet()) {
 			if(entry.getValue() == conn) {
 				to_remove = entry.getKey();
 			}
@@ -86,7 +86,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				if(legit_connections.containsKey(sender)) {
 					conn.send(new HandshakeReplyMessage(false, "There is already a user with that name connected!").toString());
 				} else {
-					legit_connections.put(sender, conn);
+					legit_connections.put(sender, new WSClientConnection(conn));
 					conn.send(new HandshakeReplyMessage(true, "Welcome to the server!").toString());
 				}
 
@@ -95,7 +95,14 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 			case LOGOUT:
 				legit_connections.remove(msg.getSender());
 				conn.close();
+				inbox.add(msg);
+				break;
+
 			default:
+				// Update the time of latest message for this connection
+				legit_connections.get(msg.getSender()).updateTimestamp(msg.getTimeStamp());
+
+				// Send the message to the game engine
 				inbox.add(msg);
 		}
 	}
@@ -123,7 +130,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 		String receiver = m.getReceiver();
 
 		if(legit_connections.containsKey(receiver)) {
-			WebSocket conn = legit_connections.get(receiver);
+			WebSocket conn = legit_connections.get(receiver).getSocket();
 			conn.send(m.toString());
 		} else {
 			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
