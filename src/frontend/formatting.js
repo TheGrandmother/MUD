@@ -62,6 +62,30 @@ function logoutMessage(){
 
 }
 
+function heartbeatMessage(){
+	return message = {
+		receiver:"server",
+		sender:user,
+		type:"HEARTBEAT",
+		action:"null",
+		time_stamp:""+ new Date().getTime(),
+		args:[]
+	};	
+
+}
+
+function heartbeatReplyMessage(){
+	return message = {
+		receiver:"server",
+		sender:user,
+		type:"HEARTBEAT_REPLY",
+		action:"null",
+		time_stamp:""+ new Date().getTime(),
+		args:[]
+	};	
+
+}
+
 function formatToSend(m){
 
 	str = window.btoa(m.receiver) + ";" + window.btoa(m.sender) + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
