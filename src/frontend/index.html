@@ -11,25 +11,40 @@
 	});
 	
 	var heart = setInterval(function (){
+		if(!connection_established){return;}
 		socket.send(formatToSend(heartbeatMessage()));
 		console.log("Sent heartbeat");
 	},5000)
 
-	user  = window.prompt("Please enter username(password is the same)",""); 
+	user = "";
 	socket = new WebSocket("ws://188.166.94.208:1337");  
 
 	handshake_complete = false;
 	connection_established = false;
+	
+	attempting_registration = false;
+	attempting_login = false;
 
+	username_entered = false;
+	password_enetered = false;
+
+	socket_open = false;
 
 	socket.onopen= function (){
 		console.log("started connection");
-		sleepFor(100);
-		socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
+		//sleepFor(100);
+		appendToOut("Connected to server.");
+		socket_open = true;
+		//socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
 
 
 	}
-	
+
+	socket.onerror = function (ev){
+		console.log("Connection error!" + ev);
+		appendToOut("Connetion error!!");
+	}
+
 	socket.onmessage = function (env){
 		data = env.data;
 		console.log("you most likley recieved this: "+ data);
@@ -40,8 +55,8 @@
 				console.log(msg.args);
 				if(msg.args[0]=="true"){
 					handshake_complete = true;
-					socket.send(window.btoa("server")+";"+window.btoa(user)+";REGISTRATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(user)+";");
-					console.log("Handshake reply confirmed. Sent registration request")
+					//socket.send(window.btoa("server")+";"+window.btoa(user)+";REGISTRATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(user)+";");
+					console.log("Handshake reply confirmed.")
 				}else{
 					console.log("handshake failed. attempting login");
 //					socket.send("server;"+user+";LOGIN;null;"+new Date().getTime()+";"+user+";"+user+";");
@@ -55,8 +70,20 @@
 					appendToOut("Welcome to the game :D")
 
 				}else{
-					alert("HANDSHAKE FAILED!");
 					console.log("Registration failed");
+					appendToOut("Registration failed: " + msg.args[1]);
+				}
+				break;
+			case "AUTHENTICATION_REPLY":
+				console.log("Received registration reply");
+				if(msg.args[0]=="true"){
+					connection_established = true;
+					console.log("Login complete");
+					appendToOut("Welcome to the game :D")
+
+				}else{
+					console.log("Login failed");
+					appendToOut("Login failed: " + msg.args[1]);
 				}
 				break;
 			case "GENERAL_REPLY":
@@ -120,13 +147,80 @@
 
 	function onInput(){
 		val =	document.getElementById("input").value;
-		msg =	parseInput(val);
-		if(msg != null){
-			msg = formatToSend(msg);
-			console.log("Sending message: " + msg);
-			socket.send(msg);
-			document.getElementById("input").value = "";
+		
+		if(!socket_open){ console.log("connection not established"); return;}
 
+		if(!connection_established){
+			if(!attempting_registration && !attempting_login){
+				switch (val){
+					case "register":
+						appendToOut("Type in your username.");
+						console.log("started registration");
+						attempting_registration = true;
+						document.getElementById("input").value = "";
+						return;
+					case "login":
+						appendToOut("Type in your username.");
+						console.log("started login");
+						attempting_login = true;
+						document.getElementById("input").value = "";
+						return;
+				}
+			}
+
+			if(attempting_registration){
+				if(!username_entered){
+					console.log("Entered username")
+					user = val;
+					username_entered = true;
+					document.getElementById("input").value = "";
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
+					appendToOut("Please enter password");
+					return;
+				}
+
+				if(username_entered && handshake_complete && !password_enetered){
+					console.log("Entered password");
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";REGISTRATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(val)+";");
+					password_enetered = true;
+					document.getElementById("input").value = "";
+					return;
+				}
+
+				console.log("registration caused oddness");
+
+			}
+			
+			if(attempting_login){
+				if(!username_entered){
+					user = val;
+					username_entered = true;
+					document.getElementById("input").value = "";
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
+					appendToOut("Please enter password");
+					return;
+				}
+
+				if(username_entered && handshake_complete && !password_enetered){
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";AUTHENTICATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(val)+";");
+					password_enetered = true;
+					document.getElementById("input").value = "";
+					return;
+				}
+
+				console.log("registration caused oddness");
+
+			}
+		
+		}else{
+			msg =	parseInput(val);
+			if(msg != null){
+				msg = formatToSend(msg);
+				console.log("Sending message: " + msg);
+				socket.send(msg);
+				document.getElementById("input").value = "";
+
+			}
 		}
 	}
 
@@ -139,7 +233,10 @@
 	function appendToOut(text){
 		out = document.getElementById("output");
 		var isScrolledToBottom = out.scrollHeight - out.clientHeight <= out.scrollTop + 1;
+		//Anny additions to the output must happen below this line and before the if statement.
+		//otherwise the autoscrolling wont work.
 		out.innerHTML += text + "<br>";
+		
 		if(isScrolledToBottom){
 			out.scrollTop = out.scrollHeight - out.clientHeight;
 		}
@@ -177,6 +274,8 @@
 		<b>equip [item]</b> Tries to equip item <br>
 		<b>unequip</b> Unequips the current item<br>
 		<b>attack [player]</b> Attacks [player] <br>
+		<p>
+		Please type register to register a new account or login to login to a existing account.
 	</div>
 	<div>
 		<input type="text" id="input" onkeydown="if (event.keyCode == 13) onInput()" style="width:100%;">
