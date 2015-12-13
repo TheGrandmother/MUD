@@ -158,6 +158,11 @@ function formatTakeReply(message){
 	return str;
 }
 
+function formatExamineReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
 function formatTakeReply(message){
 	str = "<b>"+message.args[0]+" </b>";
 	return str;
