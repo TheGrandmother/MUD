@@ -10,7 +10,10 @@
 		return 'IF YOU NAVIGATE AWAY FROM THE GAME YOU WILL BE LOGGED OUT!';
 	});
 	
-
+	var heart = setInterval(function (){
+		socket.send(formatToSend(heartbeatMessage()));
+		console.log("Sent heartbeat");
+	},5000)
 
 	user  = window.prompt("Please enter username(password is the same)",""); 
 	socket = new WebSocket("ws://188.166.94.208:1337");  
@@ -105,7 +108,9 @@
 			case "GENERAL_ERROR":
 				appendToOut(formatTime(msg.time_stamp)+formatError(msg));
 				break;
-
+			case "HEARTBEAT_REPLY":
+				console.log("recieved heartbeat reply");
+				break;
 			default:
 				appendToOut(basicMessageFormat(msg));
 
