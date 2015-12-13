@@ -2,6 +2,8 @@ package ioopm.mud.communication.websocket;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
+import ioopm.mud.communication.messages.client.HeartBeatMessage;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -17,8 +19,27 @@ public class WSClientAdapter extends WebSocketClient implements Adapter {
 
 	private final Queue<Message> inbox = new ArrayDeque<>();
 
-	public WSClientAdapter(URI serverURI) {
+	// Dummy locking object
+	private final Object send_lock = new Object();
+
+	public WSClientAdapter(final String username, URI serverURI) {
 		super(serverURI);
+
+		// Send heartbeats
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					try {
+						Thread.sleep(HEARTBEAT_FREQUENCY);
+					} catch(InterruptedException e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+					}
+
+					sendMessage(new HeartBeatMessage(username));
+				}
+			}
+		}).start();
 	}
 
 	@Override
@@ -38,7 +59,10 @@ public class WSClientAdapter extends WebSocketClient implements Adapter {
 			return;
 		}
 
-		inbox.add(msg);
+		// Ignore heartbeats
+		if(msg.getType() != MessageType.HEARTBEAT_REPLY) {
+			inbox.add(msg);
+		}
 	}
 
 	@Override
@@ -58,6 +82,8 @@ public class WSClientAdapter extends WebSocketClient implements Adapter {
 
 	@Override
 	public void sendMessage(Message m) {
-		this.send(m.getMessage());
+		synchronized(send_lock) {
+			this.send(m.getMessage());
+		}
 	}
 }

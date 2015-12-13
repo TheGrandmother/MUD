@@ -62,7 +62,7 @@ public class Client {
 		logger.info("Connecting to server...");
 
 		//adapter = new TCPClientAdapter(host_address, port, username);
-		WSClientAdapter websockclient = new WSClientAdapter(new URI("ws://" + host_address + ":" + Server.DEFAULT_PORT));
+		WSClientAdapter websockclient = new WSClientAdapter(username, new URI("ws://" + host_address + ":" + Server.DEFAULT_PORT));
 		websockclient.connect();
 
 		// Wait for the connection to be established
