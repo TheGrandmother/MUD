@@ -191,6 +191,8 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 		if(legit_connections.containsKey(receiver)) {
 			WebSocket conn = legit_connections.get(receiver).getSocket();
+
+			logger.fine("Attempting to send message: " + m.toString());
 			conn.send(m.toString());
 		} else {
 			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
