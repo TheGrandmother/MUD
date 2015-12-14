@@ -4,8 +4,8 @@ import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
-import ioopm.mud.generalobjects.Character.Inventory;
-import ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
+import ioopm.mud.generalobjects.Inventory;
+import ioopm.mud.generalobjects.Inventory.InventoryOverflow;
 import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.items.Weapon;
 

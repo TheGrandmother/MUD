@@ -4,6 +4,7 @@ import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.server.*;
+import ioopm.mud.database.PersistentStorage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.exceptions.EntityNotUnique;
 import ioopm.mud.generalobjects.Player;
@@ -23,6 +24,7 @@ public class GameEngine {
 	private static final Logger logger = Logger.getLogger(GameEngine.class.getName());
 
 	private final Adapter adapter;
+	private final PersistentStorage storage;
 	private final World world;
 
 	/**
@@ -31,8 +33,9 @@ public class GameEngine {
 	 * @param adapter This is the adapter trough which all of the communication is to be handled
 	 * @param world   This is the world where all of the in-game entities live.
 	 */
-	public GameEngine(Adapter adapter, World world) {
+	public GameEngine(Adapter adapter, PersistentStorage storage, World world) {
 		this.adapter = adapter;
+		this.storage = storage;
 		this.world = world;
 	}
 
@@ -41,8 +44,6 @@ public class GameEngine {
 	 *
 	 * @param adapter
 	 * @param room
-	 * @param type
-	 * @param nouns
 	 */
 	public static void broadcastToRoom(Adapter adapter, Room room, String message) {
 		for(Player player : room.getPlayers()) {
@@ -157,12 +158,21 @@ public class GameEngine {
 		String password = arguments[1];
 
 		try {
-			world.addCharacter(new Player(username, "", password, world.getLobby(0)));
+			Player p = new Player(username, "", password, world.getLobby(0));
+
+			world.addCharacter(p);
+
 			//The below methods must be celled in this order... which is horrible
 			world.findPlayer(username).setLoggedIn(true);
 			world.findPlayer(username).getLocation().addPlayer(world.findPlayer(username));
 			GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " joined the fun :D!", username);
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
+
+			// Store the player
+			if(storage != null) {
+				storage.storePlayer(p);
+			}
+
 			return;
 
 		} catch(EntityNotUnique e) {

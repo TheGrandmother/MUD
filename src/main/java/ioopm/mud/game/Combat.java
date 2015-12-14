@@ -4,6 +4,7 @@ import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
+import ioopm.mud.generalobjects.CharacterSheet;
 import ioopm.mud.generalobjects.Item;
 import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
@@ -31,7 +32,7 @@ public abstract class Combat {
 	 * Upon death the the target will be respawned in the appropriate lobby(see {@link ioopm.mud.generalobjects.World#getLobby(int)}) with some health restored.
 	 * All the players in the lobby will be notified about the targets arrival.
 	 * <p>
-	 * Upon the death of the target and after the attacker receives his new university credits a level-up check will be performed (see {@link ioopm.mud.generalobjects.Character.CharacterSheet#levelUp()}).
+	 * Upon the death of the target and after the attacker receives his new university credits a level-up check will be performed (see {@link CharacterSheet#levelUp()}).
 	 * <p>
 	 * The mechanics of the combat are defined in specs/Mechanics.txt (<b>NOTE:</b> this file is as of now a bit incomplete.)
 	 *

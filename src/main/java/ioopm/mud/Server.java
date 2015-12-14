@@ -87,7 +87,7 @@ public class Server {
 			e1.printStackTrace();
 		}
 
-		engine = new GameEngine(adapter, world);
+		engine = new GameEngine(adapter, storage, world);
 
 		/*
 		 Main polling loop
