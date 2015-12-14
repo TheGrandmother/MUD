@@ -3,6 +3,7 @@ package ioopm.mud;
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.websocket.WSServerAdapter;
+import ioopm.mud.database.PersistentStorage;
 import ioopm.mud.database.SQLite;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
@@ -25,6 +26,7 @@ public class Server {
 	private Adapter adapter = null;
 	private World world = new World();
 	private GameEngine engine;
+	private PersistentStorage storage;
 
 	/**
 	 * Constructs a MUD server.
@@ -66,9 +68,13 @@ public class Server {
 			logger.severe("Could not load the JDBC driver!");
 			return;
 		} catch(SQLException e) {
-			logger.severe("Could not establish a connection to the storage file!");
+			logger.severe("Could not establish a connection to the storage file! Message: " + e.getMessage());
+			return;
+		} catch(IOException e) {
+			logger.severe("Something went wrong when checking/creating the database file!");
 			return;
 		}
+		storage = database;
 
 		/*
 		 World builder
@@ -110,6 +116,16 @@ public class Server {
 	 */
 	protected Adapter getAdapter() {
 		return adapter;
+	}
+
+	/**
+	 * Returns the a reference to the persistant storage used by
+	 * the server.
+	 *
+	 * @return - The storage.
+	 */
+	public PersistentStorage getStorage() {
+		return storage;
 	}
 
 	/**
