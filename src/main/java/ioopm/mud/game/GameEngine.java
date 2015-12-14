@@ -70,7 +70,11 @@ public class GameEngine {
 
 			}
 			if(!skip) {
-				adapter.sendMessage(new NotificationMessage(player.getName(), message));
+				if(player.getName() == null || message == null){
+					logger.warning("Tried to brodcast message to odd player. Skipping player");
+				}else{
+					adapter.sendMessage(new NotificationMessage(player.getName(), message));
+				}
 			}
 		}
 	}
