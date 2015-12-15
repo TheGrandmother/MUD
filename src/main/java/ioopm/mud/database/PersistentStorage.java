@@ -8,8 +8,9 @@ public interface PersistentStorage {
 	 * Stores the given player in the storage.
 	 *
 	 * @param player - The player to store.
+	 * @throws IllegalArgumentException If something went wrong while trying to store the player.
 	 */
-	void storePlayer(Player player);
+	void storePlayer(Player player) throws IllegalArgumentException;
 
 	/**
 	 * Loads a player stored in the storage by the given name.

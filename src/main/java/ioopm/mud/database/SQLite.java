@@ -1,5 +1,7 @@
 package ioopm.mud.database;
 
+import ioopm.mud.generalobjects.CharacterSheet;
+import ioopm.mud.generalobjects.Inventory;
 import ioopm.mud.generalobjects.Player;
 
 import java.io.File;
@@ -16,17 +18,20 @@ public class SQLite implements PersistentStorage {
 		"CREATE TABLE IF NOT EXISTS player (" +
 			"id INTEGER PRIMARY KEY, " +
 			"username TEXT NOT NULL, " +
-			"description TEXT, " +
+			"description TEXT, " + // Is this needed?
 			"starting_location TEXT NOT NULL, " + // For proper safety, this should be a foreign key
 			"password TEXT NOT NULL, " +
-			"salt TEXT" +
+			"salt TEXT, " + //TODO Set this field to not null when enabling hashing and salting
+			"is_admin BOOLEAN NOT NULL" +
 			");" +
+
 			"CREATE TABLE IF NOT EXISTS inventory (" +
 			"player_id INTEGER, " +
 			"volume INTEGER NOT NULL, " +
 			"max_volume INTEGER NOT NULL, " +
 			"FOREIGN KEY(player_id) REFERENCES player(id)" +
 			");" +
+
 			"CREATE TABLE IF NOT EXISTS item (" +
 			"item_id INTEGER PRIMARY KEY, " +
 			"name TEXT NOT NULL, " +
@@ -35,6 +40,7 @@ public class SQLite implements PersistentStorage {
 			"size INTEGER NOT NULL, " +
 			"dropable BOOLEAN NOT NULL" + // TODO add generalization for keys (has target) and weapons (has damage)
 			");" +
+
 			"CREATE TABLE IF NOT EXISTS character_sheet (" +
 			"player_id INTEGER, " +
 			"hp INTEGER, " +
@@ -54,7 +60,11 @@ public class SQLite implements PersistentStorage {
 			")";
 
 	private static final String INSERT_PLAYER =
-		"INSERT INTO player(username, description, starting_location, password) VALUES(?,?,?,?);";
+		"INSERT INTO player(username, description, starting_location, password, is_admin) VALUES(?,?,?,?,?);";
+
+	private static final String INSERT_CS =
+		"INSERT INTO character_sheet(player_id, hp, health, max_health, level) " +
+			"SELECT player.id, ?, ?, ?, ? FROM player WHERE player.username = ?;";
 
 	private static final Logger logger = Logger.getLogger(SQLite.class.getName());
 
@@ -92,14 +102,11 @@ public class SQLite implements PersistentStorage {
 	}
 
 	@Override
-	public void storePlayer(Player player) {
+	public void storePlayer(Player player) throws IllegalArgumentException {
 		try {
 			PreparedStatement stmt = database_connection.prepareStatement(INSERT_PLAYER);
 
-			stmt.setString(1, player.getName());
-			stmt.setString(2, player.getDescription());
-			stmt.setString(3, player.getLocation().getName());
-
+			// Ugly as fuck reflection solution to password encapsulation.
 			String password;
 			try {
 				Field pass_field = Player.class.getDeclaredField("password");
@@ -109,17 +116,48 @@ public class SQLite implements PersistentStorage {
 			}
 			catch(NoSuchFieldException | IllegalAccessException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
-				return;
+				throw new IllegalArgumentException("Could not access password field in player! Check logs for stack trace.");
 			}
 
+			stmt.setString(1, player.getName());
+			stmt.setString(2, player.getDescription());
+			stmt.setString(3, player.getLocation().getName());
 			stmt.setString(4, password);
+			stmt.setBoolean(5, player.isAdmin());
 
 			stmt.execute();
 			stmt.close();
 		}
 		catch(SQLException e) {
 			logger.log(Level.WARNING, e.getMessage(), e);
+			return;
 		}
+
+		storeCharacterSheet(player.getName(), player.getCs());
+		storeInventory(player.getInventory());
+	}
+
+	private void storeCharacterSheet(String username, CharacterSheet cs) {
+		try {
+			PreparedStatement stmt = database_connection.prepareStatement(INSERT_CS);
+
+			stmt.setInt(1, cs.getHp());
+			stmt.setInt(2, cs.getHealth());
+			stmt.setInt(3, cs.getMaxHealth());
+			stmt.setInt(4, cs.getLevel());
+			stmt.setString(5, username);
+
+			stmt.execute();
+			stmt.close();
+		}
+		catch(SQLException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+			return;
+		}
+	}
+
+	private void storeInventory(Inventory inventory) {
+
 	}
 
 	@Override
