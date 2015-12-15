@@ -94,7 +94,7 @@ function formatToSend(m){
 	if(m.args == [] || m.args.length == 0){
 		return str;
 	}else{
-		return str + (m.args).map(window.btoa).join(";")+";";
+		return str + (m.args).map(escape).map(window.btoa).join(";")+";";
 	}
 
 }
@@ -154,6 +154,11 @@ function formatError(message){
 }
 	
 function formatTakeReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatExamineReply(message){
 	str = "<b>"+message.args[0]+" </b>";
 	return str;
 }
