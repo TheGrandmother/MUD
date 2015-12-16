@@ -3,6 +3,7 @@ package ioopm.mud.database;
 import ioopm.mud.generalobjects.CharacterSheet;
 import ioopm.mud.generalobjects.Inventory;
 import ioopm.mud.generalobjects.Player;
+import org.sqlite.SQLiteConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +41,12 @@ public class SQLite implements PersistentStorage {
 			"dropable BOOLEAN NOT NULL" + // TODO add generalization for keys (has target) and weapons (has damage)
 		");" +
 
+//		"CREATE TABLE IF NOT EXISTS key (" +
+//			"item_id INTEGER REFERENCES item(item_id), " +
+//			"" +
+
 		"CREATE TABLE IF NOT EXISTS character_sheet (" +
-			"player_id INTEGER, " +
+			"player_id INTEGER UNIQUE NOT NULL, " +
 			"hp INTEGER, " +
 			"health INTEGER, " +
 			"max_health INTEGER, " +
@@ -55,7 +60,8 @@ public class SQLite implements PersistentStorage {
 			"item_id INTEGER, " +
 			"amount INTEGER, " +
 			"FOREIGN KEY(inv_id) REFERENCES inventory(player_id), " +
-			"FOREIGN KEY(item_id) REFERENCES item(item_id)" +
+			"FOREIGN KEY(item_id) REFERENCES item(item_id), " +
+			"PRIMARY KEY(inv_id, item_id)" +
 		")";
 
 	private static final String INSERT_PLAYER =
@@ -87,14 +93,19 @@ public class SQLite implements PersistentStorage {
 	private final Connection database_connection;
 
 	public SQLite(File database_file) throws ClassNotFoundException, SQLException, IOException {
+
 		// Load JDBC driver into the JVM
 		Class.forName("org.sqlite.JDBC");
 
 		// Make sure there is a file to work against
 		database_file.createNewFile();
 
+		// Setup database configuration
+		SQLiteConfig conf = new SQLiteConfig();
+		conf.enforceForeignKeys(true);
+
 		// Establish a connection to the local databasefile
-		database_connection = DriverManager.getConnection("jdbc:sqlite:" + database_file.getAbsolutePath());
+		database_connection = DriverManager.getConnection("jdbc:sqlite:" + database_file.getAbsolutePath(), conf.toProperties());
 
 		logger.info("Database initiated.");
 	}

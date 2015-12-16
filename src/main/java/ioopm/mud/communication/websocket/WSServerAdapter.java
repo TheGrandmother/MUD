@@ -93,6 +93,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				break;
 
 			case LOGOUT:
+				logger.info("Removing " + msg.getSender() + " from legit connections!");
 				legit_connections.remove(msg.getSender());
 				conn.close();
 			default:
