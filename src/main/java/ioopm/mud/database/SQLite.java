@@ -23,48 +23,50 @@ public class SQLite implements PersistentStorage {
 			"password TEXT NOT NULL, " +
 			"salt TEXT, " + //TODO Set this field to not null when enabling hashing and salting
 			"is_admin BOOLEAN NOT NULL" +
-			");" +
+		");" +
 
-			"CREATE TABLE IF NOT EXISTS inventory (" +
+		"CREATE TABLE IF NOT EXISTS inventory (" +
 			"player_id INTEGER, " +
 			"volume INTEGER NOT NULL, " +
 			"max_volume INTEGER NOT NULL, " +
 			"FOREIGN KEY(player_id) REFERENCES player(id)" +
-			");" +
+		");" +
 
-			"CREATE TABLE IF NOT EXISTS item (" +
+		"CREATE TABLE IF NOT EXISTS item (" +
 			"item_id INTEGER PRIMARY KEY, " +
 			"name TEXT NOT NULL, " +
 			"level INTEGER NOT NULL, " +
 			"description TEXT NOT NULL, " +
 			"size INTEGER NOT NULL, " +
 			"dropable BOOLEAN NOT NULL" + // TODO add generalization for keys (has target) and weapons (has damage)
-			");" +
+		");" +
 
-			"CREATE TABLE IF NOT EXISTS character_sheet (" +
+		"CREATE TABLE IF NOT EXISTS character_sheet (" +
 			"player_id INTEGER, " +
 			"hp INTEGER, " +
 			"health INTEGER, " +
 			"max_health INTEGER, " +
 			"level INTEGER, " +
 			"FOREIGN KEY(player_id) REFERENCES player(id)" +
-			");" +
+		");" +
 
-			// M-N Relations
-			"CREATE TABLE IF NOT EXISTS inventory_item_relation (" +
+		// M-N Relations
+		"CREATE TABLE IF NOT EXISTS inventory_item_relation (" +
 			"inv_id INTEGER, " +
 			"item_id INTEGER, " +
 			"amount INTEGER, " +
 			"FOREIGN KEY(inv_id) REFERENCES inventory(player_id), " +
 			"FOREIGN KEY(item_id) REFERENCES item(item_id)" +
-			")";
+		")";
 
 	private static final String INSERT_PLAYER =
 		"INSERT INTO player(username, description, starting_location, password, is_admin) VALUES(?,?,?,?,?);";
 
 	private static final String INSERT_CS =
 		"INSERT INTO character_sheet(player_id, hp, health, max_health, level) " +
-			"SELECT player.id, ?, ?, ?, ? FROM player WHERE player.username = ?;";
+			"SELECT player.id, ?, ?, ?, ? " +
+				"FROM player " +
+				"WHERE player.username = ?;";
 
 	private static final Logger logger = Logger.getLogger(SQLite.class.getName());
 
