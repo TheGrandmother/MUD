@@ -97,6 +97,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 		for(Map.Entry<String, WSClientConnection> entry : legit_connections.entrySet()) {
 			if(entry.getValue() == conn) {
 				to_remove = entry.getKey();
+				break;
 			}
 		}
 
@@ -192,8 +193,15 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 		if(legit_connections.containsKey(receiver)) {
 			WebSocket conn = legit_connections.get(receiver).getSocket();
 
-			logger.fine("Attempting to send message: " + m.toString());
-			conn.send(m.toString());
+			if(conn.isClosed() || conn.isClosing()) {
+				logger.info("Connection to user \"" + receiver + "\" was apparently closed! Removing user from server...");
+				legit_connections.remove(receiver);
+				inbox.add(new LogoutMessage(receiver));
+			}
+			else {
+				logger.fine("Attempting to send message: " + m.toString());
+				conn.send(m.toString());
+			}
 		} else {
 			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
 		}
