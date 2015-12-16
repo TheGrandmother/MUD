@@ -17,9 +17,8 @@ public class SQLite implements PersistentStorage {
 		// Tables
 		"CREATE TABLE IF NOT EXISTS player (" +
 			"id INTEGER PRIMARY KEY, " +
-			"username TEXT NOT NULL, " +
-			"description TEXT, " + // Is this needed?
-			"starting_location TEXT NOT NULL, " + // For proper safety, this should be a foreign key
+			"username TEXT UNIQUE NOT NULL, " +
+			"location TEXT NOT NULL, " + // For proper safety, this should be a foreign key
 			"password TEXT NOT NULL, " +
 			"salt TEXT, " + //TODO Set this field to not null when enabling hashing and salting
 			"is_admin BOOLEAN NOT NULL" +
@@ -34,7 +33,7 @@ public class SQLite implements PersistentStorage {
 
 		"CREATE TABLE IF NOT EXISTS item (" +
 			"item_id INTEGER PRIMARY KEY, " +
-			"name TEXT NOT NULL, " +
+			"name TEXT UNIQUE NOT NULL, " +
 			"level INTEGER NOT NULL, " +
 			"description TEXT NOT NULL, " +
 			"size INTEGER NOT NULL, " +
@@ -60,13 +59,28 @@ public class SQLite implements PersistentStorage {
 		")";
 
 	private static final String INSERT_PLAYER =
-		"INSERT INTO player(username, description, starting_location, password, is_admin) VALUES(?,?,?,?,?);";
+		// This can be shorten to look like INSERT_CS
+		"INSERT OR REPLACE INTO player(id, username, location, password, is_admin) " +
+		"SELECT old.id, new.username, new.location, new.password, new.is_admin " +
+		"FROM ( SELECT " +
+			"? AS username, " +
+			"? AS location, " +
+			"? AS password, " +
+			"? AS is_admin " +
+		") AS new " +
+		"LEFT JOIN ( " +
+			"SELECT id, username " +
+			"FROM player " +
+		") AS old ON new.username = old.username;";
 
 	private static final String INSERT_CS =
-		"INSERT INTO character_sheet(player_id, hp, health, max_health, level) " +
-			"SELECT player.id, ?, ?, ?, ? " +
-				"FROM player " +
-				"WHERE player.username = ?;";
+		"INSERT OR REPLACE INTO character_sheet(player_id, hp, health, max_health, level) " +
+		"VALUES ((" +
+			"SELECT id FROM player where player.username = ? " +
+		"), ?, ?, ?, ?) ";
+
+	private static final String INSERT_ITEM =
+		"INSERT ";
 
 	private static final Logger logger = Logger.getLogger(SQLite.class.getName());
 
@@ -90,6 +104,8 @@ public class SQLite implements PersistentStorage {
 	 * Does not overwrite already defined tables/relations.
 	 */
 	public void setupDatabase() throws SQLException {
+		logger.fine("Constructing database...");
+
 		Statement statement = database_connection.createStatement();
 
 		String[] statements = DATABASE_STRUCTURE.split(";");
@@ -114,7 +130,6 @@ public class SQLite implements PersistentStorage {
 				Field pass_field = Player.class.getDeclaredField("password");
 				pass_field.setAccessible(true);
 				password = (String) pass_field.get(player);
-				pass_field.setAccessible(false);
 			}
 			catch(NoSuchFieldException | IllegalAccessException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
@@ -122,10 +137,9 @@ public class SQLite implements PersistentStorage {
 			}
 
 			stmt.setString(1, player.getName());
-			stmt.setString(2, player.getDescription());
-			stmt.setString(3, player.getLocation().getName());
-			stmt.setString(4, password);
-			stmt.setBoolean(5, player.isAdmin());
+			stmt.setString(2, player.getLocation().getName());
+			stmt.setString(3, password);
+			stmt.setBoolean(4, player.isAdmin());
 
 			stmt.execute();
 			stmt.close();
@@ -143,18 +157,17 @@ public class SQLite implements PersistentStorage {
 		try {
 			PreparedStatement stmt = database_connection.prepareStatement(INSERT_CS);
 
-			stmt.setInt(1, cs.getHp());
-			stmt.setInt(2, cs.getHealth());
-			stmt.setInt(3, cs.getMaxHealth());
-			stmt.setInt(4, cs.getLevel());
-			stmt.setString(5, username);
+			stmt.setString(1, username);
+			stmt.setInt(2, cs.getHp());
+			stmt.setInt(3, cs.getHealth());
+			stmt.setInt(4, cs.getMaxHealth());
+			stmt.setInt(5, cs.getLevel());
 
 			stmt.execute();
 			stmt.close();
 		}
 		catch(SQLException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
-			return;
 		}
 	}
 
