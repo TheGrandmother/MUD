@@ -230,11 +230,7 @@ public abstract class Message {
 				if(s == null) {
 					s = "null";
 				}
-				try{
-					sb.append(encoder.encodeToString((URLEncoder.encode(s,"UTF-8")).getBytes())).append(';');
-				}catch(UnsupportedEncodingException e){
-				
-				}
+					sb.append(encoder.encodeToString((encodeURIComponent(s)).getBytes())).append(';');
 			}
 		}
 
@@ -245,4 +241,42 @@ public abstract class Message {
 	public String toString() {
 		return getMessage();
 	}
+
+
+/**
+ *Hack  required since javas URL/URI things are dumb.
+ *
+ */
+public static String encodeURIComponent(String s) {
+	String result;
+
+	try {
+		result = URLEncoder.encode(s, "UTF-8")
+			.replaceAll("\\+", "%20")
+			.replaceAll("\\%21", "!")
+			.replaceAll("\\%27", "'")
+			.replaceAll("\\%28", "(")
+			.replaceAll("\\%29", ")")
+			.replaceAll("\\%7E", "~");
+	} catch (UnsupportedEncodingException e) {
+		result = s;
+	}
+
+	return result;
 }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
