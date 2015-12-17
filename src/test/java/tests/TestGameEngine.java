@@ -10,9 +10,7 @@ import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
-import ioopm.mud.generalobjects.Character.Inventory.InventoryOverflow;
-import ioopm.mud.generalobjects.ItemContainer;
-import ioopm.mud.generalobjects.World;
+import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
@@ -52,7 +50,7 @@ public class TestGameEngine {
 	
 	
 	@Test
-	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, InventoryOverflow{
+	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
 		ge = new GameEngine(adapter, world);
 		boolean p1;
@@ -545,7 +543,7 @@ public class TestGameEngine {
 	}
 	
 	@Test
-	public void testMove() throws BuilderException, EntityNotPresent, InventoryOverflow{
+	public void testMove() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
 		ge = new GameEngine(adapter, world);
 		adapter.flush();

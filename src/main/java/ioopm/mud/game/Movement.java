@@ -5,11 +5,7 @@ import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
-import ioopm.mud.generalobjects.Character.Inventory;
-import ioopm.mud.generalobjects.ItemContainer;
-import ioopm.mud.generalobjects.Player;
-import ioopm.mud.generalobjects.Room;
-import ioopm.mud.generalobjects.World;
+import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.items.Key;
 
 /**

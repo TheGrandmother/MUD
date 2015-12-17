@@ -1,6 +1,7 @@
 package ioopm.mud.generalobjects;
 
 import ioopm.mud.generalobjects.items.Weapon;
+import ioopm.mud.generalobjects.*;
 
 /**
  * This class specifies a Character. Will be extended by other classes for PC's and NPC's.
