@@ -19,7 +19,7 @@ public class SQLite implements PersistentStorage {
 		"CREATE TABLE IF NOT EXISTS player (" +
 			"id INTEGER PRIMARY KEY, " +
 			"username TEXT UNIQUE NOT NULL, " +
-			"location TEXT NOT NULL, " + // For proper safety, this should be a foreign key
+			"location INTEGER REFERENCES room(id), " +
 			"password TEXT NOT NULL, " +
 			"salt TEXT, " + //TODO Set this field to not null when enabling hashing and salting
 			"is_admin BOOLEAN NOT NULL" +
@@ -32,18 +32,19 @@ public class SQLite implements PersistentStorage {
 			"FOREIGN KEY(player_id) REFERENCES player(id)" +
 		");" +
 
-		"CREATE TABLE IF NOT EXISTS item (" +
-			"item_id INTEGER PRIMARY KEY, " +
+		"CREATE TABLE IF NOT EXISTS weapon (" +
+			"item_id INTEGER REFERENCES item(id), " +
 			"name TEXT UNIQUE NOT NULL, " +
-			"level INTEGER NOT NULL, " +
 			"description TEXT NOT NULL, " +
 			"size INTEGER NOT NULL, " +
-			"dropable BOOLEAN NOT NULL" + // TODO add generalization for keys (has target) and weapons (has damage)
+			"level INTEGER NOT NULL, " +
+			"damage INTEGER NOT NULL" +
 		");" +
 
-//		"CREATE TABLE IF NOT EXISTS key (" +
-//			"item_id INTEGER REFERENCES item(item_id), " +
-//			"" +
+		"CREATE TABLE IF NOT EXISTS key (" +
+			"item_id INTEGER REFERENCES item(id), " +
+			"target INTEGER REFERENCES room(id)" +
+		");" +
 
 		"CREATE TABLE IF NOT EXISTS character_sheet (" +
 			"player_id INTEGER UNIQUE NOT NULL, " +
@@ -54,15 +55,33 @@ public class SQLite implements PersistentStorage {
 			"FOREIGN KEY(player_id) REFERENCES player(id)" +
 		");" +
 
+		"CREATE TABLE IF NOT EXISTS room (" +
+			"id INTEGER PRIMARY KEY, " +
+			"name TEXT UNIQUE NOT NULL, " +
+			"description TEXT, " +
+			"pvp BOOLEAN NOT NULL" +
+		");" +
+
 		// M-N Relations
 		"CREATE TABLE IF NOT EXISTS inventory_item_relation (" +
 			"inv_id INTEGER, " +
 			"item_id INTEGER, " +
 			"amount INTEGER, " +
 			"FOREIGN KEY(inv_id) REFERENCES inventory(player_id), " +
-			"FOREIGN KEY(item_id) REFERENCES item(item_id), " +
+			"FOREIGN KEY(item_id) REFERENCES item(id), " +
 			"PRIMARY KEY(inv_id, item_id)" +
-		")";
+		");" +
+
+		"CREATE TABLE IF NOT EXISTS room_item_relation (" +
+			"room_id INTEGER REFERENCES room(id), " +
+			"item_id INTEGER REFERENCES item(id), " +
+			"amount INTEGER NOT NULL" +
+		");" +
+
+		"CREATE TABLE IF NOT EXISTS room_exit_relation (" +
+			"room_id INTEGER REFERENCES room(id), " +
+			"exit_id INTEGER REFERENCES room(id)" +
+		");";
 
 	private static final String INSERT_PLAYER =
 		// This can be shorten to look like INSERT_CS
