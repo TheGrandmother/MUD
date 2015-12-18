@@ -170,7 +170,6 @@ public class GameEngine {
 			return;
 
 		} catch(EntityNotUnique e) {
-			adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken"));
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Username is already taken!"));
 			return;
 
