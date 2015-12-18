@@ -108,6 +108,9 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 			// Notify the game engine about the dropped connection
 			inbox.add(new LogoutMessage(to_remove));
 		}
+		else {
+			logger.warning("Could not find legit-name for closed connection!");
+		}
 	}
 
 	@Override
@@ -194,7 +197,8 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 			WebSocket conn = legit_connections.get(receiver).getSocket();
 
 			if(conn.isClosed() || conn.isClosing()) {
-				logger.info("Connection to user \"" + receiver + "\" was apparently closed! Removing user from server...");
+				//TODO perform this "check" inside the onClose() method instead.
+				logger.warning("Connection to user \"" + receiver + "\" was apparently closed! Removing user from server...");
 				legit_connections.remove(receiver);
 				inbox.add(new LogoutMessage(receiver));
 			}
