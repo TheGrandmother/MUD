@@ -175,7 +175,7 @@ public class GameEngine {
 
 		} catch(EntityNotPresent e) {
 			adapter.sendMessage(new SeriousErrorMessage(actor_name, "The lobby does not exist"));
-			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
+			//adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
 			return;
 		}
 
