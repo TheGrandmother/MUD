@@ -143,13 +143,8 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				break;
 
 			case LOGOUT:
-				// Close and remove connection
-				legit_connections.remove(msg.getSender());
+				// This will call the onClose() method.
 				conn.close();
-
-				// Notify the game
-				inbox.add(msg);
-
 				break;
 
 			case HEARTBEAT:
