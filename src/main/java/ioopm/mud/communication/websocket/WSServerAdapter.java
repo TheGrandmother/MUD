@@ -95,7 +95,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 		String to_remove = null;
 		for(Map.Entry<String, WSClientConnection> entry : legit_connections.entrySet()) {
-			if(entry.getValue() == conn) {
+			if(entry.getValue().getSocket() == conn) {
 				to_remove = entry.getKey();
 				break;
 			}
