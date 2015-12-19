@@ -1,6 +1,5 @@
 package ioopm.mud;
 
-import ioopm.mud.logger.ClientConsoleFormatter;
 import ioopm.mud.logger.HTMLFormatter;
 import ioopm.mud.logger.ServerConsoleFormatter;
 
@@ -25,41 +24,13 @@ public class Main {
 		// Set up the logger.
 		setUpLogger();
 
-		logger.fine("Initiating program!");
+		logger.fine("Initiating server...");
 
-		if(args.length != 1) {
-			System.out.println("Incorrect usage! Please provide if the game should run as client or server!");
-			System.out.println("Example usage: java -jar MUD.jar client");
-			return;
-		}
-
-		switch(args[0].toLowerCase()) {
-
-			case "client":
-				logger.fine("Initiating client...");
-
-				try {
-					setRootFormatter(new ClientConsoleFormatter(), Level.INFO);
-					new Client();
-				} catch(Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-				break;
-
-			case "server":
-				logger.fine("Initiating server...");
-
-				try {
-					setRootFormatter(new ServerConsoleFormatter(), Level.ALL);
-					new Server();
-				} catch(Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
-				}
-				break;
-
-			default:
-				System.out.println("Incorrect choice! Please choose either client or server!");
-				return;
+		try {
+			setRootFormatter(new ServerConsoleFormatter(), Level.ALL);
+			new Server();
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
