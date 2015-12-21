@@ -70,7 +70,7 @@ public abstract class Talk {
 		String message = arguments[1];
 
 		if(recipient.equals(actor.getName())) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "You cant talk to yourself.... that is silly"));
+			adapter.sendMessage(new ErrorMessage(actor.getName(), "You can't talk to yourself.... that is silly"));
 			return;
 		}
 
