@@ -64,10 +64,6 @@ public abstract class ItemInteraction {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Item " + item_name + " is not in the room!"));
 			return;
 		}
-
-
-		//adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.TAKE_REPLY, "You picked up a/an " + item_name +"."));
-		//GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name+".", actor.getName());
 	}
 
 	/**
@@ -99,7 +95,7 @@ public abstract class ItemInteraction {
 				current_room.addItem(i.getItem());
 				actor.getInventory().removeItem(item_name);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, "You dropped " + item_name + "."));
-				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " dropped " + item_name, actor.getName());
+				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " dropped " + item_name + ".", actor.getName());
 				return;
 			}
 		}
@@ -180,12 +176,8 @@ public abstract class ItemInteraction {
 					" units of space but you only have " + (actor.getInventory().getMax_volume() - actor.getInventory().getVolume()) + " free."));
 				return;
 			}
-
 		}
-
-
 	}
-
 }
 
 
