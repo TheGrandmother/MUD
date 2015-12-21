@@ -6,7 +6,6 @@ import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
-//import ioopm.mud.generalobjects.Character.Inventory;
 import ioopm.mud.generalobjects.*;
 
 
@@ -27,14 +26,16 @@ public final class See {
 	public static void look(Player actor, World world, Adapter server) {
 
 		Room current_room = actor.getLocation();
-		String[] observation = new String[6];
+		String[] observation = new String[7];
 		observation[0] = "You are in room " + current_room.getName() + "."; //NAME
 		observation[1] = current_room.getDescription();                        //DESCRIPTION
 		observation[2] = "";                                                //EXITS
 		observation[3] = "";                                                //PLAYERS
 		observation[4] = "";                                                //NPCS
 		observation[5] = "";                                                //ITEMS
-
+		
+		observation[6] = (current_room.isPVP()) ? "PVP is allowed in this room!" : "";	
+	
 		if(current_room.getExits().isEmpty()) {
 			observation[2] = " ";
 		} else {
@@ -96,7 +97,7 @@ public final class See {
 
 		inventory = actor.getInventory();
 		if(inventory.getitems().isEmpty()) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is empty! You have " + inventory.getMax_volume() + " units of space left."));
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.INVENTORY_REPLY, "Your inventory is empty. You have " + inventory.getVolume() + " units of space left."));
 			return;
 		}
 
@@ -142,28 +143,29 @@ public final class See {
 
 		String query_name = arguments[0];
 
+		//check the players inventory. Do this first otherwise the "you own..." wont be displayed if an object that the user has is allready in the inventory.
+		for(ItemContainer ic : actor.getInventory().getitems()) {
+			if(ic.getName().equals(query_name)) {
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect() + " You own this item."));
+				return;
+			}
+		}
+
 		if(World.assertExistence(query_name, world.getItems())) {
 			//query is item.
 			//First check the room for the item.
+			
+			// check if its a mounted weapon.
+			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(query_name)) {
+				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, actor.getWeapon().inspect() + " You have equipped this weapon."));
+				return;
+			}
+			
 			for(ItemContainer ic : actor.getLocation().getItems()) {
 				if(ic.getName().equals(query_name)) {
 					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect()));
 					return;
 				}
-			}
-
-			//check the players inventory
-			for(ItemContainer ic : actor.getInventory().getitems()) {
-				if(ic.getName().equals(query_name)) {
-					adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, ic.getItem().inspect() + " You own this item."));
-					return;
-				}
-			}
-
-			// check if its a mounted weapon.
-			if(actor.getWeapon() != null && actor.getWeapon().getName().equals(query_name)) {
-				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.EXAMINE_REPLY, actor.getWeapon().inspect() + " You have equipped this weapon."));
-				return;
 			}
 
 		} else if(World.assertExistence(query_name, world.getPlayers())) {
@@ -200,8 +202,8 @@ public final class See {
 	 */
 	public static void cs(Player actor, World world, Adapter adapter) {
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, "You are level " + actor.getCs().getLevel() + ". You have " +
-			actor.getCs().getHealth() + " health points out of " + actor.getCs().getMaxHealth() + ".You have " + actor.getCs().getHp() + " university credits and and need " +
-			actor.getCs().hpToNextLevel() + " more to level up."));
+			actor.getCs().getHealth() + " health points out of " + actor.getCs().getMaxHealth() + ". You have " + actor.getCs().getUc() + " university credits and and need " +
+			actor.getCs().ucToNextLevel() + " more to level up."));
 	}
 
 }

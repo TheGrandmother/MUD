@@ -36,49 +36,14 @@ public abstract class Movement {
 		}
 
 		String destination_name = arguments[0];
-		Room destination_room = null;
 		Room current_room = actor.getLocation();
 
-		try {
-
-			destination_room = world.findRoom(destination_name);
-
-		} catch(EntityNotPresent e1) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), destination_name + " isn't even a real room!"));
-			return;
-		}
-
-		if(actor.getLocation() == destination_room) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), "Dude you are already in that room"));
-			return;
-
-		}
+		Room destination_room = getDestinationRoom(destination_name,current_room,actor,world,adapter);
+		
+		if(destination_room == null){return;}
 
 		Room.Exit door = current_room.getExit(destination_name);
-		if(door == null) {
-			adapter.sendMessage(new ErrorMessage(actor.getName(), current_room.getName() + " has no exit to " + destination_name + "."));
-			return;
-		}
-
-		//This shit is pretty ugly :(
-		Boolean has_key = true;
-		if(door.isLocked()) {
-			has_key = false;
-			Inventory inventory = actor.getInventory();
-			for(ItemContainer i : inventory.getitems()) {
-				if(i.getItem() instanceof Key && destination_name.equals(((Key) i.getItem()).getTargetRoom())) {
-					if(i.getItem().getLevel() > actor.getCs().getLevel()) {
-						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level " + actor.getCs().getLevel() + "."));
-						return;
-					} else {
-						has_key = true;
-						break;
-					}
-				}
-			}
-		}
-
-		if(has_key) {
+		if(!door.isLocked() || hasKey(door,actor,world,adapter)) {
 
 			try {
 				current_room.removePlayer(actor);
@@ -93,14 +58,77 @@ public abstract class Movement {
 
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.MOVE_REPLY, "You are now in " + destination_room.getName() + "."));
 			GameEngine.broadcastToRoom(adapter, destination_room, actor.getName() + " entered from " + current_room.getName() + ".", actor.getName());
-			return;
 
 		} else {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have the key to " + destination_name + "."));
-			return;
 		}
 
 	}
 
+	
+	/**Checks if the player has the key to the current door.
+	 *
+	 *@param door The actual door!
+	 *@param actor Who is trying to open the door
+	 *@param world The world in which everything is
+	 *@param adapter take aguess
+	 *@return True if the player has the key and false otherwise.
+	 */
+	private static boolean hasKey(Room.Exit door, Player actor, World world, Adapter adapter){
+	
+		if(door.isLocked()) {
+			Inventory inventory = actor.getInventory();
+			for(ItemContainer i : inventory.getitems()) {
+				if(i.getItem() instanceof Key && door.getNameOfOtherside().equals(((Key) i.getItem()).getTargetRoom())) {
+					if(i.getItem().getLevel() > actor.getCs().getLevel()) {
+						adapter.sendMessage(new ErrorMessage(actor.getName(), "Key requires level " + i.getItem().getLevel() + " but you are only level " + actor.getCs().getLevel() + "."));
+						return false;
+					} else {
+						 return true;
+					}
+				}
+			}
+		}
+		return false;
 
+	}
+
+
+	/**Gets the room wich has the destination name if such a room exists and there is an exit to it.
+	 *
+	 *
+	 *@param destination_name The name of the room to which the player thinks he can go
+	 *@param current_room The room that the player is in
+	 *@param actor The player who is apparently moving around.
+	 *@param world Where everuthing is
+	 *@param adapter The adapter trough which messages are sent.
+	 *@return The room to which destination_name points. If thigs go south null is returned.
+	 */
+	private static Room getDestinationRoom(String destination_name, Room current_room,Player actor, World world, Adapter adapter){
+	
+		Room destination_room = null;
+		
+		try {
+
+			destination_room = world.findRoom(destination_name);
+
+			if(actor.getLocation() == destination_room) {
+				adapter.sendMessage(new ErrorMessage(actor.getName(), "Dude you are already in that room"));
+				return null;
+
+			}
+
+			if(current_room.getExit(destination_name) == null) {
+				adapter.sendMessage(new ErrorMessage(actor.getName(), current_room.getName() + " has no exit to " + destination_name + "."));
+				return null;
+			}
+			
+		} catch(EntityNotPresent e1) {
+			adapter.sendMessage(new ErrorMessage(actor.getName(), destination_name + " isn't even a real room!"));
+			return null;
+		}
+
+		return destination_room;
+
+	}
 }

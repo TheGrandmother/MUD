@@ -8,10 +8,10 @@ package ioopm.mud.generalobjects;
  * @author TheGrandmother
  */
 public class CharacterSheet {
-	private final int BASE_HP = 30;
-	private final double HP_FACTOR = 1.5;
+	private final int BASE_UC = 30;
+	private final double UC_FACTOR = 1.5;
 	private final double HEALTH_FACTOR = 1.3;
-	private int hp;
+	private int uc;
 	private int health;
 	private int max_health;
 	private int level;
@@ -24,28 +24,28 @@ public class CharacterSheet {
 	 * Hp = 30<p>
 	 */
 	public CharacterSheet() {
-		this.hp = BASE_HP;
+		this.uc = BASE_UC;
 		this.level = 1;
 		this.health = 50;
 		this.max_health = 50;
-		this.hp = 30;
+		this.uc = 30;
 
 	}
 
 	/**
-	 * @return The hp (university credits) of the character
+	 * @return The Uc (university credits) of the character
 	 */
-	public int getHp() {
-		return hp;
+	public int getUc() {
+		return uc;
 	}
 
 	/**
-	 * sets the hp (university credits)
+	 * sets the Uc (university credits)
 	 *
-	 * @param hp
+	 * @param uc
 	 */
-	public void setHp(int hp) {
-		this.hp = hp;
+	public void setUc(int uc) {
+		this.uc = uc;
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class CharacterSheet {
 	 *
 	 * @return how many hp left until the new level is reached.
 	 */
-	public int hpToNextLevel() {
-		return (int) (BASE_HP * (HP_FACTOR * level)) - hp;
+	public int ucToNextLevel() {
+		return (int) (BASE_UC * (UC_FACTOR * level)) - uc;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class CharacterSheet {
 	 */
 	//TODO This seriously needs to be reworked!
 	public boolean levelUp() {
-		if(hp >= BASE_HP * (HP_FACTOR * level)) {
+		if(uc >= BASE_UC * (UC_FACTOR * level)) {
 			level++;
 			max_health = (int) (max_health * (HEALTH_FACTOR));
 			health = max_health;
@@ -80,13 +80,13 @@ public class CharacterSheet {
 	/**
 	 * Adds or subtracts hp. Can't set hp to less than 0
 	 *
-	 * @param hp
+	 * @param uc
 	 */
-	public void addHp(int hp) {
-		if(this.hp + hp < 0) {
-			this.hp = 0;
+	public void addUc(int uc) {
+		if(this.uc + uc < 0) {
+			this.uc = 0;
 		} else {
-			this.hp += hp;
+			this.uc += uc;
 		}
 	}
 
