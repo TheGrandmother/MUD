@@ -206,7 +206,8 @@ public class SQLite implements PersistentStorage {
 	}
 
 	@Override
-	public Player loadPlayer(String username) throws IllegalArgumentException {
+	public Player loadPlayer(String username, World world) throws IllegalArgumentException {
+			
 		return null;
 	}
 }
