@@ -26,14 +26,16 @@ public final class See {
 	public static void look(Player actor, World world, Adapter server) {
 
 		Room current_room = actor.getLocation();
-		String[] observation = new String[6];
+		String[] observation = new String[7];
 		observation[0] = "You are in room " + current_room.getName() + "."; //NAME
 		observation[1] = current_room.getDescription();                        //DESCRIPTION
 		observation[2] = "";                                                //EXITS
 		observation[3] = "";                                                //PLAYERS
 		observation[4] = "";                                                //NPCS
 		observation[5] = "";                                                //ITEMS
-
+		
+		observation[6] = (current_room.isPVP()) ? "PVP is allowed in this room!" : "";	
+	
 		if(current_room.getExits().isEmpty()) {
 			observation[2] = " ";
 		} else {
