@@ -127,13 +127,13 @@ public abstract class Message {
 			// Decode the arguments
 			for(int i = 0; i < arg_arr.length; i++) {
 				try {
-					arg_arr[i] = URLDecoder.decode( new String(decoder.decode(arg_arr[i])), "UTF-8");
+					arg_arr[i] = URLDecoder.decode( new String(decoder.decode(arg_arr[i]),"ISO-8859-1"), "ISO-8859-1");
 				}
 				catch(IllegalArgumentException e) {
 					logger.warning("Argument was not correctly base64 encoded! arg: " + arg_arr[i]);
 					throw new IllegalArgumentException("Transmission argument was not correctly base64 encoded!");
 				}catch(UnsupportedEncodingException e){
-					logger.warning("Apparently the encoding UTF-8 does not exist :/ arg: "); 
+					logger.warning("Apparently the encoding ISO-8859-1 does not exist :/ arg: "); 
 					throw new IllegalArgumentException("Transmission argument was not correctly URL encoded!");
 
 				
@@ -251,7 +251,7 @@ public static String encodeURIComponent(String s) {
 	String result;
 
 	try {
-		result = URLEncoder.encode(s, "UTF-8")
+		result = URLEncoder.encode(s, "ISO-8859-1")
 			.replaceAll("\\+", "%20")
 			.replaceAll("\\%21", "!")
 			.replaceAll("\\%27", "'")
