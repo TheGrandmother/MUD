@@ -58,17 +58,22 @@ public abstract class Movement {
 
 			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.MOVE_REPLY, "You are now in " + destination_room.getName() + "."));
 			GameEngine.broadcastToRoom(adapter, destination_room, actor.getName() + " entered from " + current_room.getName() + ".", actor.getName());
-			return;
 
 		} else {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have the key to " + destination_name + "."));
-			return;
 		}
 
 	}
 
 	
-
+	/**Checks if the player has the key to the current door.
+	 *
+	 *@param door The actual door!
+	 *@param actor Who is trying to open the door
+	 *@param world The world in which everything is
+	 *@param adapter take aguess
+	 *@return True if the player has the key and false otherwise.
+	 */
 	private static boolean hasKey(Room.Exit door, Player actor, World world, Adapter adapter){
 	
 		if(door.isLocked()) {
@@ -84,10 +89,21 @@ public abstract class Movement {
 				}
 			}
 		}
-
 		return false;
+
 	}
 
+
+	/**Gets the room wich has the destination name if such a room exists and there is an exit to it.
+	 *
+	 *
+	 *@param destination_name The name of the room to which the player thinks he can go
+	 *@param current_room The room that the player is in
+	 *@param actor The player who is apparently moving around.
+	 *@param world Where everuthing is
+	 *@param adapter The adapter trough which messages are sent.
+	 *@return The room to which destination_name points. If thigs go south null is returned.
+	 */
 	private static Room getDestinationRoom(String destination_name, Room current_room,Player actor, World world, Adapter adapter){
 	
 		Room destination_room = null;
