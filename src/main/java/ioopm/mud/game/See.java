@@ -202,8 +202,8 @@ public final class See {
 	 */
 	public static void cs(Player actor, World world, Adapter adapter) {
 		adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.CS_REPLY, "You are level " + actor.getCs().getLevel() + ". You have " +
-			actor.getCs().getHealth() + " health points out of " + actor.getCs().getMaxHealth() + ". You have " + actor.getCs().getHp() + " university credits and and need " +
-			actor.getCs().hpToNextLevel() + " more to level up."));
+			actor.getCs().getHealth() + " health points out of " + actor.getCs().getMaxHealth() + ". You have " + actor.getCs().getUc() + " university credits and and need " +
+			actor.getCs().ucToNextLevel() + " more to level up."));
 	}
 
 }

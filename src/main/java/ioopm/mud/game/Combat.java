@@ -158,11 +158,11 @@ public abstract class Combat {
 			GameEngine.broadcastToRoom(adapter, target.getLocation(), target.getName() + " returned from the dead.", target.getName());
 
 
-			int hp_taken = computeTakenHp(actor, target); 
-			target.getCs().addHp(-1 * (int)(hp_taken / UC_REDUCTION_FACTOR));
-			actor.getCs().addHp(hp_taken);
-			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "You killed " + target.getName() + " and got " + hp_taken + " university credits :D"));
-			adapter.sendMessage(new ReplyMessage(target.getName(), Keywords.ATTACK_REPLY, "You were killed by " + actor.getName() + " and he stole " + (int)(hp_taken / UC_REDUCTION_FACTOR) + " university credits!. "
+			int uc_taken = computeTakenHp(actor, target); 
+			target.getCs().addUc(-1 * (int)(uc_taken / UC_REDUCTION_FACTOR));
+			actor.getCs().addUc(uc_taken);
+			adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.ATTACK_REPLY, "You killed " + target.getName() + " and got " + uc_taken + " university credits :D"));
+			adapter.sendMessage(new ReplyMessage(target.getName(), Keywords.ATTACK_REPLY, "You were killed by " + actor.getName() + " and he stole " + (int)(uc_taken / UC_REDUCTION_FACTOR) + " university credits!. "
 				+ "You respawned in " + target.getLocation().getName()));
 
 
@@ -178,7 +178,7 @@ public abstract class Combat {
 	 */
 	private static int computeTakenHp(Player actor, Player target){
 		double dice_factor = 0.1;
-		return (int) (target.getCs().getHp() * ((double) GameEngine.d6() * dice_factor));
+		return (int) (target.getCs().getUc() * ((double) GameEngine.d6() * dice_factor));
 	}
 
 }
