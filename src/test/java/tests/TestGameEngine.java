@@ -14,6 +14,14 @@ import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,10 +52,69 @@ public class TestGameEngine {
 	
 	private void dumpMessages(){
 		for(Message m : adapter.messages){
-			System.out.println(m.getMessage());
+			System.out.println(m.toHumanForm());
 		}
 	}
+
+
+	@Test
+	public void testSetAdmin() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
+		makeMeAWorld();
+		ge = new GameEngine(adapter, world);
+			
+		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
+		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, player2,player2_password));
+
+		assertFalse("Player 1 was admin at login",world.findPlayer(player1).isAdmin());
+		assertFalse("Player 2 was admin at login",world.findPlayer(player2).isAdmin());
+		adapter.flush();
+
+
+		long time_stamp = System.currentTimeMillis();
+		
+		String local_hash = "";
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("adminpass"));
+			StringBuilder sb = new StringBuilder();
+			local_hash = br.readLine();
+
+			br.close();
+
+		}catch (FileNotFoundException e){
+			fail("No adminpassword file found on the server!");
+		}catch (IOException e){
+			fail("IOException while trying to read adminpass file!");
+		} 
+
+		String local_hash_salted = local_hash + time_stamp;
+		byte[] digest = null;
+		try{
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+			md.update(local_hash_salted.getBytes("UTF-8")); // Change this to "UTF-16" if needed
+			digest = md.digest();
+		}catch(NoSuchAlgorithmException e){
+			fail("No such alogrithm exception occured when hasing stuff!");
+		}catch (UnsupportedEncodingException e){
+			fail("UnsupportedEncodingException occured!");
+		}
+
+		String mathching_hash = String.format("%064x", new java.math.BigInteger(1, digest));
+		System.out.println("Hash is: " + mathching_hash);
+		String[] args = {mathching_hash};
 	
+		ge.handleMessage(new TestMessage(player1,MessageType.ADMIN_ACTION,"make_admin",time_stamp, args));
+
+		assertTrue("Player1 still not admin after supposed sucsessfull login.",world.findPlayer(player1).isAdmin());
+		assertFalse("Somehow player2 allso became admin :/.",world.findPlayer(player2).isAdmin());
+		adapter.flush();
+
+
+		args[0] = "asdf";
+		ge.handleMessage(new TestMessage(player2,MessageType.ADMIN_ACTION,"make_admin",time_stamp, args));
+		assertFalse("Player2 became admin even though he supplied the wrong password.",world.findPlayer(player2).isAdmin());
+	}
 	
 	@Test
 	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
@@ -1026,14 +1093,19 @@ public class TestGameEngine {
 	
 	class TestMessage extends Message{
 
+		protected TestMessage(String sender, MessageType type, String action, long time_stamp, String[] arguments) {
+			super("server", sender, type, action, time_stamp, arguments); 
+		
+		}
+
 		protected TestMessage(String sender, MessageType type,
 				String action, String... arguments) {
 			super("server", sender, type, action, arguments);
-			// TODO Auto-generated constructor stub
 		}
 
 	}
-	
+
+	@SuppressWarnings("serial")
 	private class WrongMessage extends Exception{
 		Message msg;
 		public WrongMessage(Message msg) {

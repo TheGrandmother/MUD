@@ -116,7 +116,7 @@ public class GameEngine {
 			handleRegistrationRequest(message);
 		} else if(type == MessageType.LOGOUT) {
 			handleLogoutRequest(message);
-		} else if(type == MessageType.GENERAL_ACTION) {
+		} else if(type == MessageType.GENERAL_ACTION || type == MessageType.ADMIN_ACTION) {
 			executeAction(message);
 		}
 	}
@@ -252,6 +252,13 @@ public class GameEngine {
 		}
 
 		String action = message.getAction();
+	
+		if(message.getType() == MessageType.ADMIN_ACTION){
+		
+				Admin.action(actor, action, arguments, message.getTimeStamp(), world, adapter, logger);
+				return;
+		} 
+
 
 		switch(action) {
 

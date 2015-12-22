@@ -48,7 +48,7 @@ public class Player extends Character {
 	}
 
 	/**
-	 * This sets the players admin status. <b>NOTE:</b> currently not used at all.
+	 * This sets the players admin status.
 	 *
 	 * @param is_admin if the player should be admin.
 	 */

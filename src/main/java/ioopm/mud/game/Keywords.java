@@ -35,6 +35,8 @@ public abstract class Keywords {
 	public static final String EXAMINE_REPLY = "examine_reply";
 	public static final String CS = "cs";
 	public static final String CS_REPLY = "cs_reply";
+	public static final String ADMIN_ACTION = "admin_action";
+	public static final String ADMIN_REPLY = "admin_reply";
 
 
 }
