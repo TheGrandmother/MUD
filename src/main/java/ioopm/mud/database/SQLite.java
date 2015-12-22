@@ -3,6 +3,7 @@ package ioopm.mud.database;
 import ioopm.mud.generalobjects.CharacterSheet;
 import ioopm.mud.generalobjects.Inventory;
 import ioopm.mud.generalobjects.Player;
+import ioopm.mud.generalobjects.World;
 import org.sqlite.SQLiteConfig;
 
 import java.io.File;
