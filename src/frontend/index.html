@@ -1,0 +1,207 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="formatting.js" async></script>
+<script src="parser.js" async></script>
+<script>
+function require(script) {
+	$.ajax({
+		url: script,
+		dataType: "script",
+		async: false,           // <-- This is the key
+		success: function () {
+			// all good...
+		},
+		error: function () {
+			throw new Error("Could not load script " + script);
+		}
+		});
+}
+
+//require("formatting.js")
+
+/*
+$.getScript("formatting.js", function(){
+					alert("something something darkside");
+
+			 });
+*/
+$(document).ready(function(){
+var out_ = document.getElementById("output");
+var c = 0;
+var add = setInterval(function() {
+		// allow 1px inaccuracy by adding 1
+		var isScrolledToBottom = out_.scrollHeight - out_.clientHeight <= out_.scrollTop + 1;
+		//TODO Fix so that it just sticks when the user hass scrolled down and stops stiking when the user scrolls upp.
+		if(isScrolledToBottom){
+			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
+			}else{
+			out_.scrollTop = out_.scrollHeight - out_.clientHeight;
+			}
+		}, 1000);
+});
+
+	user  = window.prompt("Please enter username(password is the same)",""); 
+	socket = new WebSocket("ws://188.166.94.208:1337");  
+
+	handshake_complete = false;
+	connection_established = false;
+
+
+	socket.onopen= function (){
+		console.log("started connection");
+		sleepFor(100);
+		socket.send(window.btoa("server")+";"+window.btoa(user)+";HANDSHAKE;null;"+new Date().getTime()+";");
+
+
+	}
+	
+	socket.onmessage = function (env){
+		data = env.data;
+		console.log("you most likley recieved this: "+ data);
+		msg = new Message(data);
+		switch(msg.type){
+			case "HANDSHAKE_REPLY":
+				console.log("recieved handshake reply");
+				console.log(msg.args);
+				if(msg.args[0]=="true"){
+					handshake_complete = true;
+					socket.send(window.btoa("server")+";"+window.btoa(user)+";REGISTRATION;null;"+new Date().getTime()+";"+window.btoa(user)+";"+window.btoa(user)+";");
+					console.log("Handshake reply confirmed. Sent registration request")
+				}else{
+					console.log("handshake failed. attempting login");
+//					socket.send("server;"+user+";LOGIN;null;"+new Date().getTime()+";"+user+";"+user+";");
+				}
+				break;
+			case "REGISTRATION_REPLY":
+				console.log("Received registration reply");
+				if(msg.args[0]=="true"){
+					connection_established = true;
+					console.log("Registartion complete");
+					appendToOut("Welcome to the game :D")
+
+				}else{
+					alert("HANDSHAKE FAILED!");
+					console.log("Registration failed");
+				}
+				break;
+			case "GENERAL_REPLY":
+				switch (msg.action){
+						case "look_reply":
+							appendToOut( formatTime(msg.time_stamp)+ formatLookReply(msg));
+							break;
+						case "move_reply":
+							appendToOut( formatTime(msg.time_stamp)+ formatMoveReply(msg));
+							break;
+						case "say":
+							appendToOut(formatTime(msg.time_stamp)+formatSayReply(msg));
+							break;
+						case "whisper_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatWhisperReply(msg));
+							break;
+						case "inventory_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatInventoryReply(msg));
+							break;
+						case "take_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatTakeReply(msg));
+							break;
+						case "examine_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatExamineReply(msg));
+							break;
+						case "cs_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatCsReply(msg));
+							break;
+						case "equip_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatEquipReply(msg));
+							break;
+						case "unequip_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatUnequipReply(msg));
+							break;
+						case "attack_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatAttackReply(msg));
+							break;
+						case "drop_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatDropReply(msg));
+							break;
+						default:
+							appendToOut(basicMessageFormat(msg));
+							break;
+				}
+				break;
+			case "NOTIFICATION":
+				appendToOut(formatTime(msg.time_stamp)+formatNotification(msg));
+				break;
+			case "GENERAL_ERROR":
+				appendToOut(formatTime(msg.time_stamp)+formatError(msg));
+				break;
+
+			default:
+				appendToOut(basicMessageFormat(msg));
+
+		}
+		
+	}
+
+	function ass(){
+		val =	document.getElementById("input").value;
+		document.getElementById("input").value = "";
+		msg = formatToSend(parseInput(val));
+		console.log("Sending message: " + msg);
+		socket.send(msg);
+	}
+
+	function look(){
+		msg = formatToSend(new makeRequest("look",[],user));
+		console.log("sending message: " + msg);
+		socket.send(msg);
+	}
+
+	function appendToOut(text){
+		output = document.getElementById("output");
+		output.innerHTML += text + "<br>";
+	}
+
+	function sleepFor( sleepDuration ){
+	    var now = new Date().getTime();
+			while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+	}
+
+
+
+
+
+</script>
+</head>
+
+<body>
+
+<div>
+	<div id="output" style="overflow:auto; height:400px;font-family: Mono;font-size: 12px;">
+		<b>Welcome to the scary university of fear and doom!!!!</b><br>
+		This is so fucking beta it is silly.<br>
+		<p>
+		USAGE:<br>
+		If you justtype something into the text field you will say something to all the players in the room.<br>
+		To do an action you need to type a ":" first. <br>
+		Actions are:<br>
+		<b>look</b> Returns a description of the room you are in. <br>
+		<b>move [room]</b> Moves the player to [room] if possible. <br>
+		<b>whisper [player]</b> Whispers something to the [player]. Only [player] can see this message <br>
+		<b>take [item]</b> Tries to pickup [item] <br>
+		<b>drop [item]</b> Tries to drop [item] <br>
+		<b>examine [item]</b> Examines [item] <br>
+		<b>equip [item]</b> Tries to equip item <br>
+		<b>unequip</b> Unequips the current item<br>
+		<b>attack [player]</b> Attacks [player] <br>
+	</div>
+	<div>
+		<input type="text" id="input" onkeydown="if (event.keyCode == 13) ass()">
+	</div>
+
+</div>
+
+
+</body>
+
+</html>
