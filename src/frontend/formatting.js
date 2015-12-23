@@ -50,6 +50,28 @@ function makeRequest(action_,args_,sender_){
 	};	
 }
 
+function makeRequestWithTimeStamp(action_,args_,sender_,stamp_){
+	return message = {
+		receiver:"server",
+		sender:sender_,
+		type:"GENERAL_ACTION",
+		action:action_,
+		time_stamp:""+ stamp_,
+		args:args_
+	};	
+}
+
+function makeAdminAction(action_,args_,sender_,stamp_){
+	return message = {
+		receiver:"server",
+		sender:sender_,
+		type:"ADMIN_ACTION",
+		action:action_,
+		time_stamp:""+ stamp_,
+		args:args_
+	};	
+}
+
 function logoutMessage(){
 	return message = {
 		receiver:"server",
@@ -137,9 +159,12 @@ function formatNotification(message){
 function formatWhisperReply(message){
 	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
 	return str;
-
 }
 
+function formatAdminReply(message){
+	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
+	return str;
+}
 
 function formatInventoryReply(message){
 	str = "<b>Your inventory contains:</b><br>";
