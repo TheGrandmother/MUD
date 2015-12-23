@@ -1,6 +1,11 @@
 function parseInput(inp){
 
 	inp = 	inp.trim();
+
+	if(inp == ""){
+		return null;
+	}
+
 	if(inp.charAt(0)==":"){
 		inp = inp.substr(1);
 		action = inp.split(" ")[0].toLowerCase();

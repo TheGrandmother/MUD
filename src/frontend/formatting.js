@@ -62,17 +62,39 @@ function logoutMessage(){
 
 }
 
+function heartbeatMessage(){
+	return message = {
+		receiver:"server",
+		sender:user,
+		type:"HEARTBEAT",
+		action:"null",
+		time_stamp:""+ new Date().getTime(),
+		args:[]
+	};	
+
+}
+
+function heartbeatReplyMessage(){
+	return message = {
+		receiver:"server",
+		sender:user,
+		type:"HEARTBEAT_REPLY",
+		action:"null",
+		time_stamp:""+ new Date().getTime(),
+		args:[]
+	};	
+
+}
+
 function formatToSend(m){
 
 	str = window.btoa(m.receiver) + ";" + window.btoa(m.sender) + ";" + m.type + ";" + m.action + ";" + m.time_stamp + ";";
-
-	console.log(m.args + " mvkf : " + m.args.length);
 
 	//Okay..... why can't i just check for empty array..
 	if(m.args == [] || m.args.length == 0){
 		return str;
 	}else{
-		return str + (m.args).map(window.btoa).join(";")+";";
+		return str + (m.args).map(escape).map(window.btoa).join(";")+";";
 	}
 
 }
@@ -132,6 +154,11 @@ function formatError(message){
 }
 	
 function formatTakeReply(message){
+	str = "<b>"+message.args[0]+" </b>";
+	return str;
+}
+
+function formatExamineReply(message){
 	str = "<b>"+message.args[0]+" </b>";
 	return str;
 }
