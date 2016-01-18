@@ -1,7 +1,7 @@
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
+<script src='forge-sha256.min.js'></script>
 <script src="formatting.js" async></script>
 <script src="parser.js" async></script>
 <script>
@@ -39,6 +39,12 @@
 	socket.onerror = function (ev){
 		console.log("Connection error!" + ev);
 		appendToOut("Connetion error!!");
+	}
+
+
+	socket.onclose = function (){
+		console.log("Connection Terminatd!");
+		appendToOut("Connetion terminated!!");
 	}
 
 	socket.onmessage = function (env){
@@ -126,6 +132,9 @@
 							break;
 						case "drop_reply":
 							appendToOut(formatTime(msg.time_stamp)+formatDropReply(msg));
+							break;
+						case "admin_reply":
+							appendToOut(formatTime(msg.time_stamp)+formatAdminReply(msg));
 							break;
 						default:
 							appendToOut(basicMessageFormat(msg));
