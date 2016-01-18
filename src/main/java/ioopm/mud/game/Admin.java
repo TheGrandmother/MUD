@@ -110,7 +110,7 @@ public abstract class Admin {
 						}
 
 						if(bannee.isLoggedIn()){
-							adapter.sendMessage(new ReplyMessage(bannee.getName(),Keywords.ADMIN_REPLY,"Congratulations you are being banned :D Please go home and reconsider your life choises."));
+							adapter.sendMessage(new ReplyMessage(bannee.getName(),Keywords.ADMIN_LOGOUT,"Congratulations you are being banned :D Please go home and reconsider your life choises."));
 							bannee.setBanned(true);
 							logger.fine(actor.getName() + " banned " + bannee.getName() + " like a boss!");
 							GameEngine.logoutPlayer(bannee.getName(),world,adapter);

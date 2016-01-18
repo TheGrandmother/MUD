@@ -37,6 +37,11 @@ public abstract class Keywords {
 	public static final String CS_REPLY = "cs_reply";
 	public static final String ADMIN_ACTION = "admin_action";
 	public static final String ADMIN_REPLY = "admin_reply";
+	/**
+	 * To be used when an admin bans or kicks a player.
+	 * Needed by the frontend to handle stuff.
+	 */
+	public static final String ADMIN_LOGOUT = "admin_logout";
 
 
 }
