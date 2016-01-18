@@ -106,7 +106,6 @@ public class GameEngine {
 	 *
 	 * @param message The message to be handled.
 	 */
-	//TODO Implement logging out so that players gets removed from rooms when they log out.
 	public void handleMessage(Message message) {
 		MessageType type = message.getType();
 
@@ -142,6 +141,21 @@ public class GameEngine {
 		}
 
 	}
+
+	public static void logoutPlayer(String  actor_name, World world, Adapter adapter){
+
+		try {
+			Player player = world.findPlayer(actor_name);
+			player.getLocation().removePlayer(player);
+			player.setLoggedIn(false);
+			GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
+		} catch(EntityNotPresent e) {
+			logger.warning("Unknown player tried to log out! Username: \"" + actor_name + "\"");
+			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non existing player."));
+		}
+
+	}
+
 
 	/**
 	 * Handles a registration request.<p>
@@ -202,6 +216,10 @@ public class GameEngine {
 			player = world.findPlayer(username);
 			if(player.isLoggedIn()) {
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That player is already logged in!"));
+				return;
+			}
+			if(player.isBanned()) {
+				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "You are banned! Please go away! We don't want you here!"));
 				return;
 			}
 			if(checkUsernamePassword(username, password)) {

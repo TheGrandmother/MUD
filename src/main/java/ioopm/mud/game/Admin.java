@@ -7,6 +7,8 @@ import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.generalobjects.Item;
 import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
+import ioopm.mud.game.GameEngine;
+
 import java.util.logging.Logger;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -49,14 +51,83 @@ public abstract class Admin {
 						}
 						validatePrivelegeEscalation(actor, arguments[0], time_stamp, adapter, logger);
 
-					}else{
-						adapter.sendMessage(new ErrorMessage(actor.getName(),"Unrecognised admin action."));
+					}
+					if(!actor.isAdmin()){
+						adapter.sendMessage(new ErrorMessage(actor.getName(),"You are not admin! Please go away!"));
 						return;
-						
+					} else if(action.equals("ban")){
+
+						banPlayer(actor, arguments[0], logger, world,adapter);
+						return;
+					}else if(action.equals("un_ban")){
+
+						Player bannee = null;
+						try{
+							bannee = world.findPlayer(arguments[0]);
+
+							if(!bannee.isBanned()){
+
+							adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to un ban a player that is not banned!"));
+							return;
+
+							}else{
+								bannee.setBanned(false);
+							
+								adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is no longer banned!"));
+								logger.fine(actor.getName() + "has un banned" + bannee.getName());
+								return;
+
+							}
+
+						}catch (EntityNotPresent e){
+									
+							adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to un ban a player which does not exist!"));
+							return;
+
+						}
 					}
 				
 				}
 
+
+				private static void banPlayer(Player actor, String bannee_name, Logger logger,World world, Adapter adapter){
+						
+						Player bannee = null;
+						try{
+							bannee = world.findPlayer(bannee_name);
+						}catch (EntityNotPresent e){
+									
+							adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to ban a player which does not exist!"));
+							return;
+
+						}
+
+						if(bannee.isBanned()){
+
+							adapter.sendMessage(new ErrorMessage(actor.getName(),bannee.getName() + " is allready banned!"));
+							return;
+
+						}
+
+						if(bannee.isLoggedIn()){
+							adapter.sendMessage(new ReplyMessage(bannee.getName(),"Congratulations you are being banned :D Please go home and reconsider your life choises."));
+							bannee.setBanned(true);
+							logger.fine(actor.getName() + " banned " + bannee.getName() + " like a boss!");
+							GameEngine.logoutPlayer(bannee.getName(),world,adapter);
+							
+							adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is now banned!"));
+							return;
+
+						}else{
+							bannee.setBanned(true);
+
+							adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is now banned!"));
+							return;
+						}
+
+
+
+				}
 				
 				/**Validates an attempt to become admin.
 				 *

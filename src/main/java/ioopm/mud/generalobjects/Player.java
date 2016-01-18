@@ -11,6 +11,7 @@ public class Player extends Character {
 	private final String password;
 	private boolean logged_in;
 	private boolean is_admin;
+	private boolean is_banned;
 
 	/**
 	 * Creates a new player. With a given name and a given description.
@@ -26,6 +27,7 @@ public class Player extends Character {
 		logged_in = false;
 		this.password = password;
 		is_admin = false;
+		is_banned = false;
 	}
 
 	/**
@@ -54,6 +56,24 @@ public class Player extends Character {
 	 */
 	public void setAdmin(boolean is_admin) {
 		this.is_admin = is_admin;
+	}
+	
+	/**
+	 * Checks if the player is banned
+	 *
+	 * @return true if the player is banned.
+	 */
+	public boolean isBanned() {
+		return is_banned;
+	}
+
+	/**
+	 * This sets the players banned status.
+	 *
+	 * @param is_banned if the player should be banned.
+	 */
+	public void setBanned(boolean banned) {
+		this.is_banned = banned;
 	}
 
 	/**
