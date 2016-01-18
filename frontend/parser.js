@@ -6,6 +6,12 @@ function parseInput(inp){
 		return null;
 	}
 
+	if(is_banned){
+	 	appendToOut("You are banned... Deal with it!");	
+		return null;
+	}
+
+
 	if(inp.charAt(0)==":"){
 		inp = inp.substr(1);
 		action = inp.split(" ")[0].toLowerCase();
@@ -66,14 +72,9 @@ function parseInput(inp){
 			
 			case "_make_admin_":
 				arg = inp.split(" ").splice(1);
-				console.log("trying to become admin with pass: " + arg[0]);
-				
 				hashed_pass = forge_sha256(arg[0]);
-				console.log("Unsalted hash: " + hashed_pass);
 				time_stamp = new Date().getTime();
-				console.log("Salting with stamp: " + time_stamp);
 				salted_hash = forge_sha256(hashed_pass + "" + time_stamp);
-				console.log("Salted hash is: " + salted_hash);
 				arg[0] = salted_hash;
 				return makeAdminAction("make_admin",[arg[0]],user,time_stamp);
 				

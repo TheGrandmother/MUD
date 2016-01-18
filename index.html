@@ -27,6 +27,8 @@
 	username_entered = false;
 	password_enetered = false;
 
+	is_banned = false;
+
 	socket_open = false;
 
 	socket.onopen= function (){
@@ -135,6 +137,10 @@
 							break;
 						case "admin_reply":
 							appendToOut(formatTime(msg.time_stamp)+formatAdminReply(msg));
+							break;
+						case "admin_logout":
+							is_banned = true;
+							appendToOut(formatTime(msg.time_stamp)+formatAdminLogout(msg));
 							break;
 						default:
 							appendToOut(basicMessageFormat(msg));

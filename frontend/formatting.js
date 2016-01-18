@@ -166,6 +166,10 @@ function formatAdminReply(message){
 	return str;
 }
 
+function formatAdminLogout(message){
+	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
+	return str;
+}
 function formatInventoryReply(message){
 	str = "<b>Your inventory contains:</b><br>";
 	str += time_stamp_offs + message.args[2] + "<br>";
