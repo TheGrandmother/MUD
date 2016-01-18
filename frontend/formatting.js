@@ -162,12 +162,12 @@ function formatWhisperReply(message){
 }
 
 function formatAdminReply(message){
-	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
+	str = "<b>"+message.args[0]+"</b>";
 	return str;
 }
 
 function formatAdminLogout(message){
-	str = "<b>"+message.args[0]+": </b><i>"+message.args[1]+"</i>";
+	str = "<b>"+message.args[0]+"</b>";
 	return str;
 }
 function formatInventoryReply(message){
