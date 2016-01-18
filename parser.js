@@ -66,6 +66,10 @@ function parseInput(inp){
 			
 			case "_make_admin_":
 				arg = inp.split(" ").splice(1);
+				if(arg.length == 0){
+					appendToOut("No admin password supplied");
+					return;
+				}
 				console.log("trying to become admin with pass: " + arg[0]);
 				
 				hashed_pass = forge_sha256(arg[0]);
