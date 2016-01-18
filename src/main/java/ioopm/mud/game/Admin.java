@@ -73,7 +73,7 @@ public abstract class Admin {
 							}else{
 								bannee.setBanned(false);
 							
-								adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is no longer banned!"));
+								adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,bannee.getName() + " is no longer banned!"));
 								logger.fine(actor.getName() + "has un banned" + bannee.getName());
 								return;
 
@@ -110,18 +110,18 @@ public abstract class Admin {
 						}
 
 						if(bannee.isLoggedIn()){
-							adapter.sendMessage(new ReplyMessage(bannee.getName(),"Congratulations you are being banned :D Please go home and reconsider your life choises."));
+							adapter.sendMessage(new ReplyMessage(bannee.getName(),Keywords.ADMIN_REPLY,"Congratulations you are being banned :D Please go home and reconsider your life choises."));
 							bannee.setBanned(true);
 							logger.fine(actor.getName() + " banned " + bannee.getName() + " like a boss!");
 							GameEngine.logoutPlayer(bannee.getName(),world,adapter);
 							
-							adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is now banned!"));
+							adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,bannee.getName() + " is now banned!"));
 							return;
 
 						}else{
 							bannee.setBanned(true);
 
-							adapter.sendMessage(new ReplyMessage(actor.getName(),bannee.getName() + " is now banned!"));
+							adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,bannee.getName() + " is now banned!"));
 							return;
 						}
 
