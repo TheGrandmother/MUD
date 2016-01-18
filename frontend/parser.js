@@ -84,7 +84,15 @@ function parseInput(inp){
 				arg = inp.split(" ").splice(1);
 				console.log("Trying to ban " + arg[0]);
 				
-				return makeAdminAction("ban",[arg[0]],user,time_stamp);
+				return makeAdminAction("ban",[arg[0]],user, new Date().getTime());
+				break;
+			
+			case "_un_ban_":
+				
+				arg = inp.split(" ").splice(1);
+				console.log("Trying to un ban " + arg[0]);
+				
+				return makeAdminAction("un_ban",[arg[0]],user,new Date().getTime());
 				break;
 				
 			case "cs":
