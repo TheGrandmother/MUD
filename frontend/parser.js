@@ -78,6 +78,14 @@ function parseInput(inp){
 				return makeAdminAction("make_admin",[arg[0]],user,time_stamp);
 				
 				break;
+
+			case "_ban_":
+				
+				arg = inp.split(" ").splice(1);
+				console.log("Trying to ban " + arg[0]);
+				
+				return makeAdminAction("ban",[arg[0]],user,time_stamp);
+				break;
 				
 			case "cs":
 				return makeRequest("cs",[],user);
