@@ -110,45 +110,6 @@ public class TestGameEngine {
 		assertFalse("Player 1 was admin at login",world.findPlayer(player1).isAdmin());
 		assertFalse("Player 2 was admin at login",world.findPlayer(player2).isAdmin());
 		adapter.flush();
-/*
-
-		long time_stamp = System.currentTimeMillis();
-		
-		String local_hash = "";
-
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("adminpass"));
-			StringBuilder sb = new StringBuilder();
-			local_hash = br.readLine();
-
-			br.close();
-
-		}catch (FileNotFoundException e){
-			fail("No adminpassword file found on the server!");
-		}catch (IOException e){
-			fail("IOException while trying to read adminpass file!");
-		} 
-
-		String local_hash_salted = local_hash + time_stamp;
-		byte[] digest = null;
-		try{
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-			md.update(local_hash_salted.getBytes("UTF-8")); // Change this to "UTF-16" if needed
-			digest = md.digest();
-		}catch(NoSuchAlgorithmException e){
-			fail("No such alogrithm exception occured when hasing stuff!");
-		}catch (UnsupportedEncodingException e){
-			fail("UnsupportedEncodingException occured!");
-		}
-
-		String mathching_hash = String.format("%064x", new java.math.BigInteger(1, digest));
-		System.out.println("Hash is: " + mathching_hash);
-		String[] args = {mathching_hash};
-	
-		ge.handleMessage(new TestMessage(player1,MessageType.ADMIN_ACTION,"make_admin",time_stamp, args));
-*/
-
 
 		long time_stamp = System.currentTimeMillis();
 		ge.handleMessage(new TestMessage(player1,MessageType.ADMIN_ACTION,"make_admin",time_stamp, makeAdminRequestMessage(time_stamp)));
@@ -1063,11 +1024,26 @@ public class TestGameEngine {
 		} catch (EntityNotPresent e) {
 			fail("Player not present in the world.");
 		}
+
+		adapter.flush();
 		
+
+		//test username validity
+		String fail_name = "balls <i>";
+		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, fail_name,"asd"));
+		m = getMessageOfType(MessageType.REGISTRATION_REPLY);
+		assertTrue("Registration possible with mallformed username.",m.getArguments()[0].equals("false"));
+		try {
+			world.findPlayer(fail_name).isLoggedIn();
+			fail("Player still appeared in the world");
+		} catch (EntityNotPresent e) {
+			
+		}
+
+
 		//Test Logging out
 		adapter.flush();
 		ge.handleMessage(new TestMessage(player1, MessageType.LOGOUT, null, player1));
-		assertTrue(m.getArguments()[1],m.getArguments()[0].equals("true"));
 		try {
 			assertFalse("Player din't log out.",world.findPlayer(player1).isLoggedIn());
 		} catch (EntityNotPresent e) {

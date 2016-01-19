@@ -11,7 +11,7 @@ import ioopm.mud.generalobjects.Room;
 import ioopm.mud.generalobjects.World;
 
 import java.util.logging.Logger;
-
+import java.util.regex.Pattern;
 /**
  * This is the main class for the actual game part of the mud. This class is responsible for interpreting the messages
  * and taking appropriate action in accordance to the spec/Messages.txt file.<p>
@@ -173,6 +173,11 @@ public class GameEngine {
 		}
 		String username = arguments[0];
 		String password = arguments[1];
+
+		if(!Pattern.matches("\\w+", username)){
+			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Invalid characters in the username! Usernames can only contain letters, digits and underscores."));
+			return;
+		}
 
 		try {
 			world.addCharacter(new Player(username, "", password, world.getLobby(0)));
