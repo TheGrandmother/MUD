@@ -17,6 +17,9 @@ CREATE TABLE IF NOT EXISTS Location (
 
 CREATE TABLE IF NOT EXISTS Character (
 	id INTEGER PRIMARY KEY AUTOINCREMENT
+	has_equiped INTEGER,
+
+	FOREIGN KEY(has_equiped) REFERENCES Item(id)
 );
 
 --- WEAK ENTITIES
@@ -50,6 +53,13 @@ CREATE TABLE IF NOT EXISTS CharacterSheet (
 	level INTEGER,
 	health INTEGER,
 	maximum_health INTEGER,
+
+	FOREIGN KEY(id) REFERENCES Character(id)
+);
+
+CREATE TABLE IF NOT EXISTS Inventory (
+	id INTEGER PRIMARY KEY,
+	volume INTEGER NOT NULL,
 
 	FOREIGN KEY(id) REFERENCES Character(id)
 );
