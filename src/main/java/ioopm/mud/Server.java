@@ -135,8 +135,9 @@ public class Server {
 	 *
 	 * @param filename - Name of file to copy.
 	 * @throws IOException - If an I/O error occurred
+	 * @return - The loaded file.
 	 */
-	private void loadResourceFile(String filename) throws IOException {
+	public static File loadResourceFile(String filename) throws IOException {
 		File items = new File(filename);
 		if(!items.exists()) {
 			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
@@ -147,5 +148,6 @@ public class Server {
 			}
 			fos.flush();
 		}
+		return items;
 	}
 }
