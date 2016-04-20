@@ -8,7 +8,7 @@ public enum DatabaseStructure {
 			"name VARCHAR NOT NULL," +
 			"description VARCHAR," +
 			"size INTEGER" +
-			");"
+		");"
 	),
 
 	TABLE_LOCATION(
@@ -17,7 +17,7 @@ public enum DatabaseStructure {
 			"name VARCHAR NOT NULL," +
 			"description VARCHAR," +
 			"pvp BOOLEAN" +
-			");"
+		");"
 	),
 
 	TABLE_CHARACTER(
@@ -26,9 +26,9 @@ public enum DatabaseStructure {
 			"has_equiped INTEGER," +
 
 			"FOREIGN KEY(has_equiped) REFERENCES Item(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT" +
-			");"
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT" +
+		");"
 	),
 
 	TABLE_WEAPON(
@@ -37,9 +37,9 @@ public enum DatabaseStructure {
 			"damage INTEGER," +
 
 			"FOREIGN KEY(id) REFERENCES Item(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT" +
-			");"
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT" +
+		");"
 	),
 
 	TABLE_KEY(
@@ -48,12 +48,12 @@ public enum DatabaseStructure {
 			"target INTEGER," +
 
 			"FOREIGN KEY(id) REFERENCES Item(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT," +
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT," +
 			"FOREIGN KEY(target) REFERENCES Location(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT" +
-			");"
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT" +
+		");"
 	),
 
 	TABLE_PLAYER(
@@ -64,9 +64,9 @@ public enum DatabaseStructure {
 			"is_admin BOOLEAN," +
 
 			"FOREIGN KEY(id) REFERENCES Character(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT" +
-			");"
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT" +
+		");"
 	),
 
 	TABLE_CHARACTERSHEET(
@@ -78,9 +78,9 @@ public enum DatabaseStructure {
 			"maximum_health INTEGER," +
 
 			"FOREIGN KEY(id) REFERENCES Character(id)" +
-			"ON DELETE CASCADE" +
-			"ON UPDATE RESTRICT" +
-			");"
+				"ON DELETE CASCADE" +
+				"ON UPDATE RESTRICT" +
+		");"
 	),
 
 	TABLE_INVENTORY(
@@ -91,7 +91,7 @@ public enum DatabaseStructure {
 			"FOREIGN KEY(id) REFERENCES Character(id)" +
 				"ON DELETE CASCADE" +
 				"ON UPDATE RESTRICT" +
-			");"
+		");"
 	),
 
 	RELATION_CONTAINS_ITEM(
@@ -108,7 +108,7 @@ public enum DatabaseStructure {
 			"FOREIGN KEY(item_id) REFERENCES Item(id)" +
 				"ON DELETE CASCADE" +
 				"ON UPDATE RESTRICT" +
-			");"
+		");"
 	),
 
 	RELATION_EXITS_TO(
@@ -124,7 +124,7 @@ public enum DatabaseStructure {
 			"FOREIGN KEY(loc_2) REFERENCES Location(id)" +
 				"ON DELETE CASCADE" +
 				"ON UPDATE RESTRICT" +
-			");"
+		");"
 	);
 
 	private final String SQL;
