@@ -1,4 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/TheGrandmother/MUD.png?label=ready&title=Ready)](https://waffle.io/TheGrandmother/MUD)
+[![Stories in Ready](https://badge.waffle.io/TheGrandmother/MUD.png?label=ready&title=Ready)](https://waffle.io/TheGrandmother/MUD)
 # MUD
 This is the worlds most pointless MUD.
 
