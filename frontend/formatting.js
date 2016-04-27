@@ -5,8 +5,8 @@
 	function Message(message){
 		
 		split_array = message.split(";");
-		this.receiver = window.atob(split_array[0]);
-		this.sender = window.atob(split_array[1]);
+		this.receiver = window.atob(split_array[0]).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		this.sender = window.atob(split_array[1]).replace(/</g, "&lt;").replace(/>/g, "&gt;");
 		this.type = split_array[2];
 		this.action = split_array[3];
 		this.time_stamp = split_array[4];
@@ -14,7 +14,7 @@
 		this.args = [];
 	
 		for(i = 5; i < split_array.length; i++){
-			this.args.push(window.atob(split_array[i]));
+			this.args.push(window.atob(split_array[i]).replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 		}
 
 	}
