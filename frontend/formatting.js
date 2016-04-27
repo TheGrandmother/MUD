@@ -5,8 +5,8 @@
 	function Message(message){
 		
 		split_array = message.split(";");
-		this.receiver =unescape(window.atob(split_array[0])).replace(/</g, "&lt;").replace(/>/g, "&gt;");
-		this.sender = unescape(window.atob(split_array[1])).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		this.receiver = window.atob(split_array[0]).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		this.sender = window.atob(split_array[1]).replace(/</g, "&lt;").replace(/>/g, "&gt;");
 		this.type = split_array[2];
 		this.action = split_array[3];
 		this.time_stamp = split_array[4];
