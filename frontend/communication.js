@@ -156,8 +156,8 @@ socket.onmessage = function (env){
   }
 }
 
-function onInput(){
-  switch (event.keyCode){
+function onInput(key_code){
+  switch (key_code){
     case 13:
       val =  document.getElementById("input").value;
 
