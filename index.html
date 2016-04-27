@@ -251,7 +251,7 @@
     var isScrolledToBottom = out.scrollHeight - out.clientHeight <= out.scrollTop + 1;
     //Anny additions to the output must happen below this line and before the if statement.
     //otherwise the autoscrolling wont work.
-    out.innerHTML += unescape(text).replace(/</g, "&lt;").replace(/>/g, "&gt;") + "<br>";
+    out.innerHTML += unescape(text) + "<br>";
 
     if(isScrolledToBottom){
       out.scrollTop = out.scrollHeight - out.clientHeight;
