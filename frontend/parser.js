@@ -95,6 +95,14 @@ function parseInput(inp){
         return makeAdminAction("un_ban",[arg[0]],user,new Date().getTime());
         break;
         
+      case "_broadcast_":
+        
+        arg = inp.split(" ").splice(1).join(" ");
+        console.log("broadcasting");
+        
+        return makeAdminAction("broadcast",[arg],user,new Date().getTime());
+        break;
+
       case "cs":
         return makeRequest("cs",[],user);
         
