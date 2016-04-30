@@ -210,7 +210,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				conn.send(m.toString());
 			}
 		} else {
-			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
+			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toHumanForm());
 		}
 	}
 }
