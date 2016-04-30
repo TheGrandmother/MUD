@@ -123,7 +123,7 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 			msg = Message.deconstructTransmission(message);
       
       if(msg.getType() != MessageType.HEARTBEAT){
-        logger.info("IP: " + getIP(conn) + " sent message: " + message);
+        logger.info("IP: " + getIP(conn) + " sent message: " + msg.toHumanForm());
       }
 
 		} catch(IllegalArgumentException e) {

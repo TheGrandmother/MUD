@@ -244,16 +244,16 @@ public abstract class Message {
 
 
 	public String toHumanForm(){
-		String s =  SENDER + ";" + RECEIVER + ";" + TYPE + ";" + ACTION + ";" + TIME_STAMP + ";";
+    
+		String s =  new String (decoder.decode(SENDER)) + ";" + new String(decoder.decode(RECEIVER)) + ";" + TYPE + ";" + ACTION + ";" + TIME_STAMP + ";";
 		if(ARGUMENTS != null) {
 			for(String a : ARGUMENTS) {
 				if(a == null) {
 					s += "null";
 				}
-					s += a + ";";
+					s += new String(decoder.decode(a)) + ";";
 			}
 		}
-
 		return s;
 	}
 
