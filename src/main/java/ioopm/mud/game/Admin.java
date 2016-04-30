@@ -106,7 +106,7 @@ public abstract class Admin {
           adapter.sendMessage(new ReplyMessage(mutee.getName(),Keywords.ADMIN_REPLY,"Congratulations, you have been muted. Just like in the matrix where agent Smith goes all like \"What good is a phone call if you are unable to speak.\" and Neos mouth gets like all strange and stuff."));
         
           adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,mutee.getName() + " has been muted"));
-          logger.fine(actor.getName() + "has un muted" + mutee.getName());
+          logger.fine(actor.getName() + "has muted" + mutee.getName());
           return;
 
         }
