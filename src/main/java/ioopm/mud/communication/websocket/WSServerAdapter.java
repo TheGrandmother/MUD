@@ -2,6 +2,7 @@ package ioopm.mud.communication.websocket;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
+import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.client.LogoutMessage;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
@@ -115,11 +116,16 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-		logger.info("IP: " + getIP(conn) + " sent message: " + message);
+    
 
 		Message msg;
 		try {
 			msg = Message.deconstructTransmission(message);
+      
+      if(msg.getType() != MessageType.HEARTBEAT){
+        logger.info("IP: " + getIP(conn) + " sent message: " + message);
+      }
+
 		} catch(IllegalArgumentException e) {
 			logger.warning("Received malformed message! Message: " + message);
 			logger.log(Level.FINE, e.getMessage(), e);
