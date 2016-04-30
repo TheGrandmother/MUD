@@ -96,13 +96,13 @@ public abstract class Admin {
       try{
         mutee = world.findPlayer(mutee_name);
 
-        if(mutee.isBanned()){
+        if(mutee.isMuted()){
 
         adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to mute a player that is already muted!"));
         return;
 
         }else{
-          mutee.setBanned(true);
+          mutee.setMuted(true);
           adapter.sendMessage(new ReplyMessage(mutee.getName(),Keywords.ADMIN_REPLY,"Congratulations, you have been muted. Just like in the matrix where agent Smith goes all like \"What good is a phone call if you are unable to speak.\" and Neos mouth gets like all strange and stuff."));
         
           adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,mutee.getName() + " has been muted"));
@@ -125,13 +125,13 @@ public abstract class Admin {
       try{
         mutee = world.findPlayer(mutee_name);
 
-        if(!mutee.isBanned()){
+        if(!mutee.isMuted()){
 
         adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to un mute a player that not muted!"));
         return;
 
         }else{
-          mutee.setBanned(false);
+          mutee.setMuted(false);
         
           adapter.sendMessage(new ReplyMessage(mutee.getName(),Keywords.ADMIN_REPLY,"Congratulations. You are no longer muted. Unfortunately for the rest of us, you can chat openly now."));
           adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,mutee.getName() + " has been muted"));
