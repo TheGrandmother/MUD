@@ -12,6 +12,7 @@ public class Player extends Character {
 	private boolean logged_in;
 	private boolean is_admin;
 	private boolean is_banned;
+  private boolean is_muted;
 
 	/**
 	 * Creates a new player. With a given name and a given description.
@@ -26,8 +27,10 @@ public class Player extends Character {
 		//starting_location.addPlayer(this);
 		logged_in = false;
 		this.password = password;
-		is_admin = false;
-		is_banned = false;
+		this.is_admin = false;
+		this.is_banned = false;
+    this.is_muted = false;
+    
 	}
 
 	/**
@@ -68,12 +71,30 @@ public class Player extends Character {
 	}
 
 	/**
+	 * Checks if the player is muted
+	 *
+	 * @return true if the player is muted.
+	 */
+	public boolean isMuted() {
+		return is_muted;
+	}
+
+	/**
 	 * This sets the players banned status.
 	 *
 	 * @param is_banned if the player should be banned.
 	 */
 	public void setBanned(boolean banned) {
 		this.is_banned = banned;
+	}
+
+	/**
+	 * This sets the players muted status
+	 *
+	 * @param is_muted if the player can speak or not
+	 */
+	public void setMuted(boolean muted) {
+		this.is_muted = muted;
 	}
 
 	/**
