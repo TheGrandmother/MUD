@@ -204,7 +204,9 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				inbox.add(new LogoutMessage(receiver));
 			}
 			else {
-				logger.fine("Attempting to send message: " + m.toString());
+        if(m.getType() != MessageType.HEARTBEAT_REPLY){
+			  	logger.fine("Attempting to send message: " + m.toHumanForm());
+        }
 				conn.send(m.toString());
 			}
 		} else {
