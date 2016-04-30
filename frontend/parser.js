@@ -87,12 +87,20 @@ function parseInput(inp){
         return makeAdminAction("ban",[arg[0]],user, new Date().getTime());
         break;
       
-      case "_un_ban_":
+      case "_mute_":
         
         arg = inp.split(" ").splice(1);
-        console.log("Trying to un ban " + arg[0]);
+        console.log("Trying to mute " + arg[0]);
         
-        return makeAdminAction("un_ban",[arg[0]],user,new Date().getTime());
+        return makeAdminAction("mute",[arg[0]],user, new Date().getTime());
+        break;
+
+      case "_un_mute_":
+        
+        arg = inp.split(" ").splice(1);
+        console.log("Trying to un mute " + arg[0]);
+        
+        return makeAdminAction("un_mute",[arg[0]],user,new Date().getTime());
         break;
         
       case "_broadcast_":
