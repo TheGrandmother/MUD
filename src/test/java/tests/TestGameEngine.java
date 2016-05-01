@@ -4,15 +4,13 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.messages.MessageType;
-import ioopm.mud.communication.rawtcp.TCPAdapter;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.game.Keywords;
-import ioopm.mud.generalobjects.Inventory.InventoryOverflow;
-import ioopm.mud.generalobjects.ItemContainer;
-import ioopm.mud.generalobjects.World;
+import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
@@ -37,7 +35,7 @@ public class TestGameEngine {
 	@Before
 	public void setUp() throws Exception {
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		
 		
 
@@ -52,9 +50,9 @@ public class TestGameEngine {
 	
 	
 	@Test
-	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, InventoryOverflow{
+	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		boolean p1;
 		boolean p2;
 		
@@ -305,7 +303,7 @@ public class TestGameEngine {
 	@Test
 	public void testTakeAndDrop() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		
 		adapter.flush();
 		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
@@ -545,9 +543,9 @@ public class TestGameEngine {
 	}
 	
 	@Test
-	public void testMove() throws BuilderException, EntityNotPresent, InventoryOverflow{
+	public void testMove() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		adapter.flush();
 		
 		//Login players. This is tested in another function
@@ -762,7 +760,7 @@ public class TestGameEngine {
 	@Test
 	public void testTalk() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		
 		//Login players. This is tested in another function
 		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
@@ -897,7 +895,7 @@ public class TestGameEngine {
 	@Test
 	public void testAuthentication() throws BuilderException{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, null, world);
+		ge = new GameEngine(adapter, world);
 		adapter.flush();
 		Message m;
 		
@@ -1048,11 +1046,17 @@ public class TestGameEngine {
 		}
 	}
 	
-	class DummyAdapter extends TCPAdapter {
+	class DummyAdapter implements Adapter {
 		public DummyAdapter() {
 			
 		}
 		public ArrayList<Message> messages = new ArrayList<>();
+
+		@Override
+		public Message poll() {
+			return null;
+		}
+
 		@Override
 		public void sendMessage(Message message) {
 			messages.add(message);

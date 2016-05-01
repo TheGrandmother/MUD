@@ -71,7 +71,11 @@ public class GameEngine {
 
 			}
 			if(!skip) {
-				adapter.sendMessage(new NotificationMessage(player.getName(), message));
+				if(player.getName() == null || message == null){
+					logger.warning("Tried to brodcast message to odd player. Skipping player");
+				}else{
+					adapter.sendMessage(new NotificationMessage(player.getName(), message));
+				}
 			}
 		}
 	}
@@ -165,7 +169,7 @@ public class GameEngine {
 			//The below methods must be celled in this order... which is horrible
 			world.findPlayer(username).setLoggedIn(true);
 			world.findPlayer(username).getLocation().addPlayer(world.findPlayer(username));
-			GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " joined the fun :D!", username);
+			GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " joined the fun :D", username);
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, true, null));
 
 			// Store the player
@@ -176,13 +180,12 @@ public class GameEngine {
 			return;
 
 		} catch(EntityNotUnique e) {
-			adapter.sendMessage(new ErrorMessage(actor_name, "The name " + username + " is taken"));
 			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Username is already taken!"));
 			return;
 
 		} catch(EntityNotPresent e) {
 			adapter.sendMessage(new SeriousErrorMessage(actor_name, "The lobby does not exist"));
-			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
+			//adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "That lobby does not exist!"));
 			return;
 		}
 
@@ -216,7 +219,7 @@ public class GameEngine {
 				//The below methods must be celled in this order... which is horrible
 				player.setLoggedIn(true);
 				player.getLocation().addPlayer(player);
-				GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " has returned :D!", username);
+				GameEngine.broadcastToRoom(adapter, world.findPlayer(username).getLocation(), username + " has returned :D", username);
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, true, null));
 				return;
 			} else {

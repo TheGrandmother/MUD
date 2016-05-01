@@ -4,8 +4,6 @@ import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
-import ioopm.mud.generalobjects.Inventory;
-import ioopm.mud.generalobjects.Inventory.InventoryOverflow;
 import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.items.Weapon;
 
@@ -51,7 +49,7 @@ public abstract class ItemInteraction {
 		if(current_room.hasItem(item_name)) {
 			try {
 				actor.getInventory().addItem(item);
-			} catch(InventoryOverflow e) {
+			} catch(Inventory.InventoryOverflow e) {
 				adapter.sendMessage(new ErrorMessage(actor.getName(), "Your inventory is full!"));
 				return;
 			}
@@ -66,10 +64,6 @@ public abstract class ItemInteraction {
 			adapter.sendMessage(new ErrorMessage(actor.getName(), "Item " + item_name + " is not in the room!"));
 			return;
 		}
-
-
-		//adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.TAKE_REPLY, "You picked up a/an " + item_name +"."));
-		//GameEngine.broadcastToRoom(adapter, current_room, actor.getName() +" picked up " + item_name+".", actor.getName());
 	}
 
 	/**
@@ -101,7 +95,7 @@ public abstract class ItemInteraction {
 				current_room.addItem(i.getItem());
 				actor.getInventory().removeItem(item_name);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.DROP_REPLY, "You dropped " + item_name + "."));
-				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " dropped " + item_name, actor.getName());
+				GameEngine.broadcastToRoom(adapter, current_room, actor.getName() + " dropped " + item_name + ".", actor.getName());
 				return;
 			}
 		}
@@ -177,17 +171,13 @@ public abstract class ItemInteraction {
 				actor.setWeapon(null);
 				adapter.sendMessage(new ReplyMessage(actor.getName(), Keywords.UNEQUIP_REPLY, "You have unequipped your weapon."));
 				return;
-			} catch(InventoryOverflow e) {
+			} catch(Inventory.InventoryOverflow e) {
 				adapter.sendMessage(new ErrorMessage(actor.getName(), "You don't have enough space in your inventory. " + w.getName() + " takes up " + w.getSize() +
 					" units of space but you only have " + (actor.getInventory().getMax_volume() - actor.getInventory().getVolume()) + " free."));
 				return;
 			}
-
 		}
-
-
 	}
-
 }
 
 

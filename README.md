@@ -1,5 +1,11 @@
 # MUD
+[![Stories in Ready](https://badge.waffle.io/TheGrandmother/MUD.png?label=ready&title=Ready)](https://waffle.io/TheGrandmother/MUD)
+[![Stories in Progress](https://badge.waffle.io/waffleio/waffle.io.svg?label=waffle%3Ain%20progress&title=In%20Progress)](http://waffle.io/waffleio/waffle.io)
+[![Stories in Ready For Review](https://badge.waffle.io/waffleio/waffle.io.svg?label=waffle%3Aready%20for%20review&title=Ready%20For%20Review)](http://waffle.io/waffleio/waffle.io)
+
 This is the worlds most pointless MUD.
+
+***More Coolness Coming Soon***
 
 ##Building
 
@@ -9,23 +15,5 @@ The runnable file will then be `target/MUD.jar`.
 
 ##Running
 
-The program can be started as a client by running the following command in a terminal:
-`java -jar MUD.jar client`
-
 It can be started as a server by running this command:
 `java -jar MUD.jar server`
-
-###Client
-As soon as the client has loaded it will ask for a server address to connect to and a username to use for
-said server. When these two has been given to the client it attempts to connect to the given server 
-address.
-
-After a successful connection has been established you will be able play the game to its full extent by
-entering the commands given in the menu bar.
-
-###Server
-When starting the server it will attempt to bind to port 1337, if this port is already in use it will not launch
-and display an error message.
-
-##Goals completed using this program
- - 

@@ -4,7 +4,9 @@ import java.util.Base64;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 /**
  * This is the class which specifies the messages. These messages are sent to the Adapter and from there
  * translated and sent to the server.
@@ -125,11 +127,16 @@ public abstract class Message {
 			// Decode the arguments
 			for(int i = 0; i < arg_arr.length; i++) {
 				try {
-					arg_arr[i] = new String(decoder.decode(arg_arr[i]));
+					arg_arr[i] = URLDecoder.decode( new String(decoder.decode(arg_arr[i]),"ISO-8859-1"), "ISO-8859-1");
 				}
 				catch(IllegalArgumentException e) {
-					logger.warning("Argument was not correctly bas64 encoded! arg: " + arg_arr[i]);
-					throw new IllegalArgumentException("Transmission argument was not correctly bas64 encoded!");
+					logger.warning("Argument was not correctly base64 encoded! arg: " + arg_arr[i]);
+					throw new IllegalArgumentException("Transmission argument was not correctly base64 encoded!");
+				}catch(UnsupportedEncodingException e){
+					logger.warning("Apparently the encoding ISO-8859-1 does not exist :/ arg: "); 
+					throw new IllegalArgumentException("Transmission argument was not correctly URL encoded!");
+
+				
 				}
 			}
 		}
@@ -223,7 +230,7 @@ public abstract class Message {
 				if(s == null) {
 					s = "null";
 				}
-				sb.append(encoder.encodeToString(s.getBytes())).append(';');
+					sb.append(encoder.encodeToString((encodeURIComponent(s)).getBytes())).append(';');
 			}
 		}
 
@@ -234,4 +241,42 @@ public abstract class Message {
 	public String toString() {
 		return getMessage();
 	}
+
+
+/**
+ *Hack  required since javas URL/URI things are dumb.
+ *
+ */
+public static String encodeURIComponent(String s) {
+	String result;
+
+	try {
+		result = URLEncoder.encode(s, "ISO-8859-1")
+			.replaceAll("\\+", "%20")
+			.replaceAll("\\%21", "!")
+			.replaceAll("\\%27", "'")
+			.replaceAll("\\%28", "(")
+			.replaceAll("\\%29", ")")
+			.replaceAll("\\%7E", "~");
+	} catch (UnsupportedEncodingException e) {
+		result = s;
+	}
+
+	return result;
 }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
