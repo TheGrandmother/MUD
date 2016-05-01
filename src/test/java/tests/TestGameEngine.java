@@ -35,7 +35,7 @@ public class TestGameEngine {
 	@Before
 	public void setUp() throws Exception {
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		
 		
 
@@ -52,7 +52,7 @@ public class TestGameEngine {
 	@Test
 	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		boolean p1;
 		boolean p2;
 		
@@ -303,7 +303,7 @@ public class TestGameEngine {
 	@Test
 	public void testTakeAndDrop() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		
 		adapter.flush();
 		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
@@ -545,7 +545,7 @@ public class TestGameEngine {
 	@Test
 	public void testMove() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		adapter.flush();
 		
 		//Login players. This is tested in another function
@@ -760,7 +760,7 @@ public class TestGameEngine {
 	@Test
 	public void testTalk() throws BuilderException, EntityNotPresent{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		
 		//Login players. This is tested in another function
 		ge.handleMessage(new TestMessage(player1, MessageType.REGISTRATION, null, player1,player1_password));
@@ -895,7 +895,7 @@ public class TestGameEngine {
 	@Test
 	public void testAuthentication() throws BuilderException{
 		makeMeAWorld();
-		ge = new GameEngine(adapter, world);
+		ge = new GameEngine(adapter, null, world);
 		adapter.flush();
 		Message m;
 		
