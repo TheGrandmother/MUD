@@ -1,6 +1,6 @@
 package ioopm.mud.database;
 
-public enum DatabaseStructure {
+public enum SQLCode {
 
 	TABLE_PLAYER(
 		"CREATE TABLE IF NOT EXISTS Player(" +
@@ -52,7 +52,7 @@ public enum DatabaseStructure {
 
 	private final String SQL;
 
-	DatabaseStructure(String sql) {
+	SQLCode(String sql) {
 		SQL = sql;
 	}
 

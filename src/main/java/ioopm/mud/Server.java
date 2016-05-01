@@ -4,7 +4,7 @@ import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
 import ioopm.mud.communication.websocket.WSServerAdapter;
 import ioopm.mud.database.PersistentStorage;
-import ioopm.mud.database.SQLite;
+import ioopm.mud.database.serverarchs.SQLite;
 import ioopm.mud.game.GameEngine;
 import ioopm.mud.generalobjects.World;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;

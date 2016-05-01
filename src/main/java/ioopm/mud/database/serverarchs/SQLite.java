@@ -1,5 +1,7 @@
-package ioopm.mud.database;
+package ioopm.mud.database.serverarchs;
 
+import ioopm.mud.database.SQLCode;
+import ioopm.mud.database.PersistentStorage;
 import ioopm.mud.generalobjects.Player;
 import ioopm.mud.generalobjects.World;
 import org.sqlite.SQLiteConfig;
@@ -41,7 +43,7 @@ public class SQLite implements PersistentStorage {
 
 		Statement statement = database_connection.createStatement();
 
-		for(DatabaseStructure s : DatabaseStructure.values()) {
+		for(SQLCode s : SQLCode.values()) {
 			statement.addBatch(s.toString());
 		}
 
