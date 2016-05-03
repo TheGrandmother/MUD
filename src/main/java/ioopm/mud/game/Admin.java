@@ -2,7 +2,9 @@ package ioopm.mud.game;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.server.ErrorMessage;
+import ioopm.mud.communication.messages.server.SeriousErrorMessage;
 import ioopm.mud.communication.messages.server.ReplyMessage;
+import ioopm.mud.communication.messages.server.NotificationMessage;
 import ioopm.mud.exceptions.EntityNotPresent;
 import ioopm.mud.generalobjects.Item;
 import ioopm.mud.generalobjects.Player;
@@ -71,18 +73,76 @@ public abstract class Admin {
       return;
 
     }else if(action.equals("mute")){
-      mutePlayer(actor, String.join(" ", arguments), logger, world, adapter);
+      mutePlayer(actor, arguments[0], logger, world, adapter);
       return;
 
     }else if(action.equals("un_mute")){
-      unMutePlayer(actor, String.join(" ", arguments), logger, world, adapter);
+      unMutePlayer(actor, arguments[0], logger, world, adapter);
+      return;
+    }else if(action.equals("kick")){
+      kickPlayer(actor, arguments[0], logger, world, adapter);
+      return;
+    }else if(action.equals("teleport")){
+      teleportPlayer(actor, arguments[0],arguments[1], logger, world, adapter);
       return;
     }
-
-
-  
   }
 
+
+	private static void teleportPlayer(Player actor, String teleportee_name, String destination_name, Logger logger, World world, Adapter adapter){
+		Player teleportee = null;
+		try{
+			teleportee = world.findPlayer(teleportee_name);
+		}catch (EntityNotPresent e){
+			adapter.sendMessage(new ErrorMessage(actor.getName(),
+						"You are trying to teleport a player that does not exist!"))	;
+			return;
+		}
+
+		Room destination = null;
+		try{
+			destination = world.findRoom(destination_name);
+		}catch (EntityNotPresent e){
+			adapter.sendMessage(new ErrorMessage(actor.getName(),
+						"You are trying to teleport a player into a room that does not exist!"))	;
+			return;
+		}
+		
+		if (destination != teleportee.getLocation()){
+			boolean self = teleportee == actor;
+			Room current_room = teleportee.getLocation();
+			try{
+
+				current_room.removePlayer(teleportee);
+				destination.addPlayer(teleportee);
+				teleportee.setLocation(destination);
+				adapter.sendMessage(new NotificationMessage(teleportee.getName(),self ?
+							"With your great administrative powers you tear a hole in the spacetime continuum and "+
+							"teleport yourself into " + destination.getName()+".":
+							"You feel a tingling sensation in your ears, the world goes all sparkly and you find "+
+							"yourself in " + destination.getName()+"."));
+				GameEngine.broadcastToRoom(adapter,destination,teleportee.getName() + 
+							" appeared in the room from nowhere. You suspect that the great administrative powers has"+
+							" something to do with this....",teleportee.getName());
+			if (!self){
+				adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,
+							"You successfully teleported " +teleportee.getName()+" to " +destination.getName() +"."));
+			}
+
+			}catch (EntityNotPresent e){
+				adapter.sendMessage(new SeriousErrorMessage(actor.getName(),
+							"The teleportee has dissapeared from the room he was in!"));
+				return;
+			}
+
+		}else{
+		
+			adapter.sendMessage(new ErrorMessage(actor.getName(),
+						"No point teleporting a player to the room he is currently in."))	;
+			return;
+		}
+
+	}
 
   private static void broadcastToAll(Player actor, String message, Logger logger, World world, Adapter adapter){
     for (Room room: world.getRooms()){
@@ -174,6 +234,30 @@ public abstract class Admin {
 
       }
   }
+
+	private static void kickPlayer(Player actor, String kicked_name, Logger logger, World world, Adapter adapter){
+		Player kicked = null;
+		try{
+			kicked  = world.findPlayer(kicked_name);
+		}catch (EntityNotPresent e){
+			adapter.sendMessage(new ErrorMessage(actor.getName(),"You are trying to kick a player that does not exist."));
+			return;
+		}
+		
+		if(kicked.isLoggedIn()){
+			adapter.sendMessage(new ReplyMessage(kicked.getName(),"You are being kicked :)"));
+
+			logger.fine(actor.getName() + " kicked " + kicked.getName() + " like a boss!");
+			GameEngine.logoutPlayer(kicked.getName(),world,adapter);
+			
+			adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,kicked.getName() + " is now banned!"));
+			return;
+
+		}else{
+			adapter.sendMessage(new ErrorMessage(actor.getName(),kicked.getName() + " is already loged out."));
+		}
+
+	}
 
   private static void banPlayer(Player actor, String bannee_name, Logger logger,World world, Adapter adapter){
       
