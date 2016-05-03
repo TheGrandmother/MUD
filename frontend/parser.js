@@ -123,7 +123,7 @@ function parseInput(inp){
         
         arg = inp.split(" ").splice(1);
         console.log(arg);
-        arg= arg.join("").split("_to_")
+        arg= arg.join(" ").split("_to_")
         console.log(arg);
         console.log("Trying to teleport " + arg[0] + " to " + arg[1]);
         
