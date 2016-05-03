@@ -124,6 +124,10 @@ public abstract class Admin {
 				GameEngine.broadcastToRoom(adapter,destination,teleportee.getName() + 
 							" appeared in the room from nowhere. You suspect that the great administrative powers has"+
 							" something to do with this....",teleportee.getName());
+
+				GameEngine.broadcastToRoom(adapter,current_room,"A soft glow appeares around " +teleportee.getName() +
+            " and suddenly he just dissapears from the room!");
+
 			if (!self){
 				adapter.sendMessage(new ReplyMessage(actor.getName(),Keywords.ADMIN_REPLY,
 							"You successfully teleported " +teleportee.getName()+" to " +destination.getName() +"."));
