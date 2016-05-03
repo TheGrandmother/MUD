@@ -103,6 +103,25 @@ function parseInput(inp){
         return makeAdminAction("un_mute",[arg[0]],user,new Date().getTime());
         break;
         
+      case "_kick_":
+        
+        arg = inp.split(" ").splice(1);
+        console.log("Trying to kick " + arg[0]);
+        
+        return makeAdminAction("kick",[arg[0]],user,new Date().getTime());
+        break;
+
+      case "_teleport_":
+        
+        arg = inp.split(" ").splice(1);
+        console.log(arg);
+        arg= arg.join("").split("_to_")
+        console.log(arg);
+        console.log("Trying to teleport " + arg[0] + " to " + arg[1]);
+        
+        return makeAdminAction("kick",[arg[0]],user,new Date().getTime());
+        break;
+
       case "_broadcast_":
         
         arg = inp.split(" ").splice(1).join(" ");
