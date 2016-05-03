@@ -119,7 +119,7 @@ function parseInput(inp){
         console.log(arg);
         console.log("Trying to teleport " + arg[0] + " to " + arg[1]);
         
-        return makeAdminAction("kick",[arg[0]],user,new Date().getTime());
+        return makeAdminAction("teleport",[arg[0],arg[1]],user,new Date().getTime());
         break;
 
       case "_broadcast_":
