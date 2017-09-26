@@ -14,14 +14,6 @@ import ioopm.mud.generalobjects.*;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder;
 import ioopm.mud.generalobjects.worldbuilder.WorldBuilder.BuilderException;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,12 +39,16 @@ public class TestGameEngine {
 		
 		
 
-		} private void dumpMessages(){ for(Message m : adapter.messages){
-			System.out.println(m.toHumanForm());
+		
+	}
+	
+	private void dumpMessages(){
+		for(Message m : adapter.messages){
+			System.out.println(m.getMessage());
 		}
 	}
-
-
+	
+	
 	@Test
 	public void testEquipAndUnequip() throws BuilderException, EntityNotPresent, Inventory.InventoryOverflow{
 		makeMeAWorld();
@@ -912,26 +908,11 @@ public class TestGameEngine {
 		} catch (EntityNotPresent e) {
 			fail("Player not present in the world.");
 		}
-
-		adapter.flush();
 		
-
-		//test username validity
-		String fail_name = "balls <i>";
-		ge.handleMessage(new TestMessage(player2, MessageType.REGISTRATION, null, fail_name,"asd"));
-		m = getMessageOfType(MessageType.REGISTRATION_REPLY);
-		assertTrue("Registration possible with mallformed username.",m.getArguments()[0].equals("false"));
-		try {
-			world.findPlayer(fail_name).isLoggedIn();
-			fail("Player still appeared in the world");
-		} catch (EntityNotPresent e) {
-			
-		}
-
-
 		//Test Logging out
 		adapter.flush();
 		ge.handleMessage(new TestMessage(player1, MessageType.LOGOUT, null, player1));
+		assertTrue(m.getArguments()[1],m.getArguments()[0].equals("true"));
 		try {
 			assertFalse("Player din't log out.",world.findPlayer(player1).isLoggedIn());
 		} catch (EntityNotPresent e) {
@@ -1045,19 +1026,14 @@ public class TestGameEngine {
 	
 	class TestMessage extends Message{
 
-		protected TestMessage(String sender, MessageType type, String action, long time_stamp, String[] arguments) {
-			super("server", sender, type, action, time_stamp, arguments); 
-		
-		}
-
 		protected TestMessage(String sender, MessageType type,
 				String action, String... arguments) {
 			super("server", sender, type, action, arguments);
+			// TODO Auto-generated constructor stub
 		}
 
 	}
-
-	@SuppressWarnings("serial")
+	
 	private class WrongMessage extends Exception{
 		Message msg;
 		public WrongMessage(Message msg) {

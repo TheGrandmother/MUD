@@ -11,7 +11,7 @@ import ioopm.mud.generalobjects.Room;
 import ioopm.mud.generalobjects.World;
 
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
+
 /**
  * This is the main class for the actual game part of the mud. This class is responsible for interpreting the messages
  * and taking appropriate action in accordance to the spec/Messages.txt file.<p>
@@ -106,6 +106,7 @@ public class GameEngine {
 	 *
 	 * @param message The message to be handled.
 	 */
+	//TODO Implement logging out so that players gets removed from rooms when they log out.
 	public void handleMessage(Message message) {
 		MessageType type = message.getType();
 
@@ -115,7 +116,7 @@ public class GameEngine {
 			handleRegistrationRequest(message);
 		} else if(type == MessageType.LOGOUT) {
 			handleLogoutRequest(message);
-		} else if(type == MessageType.GENERAL_ACTION || type == MessageType.ADMIN_ACTION) {
+		} else if(type == MessageType.GENERAL_ACTION) {
 			executeAction(message);
 		}
 	}
@@ -142,21 +143,6 @@ public class GameEngine {
 
 	}
 
-	public static void logoutPlayer(String  actor_name, World world, Adapter adapter){
-
-		try {
-			Player player = world.findPlayer(actor_name);
-			player.getLocation().removePlayer(player);
-			player.setLoggedIn(false);
-			GameEngine.broadcastToRoom(adapter, player.getLocation(), actor_name + " has left the game.");
-		} catch(EntityNotPresent e) {
-			logger.warning("Unknown player tried to log out! Username: \"" + actor_name + "\"");
-			adapter.sendMessage(new SeriousErrorMessage(actor_name, "Tried to log out a non existing player."));
-		}
-
-	}
-
-
 	/**
 	 * Handles a registration request.<p>
 	 * <b>NOTE:</b> This method must send a {@link RegistrationReplyMessage} to the sender.
@@ -173,11 +159,6 @@ public class GameEngine {
 		}
 		String username = arguments[0];
 		String password = arguments[1];
-
-		if(!Pattern.matches("\\w+", username)){
-			adapter.sendMessage(new RegistrationReplyMessage(actor_name, false, "Invalid characters in the username! Usernames can only contain letters, digits and underscores."));
-			return;
-		}
 
 		try {
 			world.addCharacter(new Player(username, "", password, world.getLobby(0)));
@@ -221,10 +202,6 @@ public class GameEngine {
 			player = world.findPlayer(username);
 			if(player.isLoggedIn()) {
 				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "That player is already logged in!"));
-				return;
-			}
-			if(player.isBanned()) {
-				adapter.sendMessage(new AuthenticationReplyMessage(actor_name, false, "You are banned! Please go away! We don't want you here!"));
 				return;
 			}
 			if(checkUsernamePassword(username, password)) {
@@ -275,13 +252,6 @@ public class GameEngine {
 		}
 
 		String action = message.getAction();
-	
-		if(message.getType() == MessageType.ADMIN_ACTION){
-		
-				Admin.action(actor, action, arguments, message.getTimeStamp(), world, adapter, logger);
-				return;
-		} 
-
 
 		switch(action) {
 
