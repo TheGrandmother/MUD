@@ -7,3 +7,11 @@ weapon:axe:a stupid axe:5:0:20
 weapon:tp:A magnificent roll of toilet paper.:10:2:35
 weapon:Rusty knife:A rusty knife so dull it wont cut butter:1:0:3
 weapon:Crown:The crown of the otter king.:3:0:5
+
+/spoopy mansion DLC
+key:mansion lobby:0
+
+weapon:wine bottle:An eccelent vintage!:2:0:15
+weapon:herocots verts:A floppy, but tasty weapon which will instill terror in the hearts of your enemies.:1:0:1
+weapon:ASPARAGUS:THE FABLED WEAPON OF THE HEROES OF OLD!:1:5:50
+weapon:a dead bird:Look what the cat dragged in.:2:4:32

@@ -1,8 +1,15 @@
 /room:name: description : pvp : items: exits: 
 room:lol room: lamest room ever!.:false: none :ball room;true,the otter kingdom;false:
 room:ball room: giggle....:true: axe;150 :lol room;false,toilet;false:
-room:the otter kingdom:Here the all mighty otter rules over France!:true:Key to ball room;10:lol room;false,Otter Castle;true
+room:the otter kingdom:Here the all mighty otter rules over France!:true:Key to ball room;10:lol room;false,Otter Castle;true,mansion courtyard;false
 room:toilet:the shitter.:true:tp;20,Key to Otter Castle;1:ball room;false:
 room:Otter Castle:Here lives the glorious otter king!:false:Crown;1:the otter kingdom;false
 
 lobby:lol room;0,ball room;5
+
+/spoopy mansion DLC
+room:mansion courtyard:Two parallel gravel paths lead to a pair of symmetric stairs, terminating in a dais outside the main entrance to the mansion. The otter kingdom lies behind you. One of the first floor windows are broken.:true: none :the otter kingdom; false, mansion lobby;false
+room:mansion lobby:a large room, made for people with large wallets. There's a broken window. Glass is all over the floor.:true:a dead bird;1:mansion courtyard;false,dining room;false
+room:dining room:a wide room with a long dark wooden table. There's warm food on the table!:true:hericots verts;20:mansion lobby;false,kitchen;false
+room:kitchen:smells good!:true:Rusty knife;3,ASPARAGUS;2:wine cellar;false,dining room;false
+room:racks and racks of wine:looks like expensive stuff.:true:wine bottle;200:kitchen;false
