@@ -62,7 +62,7 @@ public abstract class Message {
 	 * @param action
 	 * @param arguments
 	 */
-	private Message(String receiver, String sender, MessageType type, String action, long time_stamp, String[] arguments) {
+	protected Message(String receiver, String sender, MessageType type, String action, long time_stamp, String[] arguments) {
 		this.RECEIVER = receiver;
 		this.SENDER = sender;
 		this.TYPE = type;
@@ -243,27 +243,41 @@ public abstract class Message {
 	}
 
 
-/**
- *Hack  required since javas URL/URI things are dumb.
- *
- */
-public static String encodeURIComponent(String s) {
-	String result;
-
-	try {
-		result = URLEncoder.encode(s, "ISO-8859-1")
-			.replaceAll("\\+", "%20")
-			.replaceAll("\\%21", "!")
-			.replaceAll("\\%27", "'")
-			.replaceAll("\\%28", "(")
-			.replaceAll("\\%29", ")")
-			.replaceAll("\\%7E", "~");
-	} catch (UnsupportedEncodingException e) {
-		result = s;
+	public String toHumanForm(){
+    
+		String s =  SENDER + ";" + RECEIVER + ";" + TYPE + ";" + ACTION + ";" + TIME_STAMP + ";";
+		if(ARGUMENTS != null) {
+			for(String a : ARGUMENTS) {
+				if(a == null) {
+					s += "null";
+				}
+					s += a + ";";
+			}
+		}
+		return s;
 	}
 
-	return result;
-}
+	/**
+	 *Hack  required since javas URL/URI things are dumb.
+	 *
+	 */
+	public static String encodeURIComponent(String s) {
+		String result;
+
+		try {
+			result = URLEncoder.encode(s, "ISO-8859-1")
+				.replaceAll("\\+", "%20")
+				.replaceAll("\\%21", "!")
+				.replaceAll("\\%27", "'")
+				.replaceAll("\\%28", "(")
+				.replaceAll("\\%29", ")")
+				.replaceAll("\\%7E", "~");
+		} catch (UnsupportedEncodingException e) {
+			result = s;
+		}
+
+		return result;
+	}
 
 
 

@@ -32,3 +32,5 @@ MUD-log*
 *.swo
 *.swn
 *.swm
+adminpass
+*.swl

@@ -37,15 +37,18 @@ public abstract class Talk {
 		String message = arguments[0];
 		Room actor_location = actor.getLocation();
 
+    if(!actor.isMuted()){
+      ArrayList<ReplyMessage> return_messages = new ArrayList<ReplyMessage>();
+      for(Player recipient : actor_location.getPlayers()) {
+        return_messages.add(new ReplyMessage(recipient.getName(), Keywords.SAY_REPLY, actor.getName(), message));
+      }
 
-		ArrayList<ReplyMessage> return_messages = new ArrayList<ReplyMessage>();
-		for(Player recipient : actor_location.getPlayers()) {
-			return_messages.add(new ReplyMessage(recipient.getName(), Keywords.SAY_REPLY, actor.getName(), message));
-		}
-
-		for(ReplyMessage msg : return_messages) {
-			adapter.sendMessage(msg);
-		}
+      for(ReplyMessage msg : return_messages) {
+        adapter.sendMessage(msg);
+      }
+    }else{
+      adapter.sendMessage(new ErrorMessage(actor.getName(), "You have no mouth. You can not talk. Because you suck.")) ;
+    }
 
 
 	}
