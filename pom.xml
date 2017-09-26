@@ -61,11 +61,10 @@
         </dependency>
 
         <!-- WebSocket library -->
-        <!-- https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket -->
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

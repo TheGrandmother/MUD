@@ -2,7 +2,6 @@ package ioopm.mud.communication.websocket;
 
 import ioopm.mud.communication.Adapter;
 import ioopm.mud.communication.messages.Message;
-import ioopm.mud.communication.messages.MessageType;
 import ioopm.mud.communication.messages.client.LogoutMessage;
 import ioopm.mud.communication.messages.server.ErrorMessage;
 import ioopm.mud.communication.messages.server.HandshakeReplyMessage;
@@ -116,16 +115,11 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 
 	@Override
 	public void onMessage(WebSocket conn, String message) {
-    
+		logger.info("IP: " + getIP(conn) + " sent message: " + message);
 
 		Message msg;
 		try {
 			msg = Message.deconstructTransmission(message);
-      
-      if(msg.getType() != MessageType.HEARTBEAT){
-        logger.info("IP: " + getIP(conn) + " sent message: " + msg.toHumanForm());
-      }
-
 		} catch(IllegalArgumentException e) {
 			logger.warning("Received malformed message! Message: " + message);
 			logger.log(Level.FINE, e.getMessage(), e);
@@ -204,13 +198,11 @@ public class WSServerAdapter extends WebSocketServer implements Adapter {
 				inbox.add(new LogoutMessage(receiver));
 			}
 			else {
-        if(m.getType() != MessageType.HEARTBEAT_REPLY){
-			  	logger.fine("Attempting to send message: " + m.toHumanForm());
-        }
+				logger.fine("Attempting to send message: " + m.toString());
 				conn.send(m.toString());
 			}
 		} else {
-			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toHumanForm());
+			logger.warning("Tried to send message to non legit connection! Receiver: " + receiver + ", message: " + m.toString());
 		}
 	}
 }
