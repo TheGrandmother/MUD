@@ -8,7 +8,7 @@ var heart = setInterval(function (){
 },5000)
 
 user = "";
-socket = new WebSocket("ws://18.220.218.77:1337/");
+socket = new WebSocket("ws://18.220.218.77:1337");
 
 handshake_complete = false;
 connection_established = false;
