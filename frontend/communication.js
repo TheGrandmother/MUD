@@ -3,9 +3,13 @@ jQuery(window).bind('beforeunload', function(){
 });
 
 var heart = setInterval(function (){
-  if(!connection_established){appendToOut("Connection timed out."); return;}
+  if(!connection_established){return;}
   socket.send(formatToSend(heartbeatMessage()));
 },5000)
+
+setInterval(function() {
+  if(!socket_open) {appendToOut("Socket did the opposite of timing in")}
+})
 
 user = "";
 socket = new WebSocket("ws://18.221.180.171:1337");
