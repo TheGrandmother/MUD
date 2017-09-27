@@ -3,12 +3,12 @@ jQuery(window).bind('beforeunload', function(){
 });
 
 var heart = setInterval(function (){
-  if(!connection_established){return;}
+  if(!connection_established){appendToOut("Connection timed out."); return;}
   socket.send(formatToSend(heartbeatMessage()));
 },5000)
 
 user = "";
-socket = new WebSocket("ws://18.220.218.77:1337");
+socket = new WebSocket("ws://18.221.180.171:1337");
 
 handshake_complete = false;
 connection_established = false;
