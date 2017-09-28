@@ -8,8 +8,8 @@ var heart = setInterval(function (){
 },5000)
 
 setInterval(function() {
-  if(!socket_open) {appendToOut("Socket did the opposite of timing in"), 20000}
-})
+  if(!socket_open) {appendToOut("Socket did the opposite of timing in")}
+}, 20000)
 
 user = "";
 socket = new WebSocket("ws://18.221.180.171:1337");
